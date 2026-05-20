@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Christian Smith — Developer & Spatial Computing Specialist</title>
+  <meta name="description" content="Christian Smith (RNVizion) — Python developer, AR/VR specialist at Meta, building polished desktop tools." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ---------- RESET & TOKENS ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11111a;
+      --bg-3: #1a1a26;
+      --border: #25253a;
+      --border-soft: #1e1e2e;
+      --text: #e8e8f0;
+      --text-dim: #9a9ab0;
+      --text-faint: #5a5a72;
+      --accent: #6cf;
+      --accent-2: #b794ff;
+      --accent-warm: #ffd166;
+      --max-width: 1200px;
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108, 207, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108, 207, 255, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%);
+    }
+
+    /* noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    main, nav, footer { position: relative; z-index: 2; }
+
+    a { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ---------- NAVIGATION ---------- */
+    nav {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      position: relative;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after { width: 100%; }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      padding: 120px 0 100px;
+      position: relative;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      margin-bottom: 32px;
+      background: var(--bg-2);
+    }
+
+    .hero-tag .dot {
+      width: 6px;
+      height: 6px;
+      background: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #4ade80;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 8vw, 6.5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 28px;
+      max-width: 900px;
+    }
+
+    .hero h1 em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+      color: var(--text-dim);
+      max-width: 620px;
+      margin-bottom: 48px;
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 80px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-2);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    .btn.primary:hover {
+      box-shadow: 0 8px 24px rgba(108, 207, 255, 0.25);
+    }
+
+    .btn svg { width: 14px; height: 14px; }
+
+    /* Marquee strip below hero */
+    .marquee {
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 20px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      background: var(--bg-2);
+    }
+
+    .marquee-track {
+      display: inline-flex;
+      gap: 48px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-faint);
+      animation: scroll 40s linear infinite;
+    }
+
+    .marquee-track span { display: inline-flex; align-items: center; gap: 48px; }
+    .marquee-track span::after { content: '◆'; color: var(--accent); }
+
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ---------- SECTION ---------- */
+    section {
+      padding: 100px 0;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 60px;
+      max-width: 720px;
+    }
+
+    .section-title em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    /* ---------- ABOUT ---------- */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .about-text p {
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      font-size: 1.05rem;
+    }
+
+    .about-text p:first-of-type { color: var(--text); font-size: 1.15rem; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+    }
+
+    .stat {
+      background: var(--bg-2);
+      padding: 28px;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ---------- STACK ---------- */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+    }
+
+    .stack-cat {
+      background: var(--bg-2);
+      padding: 28px;
+    }
+
+    .stack-cat h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .stack-cat ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .stack-cat li {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text);
+      padding: 4px 10px;
+      background: var(--bg-3);
+      border-radius: 4px;
+      border: 1px solid var(--border-soft);
+    }
+
+    /* ---------- PROJECTS ---------- */
+    .projects {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+    }
+
+    .project {
+      background: var(--bg-2);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .project:hover { background: var(--bg-3); }
+
+    .project:nth-child(even) { direction: rtl; }
+    .project:nth-child(even) > * { direction: ltr; }
+
+    @media (max-width: 860px) {
+      .project, .project:nth-child(even) {
+        grid-template-columns: 1fr;
+        direction: ltr;
+        padding: 32px;
+      }
+    }
+
+    .project-number {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .project h3 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .project-desc {
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+    }
+
+    .project-link {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .project-link:hover { border-bottom-color: var(--accent); }
+
+    .project-image {
+      aspect-ratio: 4 / 3;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-image .placeholder {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      text-align: center;
+      padding: 16px;
+    }
+
+    /* ---------- CONTACT ---------- */
+    .contact-section {
+      text-align: center;
+      padding: 140px 0;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .contact-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 28px;
+    }
+
+    .contact-section h2 em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .contact-section p {
+      color: var(--text-dim);
+      max-width: 500px;
+      margin: 0 auto 40px;
+      font-size: 1.1rem;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 32px 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* ---------- REVEAL ANIMATIONS ---------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- UTILS ---------- */
+    .accent { color: var(--accent); }
+    .mono { font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="container">
+      <a href="#top" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#stack">Stack</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-tag">
+          <span class="dot"></span>
+          Open to Developer Advocate &amp; Solutions Engineer roles
+        </div>
+        <h1>
+          Christian Smith — building <em>polished</em> tools where software meets spatial computing.
+        </h1>
+        <p class="hero-subtitle">
+          Python developer, AR/VR specialist at Meta, and creator of the RNVizion toolkit — a suite of five professional desktop applications.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#work">
+            View work
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a class="btn" href="https://github.com/RNVizion" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.087.636-1.337-2.22-.252-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.682-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.698 1.028 1.591 1.028 2.682 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+            GitHub
+          </a>
+          <a class="btn" href="https://www.linkedin.com/in/christian-smith-40b957161/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+      <div class="marquee-track">
+        <span>Python</span><span>PyQt6</span><span>AR/VR</span><span>Meta Quest</span><span>Spatial Computing</span><span>Developer Tools</span><span>Solutions Engineering</span>
+        <span>Python</span><span>PyQt6</span><span>AR/VR</span><span>Meta Quest</span><span>Spatial Computing</span><span>Developer Tools</span><span>Solutions Engineering</span>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="container">
+        <div class="section-label">About</div>
+        <h2 class="section-title">I build software that <em>feels right</em>, not just software that works.</h2>
+
+        <div class="about-grid">
+          <div class="about-text">
+            <p>By day I work in AR/VR at Meta, where I help customers discover Ray-Ban Meta smart glasses and the Meta Quest headset family — spanning live product demos, consultative selling, and hands-on technical support across the full spatial computing lineup.</p>
+            <p>Outside of that, I maintain the RNVizion toolkit — five professional desktop applications focused on text transformation, color management, and icon generation. Each ships with full CLI support, multi-theme UIs, cross-platform CI, and comprehensive test coverage.</p>
+            <p>My background spans game programming, IT support (Google IT Support certified), technical content development, and customer-facing work in regulated industries. I'm targeting Developer Advocate and Solutions Engineer roles where I can build, communicate, and support developers — all at once.</p>
+          </div>
+
+          <div class="about-stats">
+            <div class="stat">
+              <div class="stat-value">5</div>
+              <div class="stat-label">Apps Shipped</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">786</div>
+              <div class="stat-label">Tests Written</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">10</div>
+              <div class="stat-label">Certifications</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">B.S.</div>
+              <div class="stat-label">Game Programming</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack">
+      <div class="container">
+        <div class="section-label">Stack</div>
+        <h2 class="section-title">Tools of the <em>trade</em>.</h2>
+
+        <div class="stack-grid">
+          <div class="stack-cat">
+            <h4>Languages</h4>
+            <ul>
+              <li>Python</li><li>C++</li><li>C#</li><li>Java</li><li>JavaScript</li><li>SQL</li><li>PowerShell</li>
+            </ul>
+          </div>
+          <div class="stack-cat">
+            <h4>Frameworks</h4>
+            <ul>
+              <li>PyQt6</li><li>Unity</li><li>Unreal</li><li>Google Cloud</li><li>Microsoft 365</li>
+            </ul>
+          </div>
+          <div class="stack-cat">
+            <h4>Testing &amp; DevOps</h4>
+            <ul>
+              <li>pytest</li><li>pytest-qt</li><li>hypothesis</li><li>GitHub Actions</li><li>Git</li>
+            </ul>
+          </div>
+          <div class="stack-cat">
+            <h4>AR/VR &amp; 3D</h4>
+            <ul>
+              <li>Meta Quest</li><li>Ray-Ban Meta</li><li>zBrush</li><li>3DS Max</li><li>Substance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK / PROJECTS -->
+    <section id="work">
+      <div class="container">
+        <div class="section-label">Selected Work</div>
+        <h2 class="section-title">The RNVizion <em>toolkit</em>.</h2>
+
+        <div class="projects">
+
+          <!-- PROJECT 1 -->
+          <article class="project">
+            <div>
+              <div class="project-number">01 / TEXT</div>
+              <h3>RNV Text Transformer</h3>
+              <p class="project-desc">11 transformation modes across 9+ file formats with regex builder, folder watching, compare view, and a full CLI. Backed by 786 tests at ~76% coverage running on Linux and Windows CI.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">CLI</span>
+                <span class="tag">pytest</span>
+                <span class="tag">GitHub Actions</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-text-transformer" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/text-transformer.png" alt="RNV Text Transformer screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/text-transformer.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 2 -->
+          <article class="project">
+            <div>
+              <div class="project-number">02 / COLOR</div>
+              <h3>RNV Color Palette Manager</h3>
+              <p class="project-desc">Professional palette management for designers and developers — 16+ export formats, 7 color mixing algorithms, and built-in WCAG accessibility tools.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">WCAG</span>
+                <span class="tag">Color Science</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-color-palette-manager" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/color-palette-manager.png" alt="RNV Color Palette Manager screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/color-palette-manager.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 3 -->
+          <article class="project">
+            <div>
+              <div class="project-number">03 / PICKER</div>
+              <h3>RNV Color Picker</h3>
+              <p class="project-desc">Screen color extraction with a magnifier, WCAG contrast checker, and color harmony generation. Built for designers and developers who need precision color workflows.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">Screen Capture</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-color-picker" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/color-picker.png" alt="RNV Color Picker screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/color-picker.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 4 -->
+          <article class="project">
+            <div>
+              <div class="project-number">04 / ICONS</div>
+              <h3>RNV Icon Builder</h3>
+              <p class="project-desc">Multi-resolution ICO creation from PNG, SVG, and ICO sources. Cross-platform exports for Android, iOS, and favicons — with batch processing, folder watching, and a full CLI.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">CLI</span>
+                <span class="tag">Cross-platform</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-icon-builder" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/icon-builder.png" alt="RNV Icon Builder screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/icon-builder.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 5 -->
+          <article class="project">
+            <div>
+              <div class="project-number">05 / MIXER</div>
+              <h3>RNV Color Mixer</h3>
+              <p class="project-desc">A desktop paint-mixing application simulating real-world color mixing using Kubelka-Munk theory. Bridges physical color theory with digital workflows.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">Kubelka-Munk</span>
+                <span class="tag">Color Theory</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-color-mixer" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/color-mixer.png" alt="RNV Color Mixer screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/color-mixer.png</div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact-section">
+      <div class="container">
+        <h2>Let's <em>build</em> something.</h2>
+        <p>Open to Developer Advocate, Solutions Engineer, and AR/VR Technical Specialist roles. Always happy to talk tools, spatial computing, or the craft of polished software.</p>
+        <div class="contact-links">
+          <a class="btn primary" href="mailto:vizionaryfx@yahoo.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            vizionaryfx@yahoo.com
+          </a>
+          <a class="btn" href="https://github.com/RNVizion" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/christian-smith-40b957161/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Christian Smith · RNVizion</div>
+      <div>Built with care in Washington, DC</div>
+    </div>
+  </footer>
+
+  <script>
+    // Auto year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Scroll-triggered reveals
+    const reveals = document.querySelectorAll('.section-title, .about-text, .about-stats, .stack-grid, .project, .contact-section h2');
+    reveals.forEach(el => el.classList.add('reveal'));
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
