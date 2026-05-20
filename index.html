@@ -24,7 +24,7 @@
       --text: #e8e8f0;
       --text-dim: #9a9ab0;
       --text-faint: #5a5a72;
-      --accent: #6cf;
+      --accent: #d2bc93;
       --accent-2: #b794ff;
       --accent-warm: #ffd166;
       --max-width: 1200px;
@@ -52,8 +52,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(108, 207, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(108, 207, 255, 0.025) 1px, transparent 1px);
+        linear-gradient(rgba(210, 188, 147, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 188, 147, 0.025) 1px, transparent 1px);
       background-size: 48px 48px;
       pointer-events: none;
       z-index: 0;
@@ -242,7 +242,7 @@
     }
 
     .btn.primary:hover {
-      box-shadow: 0 8px 24px rgba(108, 207, 255, 0.25);
+      box-shadow: 0 8px 24px rgba(210, 188, 147, 0.25);
     }
 
     .btn svg { width: 14px; height: 14px; }
@@ -506,9 +506,8 @@
     .project-image img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       display: block;
-      padding: 12px;
     }
 
     .project-image .placeholder {
