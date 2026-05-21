@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I Lacked the Tools, So I Built Them — Christian Smith</title>
+  <meta name="description" content="How constraint created a software suite — the story behind the RNVizion toolkit." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://rnvizion.dev/blog/i-lacked-the-tools/" />
+  <meta property="og:title" content="I Lacked the Tools, So I Built Them: How Constraint Created a Software Suite" />
+  <meta property="og:description" content="How constraint created a software suite — the story behind the RNVizion toolkit." />
+  <meta property="og:image" content="https://rnvizion.dev/assets/og-image.png" />
+  <meta property="article:author" content="Christian Smith" />
+  <meta property="article:published_time" content="2026-05-20" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11111a;
+      --bg-3: #1a1a26;
+      --border: #25253a;
+      --border-soft: #1e1e2e;
+      --text: #e8e8f0;
+      --text-dim: #9a9ab0;
+      --text-faint: #5a5a72;
+      --accent: #d2bc93;
+      --max-width: 1200px;
+      --read-width: 720px;
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(210, 188, 147, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 188, 147, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%);
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    main, nav, footer, article { position: relative; z-index: 2; }
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .read-container {
+      max-width: var(--read-width);
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* NAV (same as portfolio) */
+    nav {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      position: relative;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a:hover { text-decoration: none; }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+    }
+
+    /* ARTICLE HEADER */
+    .article-header {
+      padding: 100px 0 60px;
+      text-align: center;
+    }
+
+    .article-meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 24px;
+    }
+
+    .article-meta .accent { color: var(--accent); }
+
+    .article-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 32px;
+    }
+
+    .article-header h1 em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .article-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .byline {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .byline-divider {
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ARTICLE BODY */
+    article {
+      padding: 40px 0 80px;
+    }
+
+    article p {
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    article p:first-of-type::first-letter {
+      font-family: var(--font-serif);
+      font-size: 4.2rem;
+      float: left;
+      line-height: 0.9;
+      padding: 8px 14px 0 0;
+      color: var(--accent);
+    }
+
+    article h2 {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 60px 0 24px;
+      color: var(--text);
+    }
+
+    article h2 em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    article strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    article em {
+      font-style: italic;
+    }
+
+    article hr {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 56px auto;
+      width: 80px;
+    }
+
+    article ul {
+      margin: 0 0 24px 0;
+      padding-left: 24px;
+    }
+
+    article ul li {
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    article blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 8px 0 8px 24px;
+      margin: 32px 0;
+      color: var(--text-dim);
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    .bio {
+      margin-top: 64px;
+      padding: 32px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-2);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .bio strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* FOOTER NAV */
+    .post-footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .post-footer-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .post-footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 14px;
+    }
+
+    .post-footer-links a {
+      color: var(--text-dim);
+    }
+
+    .post-footer-links a:hover { color: var(--accent); text-decoration: none; }
+
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 32px 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
+      <div class="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#stack">Stack</a>
+        <a href="/#work">Work</a>
+        <a href="/blog/" class="active">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <header class="article-header">
+      <div class="read-container">
+        <div class="article-meta">
+          <span class="accent">●</span> May 20, 2026 · ~8 min read
+        </div>
+        <h1>I Lacked the Tools, So I Built Them: How Constraint Created a <em>Software Suite</em></h1>
+        <p class="article-subtitle">The story behind the RNVizion toolkit — five apps that emerged from one stubborn philosophy.</p>
+        <div class="byline">
+          <span>by Christian Smith</span>
+          <span class="byline-divider"></span>
+          <span>RNVizion</span>
+        </div>
+      </div>
+    </header>
+
+    <article>
+      <div class="read-container">
+
+        <p>I think of myself as a modern-day Renaissance man: someone who's never been content to do just one thing. I'm a developer, a creative, a designer, and a philosopher who craves knowledge, truth, and understanding. I'm building out my own fiction book universe on the side, with real-world artifacts planned to accompany the stories (masks I'm learning to make myself) among other things I'll save for later. I keep a notebook of research papers and inventions I want to pursue; theoretical for now, real later. I make my own art assets, not because I can't find an affordable artist, but because I enjoy the process of pulling exactly what's in my head into something other people can see. I've carved raw gemstones, done wire wrapping, played trumpet, piano, flute, electric bass (trumpet is still my favorite), and back in my university days I wrote lyrics, produced beats, and put out real tracks; some solo, some collaborations with other musicians. Some of those tracks are still floating around in the wild on Apple Music, Spotify, and SoundCloud, for anyone curious enough to dig. I'm a poet at heart, but the music phase was real work, not a hobby attempt. The vizion never lost sight. It just got upgraded. And I'm deeply invested in fitness and helping others make healthier choices both physically and mentally.</p>
+
+        <p>These feel like vastly different fields from the outside, but in my head they're all connecting to make one big picture: RNV, a life and a brand built around helping people (myself included) level up across the board.</p>
+
+        <p>The catch is that being a Renaissance man without resources is a particular kind of hard. I've learned firsthand that <strong>resources are the enemy of imagination</strong>: not because imagination needs them, but because the lack of them is what most often stops imagination from becoming real.</p>
+
+        <p>For most of my life, that's been the wall. I could see what I wanted to build. I had the ideas, the plans, the skills; What I didn't have was the gear, the software licenses, or the budget to make every vision tangible the moment I had it.</p>
+
+        <p>For a long time, that's where things stalled.</p>
+
+        <hr />
+
+        <h2>The shift in framing</h2>
+
+        <p>At some point I stopped looking at my situation as "I can't do this." I started looking at it as "what <em>can</em> I do, right now, with what I have?"</p>
+
+        <p>The answer was: more than I thought.</p>
+
+        <p>I had a computer science background (game programming and development: specifically C++ and C# for the formal training, Python for the practical lightweight tooling). I had certifications; I had Unity and Unreal experience (Unity being my main engine of choice). I had an old Lenovo Y-70 Touch from 2015 that could technically run my heavier creative software: Photoshop, Illustrator, Unity builds but limited enough that I'd lose flow waiting for things to load and render; It could absolutely run Python and PyQt6 just fine and I had time.</p>
+
+        <p>So I made a decision: <strong>I wouldn't try to break through the ceiling above me. I'd build a foundation, brick by brick, that kept rising. If you keep building up, there's no ceiling — because there's nowhere to fall.</strong></p>
+
+        <p>That's the framing that changed everything for me. I started sectioning my ambitions into two piles: <em>projects I can do now with what I have</em>, and <em>projects I need to document and plan for when I have better resources.</em> The roadmap to the Renaissance, you could call it.</p>
+
+        <p>The software suite came out of the first pile.</p>
+
+        <hr />
+
+        <h2>How brand identity work led to a <em>color picker</em></h2>
+
+        <p>I was building out my brand, RNVizion: Logos, slogans, video content, documentation. As I got deeper into it, I needed to choose colors that represented what RNV was about and choosing colors, well is harder than it sounds.</p>
+
+        <p>I was doing it the messy way at first: taking screenshots, snapping photos of things I liked, writing hex codes in a notebook; My camera roll filled up with ambiguous color swatches, I'd forget the context a few weeks later ("What was this from? Why did I save this?")</p>
+
+        <p>I needed a real color picker, one that could grab colors precisely from images or directly from my screen, with a magnifier for accuracy, and built-in tools for checking contrast and generating harmonies.</p>
+
+        <p>I couldn't find one I liked that didn't either cost money or come bundled with a design suite I couldn't afford. So I built <strong><a href="https://github.com/RNVizion/rnv-color-picker" target="_blank" rel="noopener">RNV Color Picker</a></strong>.</p>
+
+        <p>See a need, fill a need, build a need.</p>
+
+        <hr />
+
+        <h2>The picker led to the <em>palette manager</em></h2>
+
+        <p>Once I started making real color decisions, the next problem revealed itself: I needed to save these palettes and use them across other projects.</p>
+
+        <p>RNV plans to produce merch eventually; I can't make the merch yet that's a future-pile project but I can plan it. I was building color palettes for hypothetical t-shirts, hoodies, packaging and every palette deserved a <em>name</em>, a <em>story</em>, a way to be recalled with full context months later.</p>
+
+        <p>That meant exporting to every format I might eventually need: Adobe ASE files for Illustrator workflows, ACO for Photoshop, JSON for web work, CSS variables for sites, GIMP palettes for the open-source route, plain hex text for quick reference.</p>
+
+        <p><strong><a href="https://github.com/RNVizion/rnv-color-palette-manager" target="_blank" rel="noopener">RNV Color Palette Manager</a></strong> was the answer. 16+ export formats, 7 mixing algorithms, built-in WCAG accessibility tools so I could check contrast as I designed.</p>
+
+        <p>No more screenshots of forgotten colors; every palette had a name, a purpose, and a file.</p>
+
+        <hr />
+
+        <h2>Then I wanted to actually <em>mix</em> paint</h2>
+
+        <p>I was on a roll, I started thinking about real-world color; what colors look like when you mix actual paint, not when you average RGB values. Most digital color mixers fake it: they blend pixels, which isn't how pigment works at all.</p>
+
+        <p>I wanted to experiment with paint combinations without buying paint. Paint is another resource I didn't have to burn through.</p>
+
+        <p>So I went deep on <strong>Kubelka-Munk theory</strong>, the physics of how light scatters and absorbs through layers of pigment; it's the math behind how real paint actually mixes. Most "color mixers" online are just averaging RGB, I wanted mine to simulate the real thing.</p>
+
+        <p><strong><a href="https://github.com/RNVizion/rnv-color-mixer" target="_blank" rel="noopener">RNV Color Mixer</a></strong> came out of that research. It's an oddly specific tool, but it does what it's supposed to do, and now I can experiment with color combinations that would otherwise cost me $30+ in paint and a Saturday.</p>
+
+        <hr />
+
+        <h2>Documentation work led to the <em>text transformer</em></h2>
+
+        <p>By this point I was making a lot of content: documentation, scripts, product descriptions, captions, etc. Constantly reformatting text for different contexts.</p>
+
+        <p>The editors I was using didn't have the text manipulation tools I needed natively. Simple things (converting case, applying regex transformations, batch processing files) took longer than they needed to.</p>
+
+        <p>I'm a lazy worker, but I mean that in the best way; <em>Lazy</em> doesn't mean suboptimal, <em>Lazy</em> means I'd rather spend two hours building a tool that saves me five minutes a day, every day, for the rest of my life, than keep doing the five-minute thing forever.</p>
+
+        <p><strong><a href="https://github.com/RNVizion/rnv-text-transformer" target="_blank" rel="noopener">RNV Text Transformer</a></strong> is that tool. 11 transformation modes, 9+ file formats, regex builder, folder watching, full CLI; the thing I always wanted every text utility to be.</p>
+
+        <hr />
+
+        <h2>The icon builder <em>closed the loop</em></h2>
+
+        <p>Throughout building the apps themselves, I learned that proper desktop applications need <strong>multi-resolution ICO files</strong>. Not just a PNG renamed to .ico, actual multi-resolution icon files with several embedded sizes.</p>
+
+        <p>You'd think this would be an easily solved problem; It's not, ICO files feel like old tech that nobody updates tooling for anymore. The free options are sparse and outdated. The one good open-source option I found was command-line only, powerful, but with a learning curve.</p>
+
+        <p>I could've taken the time to learn it or I could build a simpler GUI version I wished existed, the kind that someone like me (wanting a clean, efficient, no-friction tool) would actually use.</p>
+
+        <p>I built it, <strong><a href="https://github.com/RNVizion/rnv-icon-builder" target="_blank" rel="noopener">RNV Icon Builder</a></strong>: Multi-resolution ICO creation from PNG, SVG, and ICO sources (Cross-platform exports for Android, iOS, and favicons). Full CLI for the power users who want it, full GUI for everyone else.</p>
+
+        <hr />
+
+        <h2>What I didn't <em>expect</em></h2>
+
+        <p>Five apps in, I realized I hadn't been building isolated tools: I'd been building <strong>an interconnected creative suite</strong>, apps sharing a design language, talking to each other through compatible export formats, running on the same Python/PyQt6 foundation, and solving problems that naturally flowed into one another.</p>
+
+        <p>I never set out to make a suite. The need <em>was</em> a suite. You can't build a desktop app without icons. You can't design a brand without colors. You can't manage colors without organizing them. You can't write content without transforming it.</p>
+
+        <p>The suite emerged because the problems were always connected, I was just following them in order.</p>
+
+        <hr />
+
+        <h2>What this <em>taught</em> me</h2>
+
+        <p>A few things, in no particular order:</p>
+
+        <p><strong>Constraint is a creative engine.</strong> I built more, learned more, and shipped more under "can't afford it" than I ever did when I had broader access. The constraint forced clarity about what I <em>actually</em> needed versus what I <em>thought</em> I needed.</p>
+
+        <p><strong>Time is a real resource — maybe the most real one.</strong> When you can't throw money at problems, you have to think harder about which problems are worth solving. That filter is brutally useful. Half the projects I would've started if money were no object would've been wasted effort.</p>
+
+        <p><strong>Build the foundation, brick by brick.</strong> Don't fight the ceiling. Build past it. Every brick I laid, every app I shipped, every lesson I documented, every plan I wrote down for a future-pile project raised the floor. There's no ceiling above someone who keeps building up.</p>
+
+        <p><strong>Lazy in the right way is a feature, not a bug.</strong> I built tools to save myself effort across thousands of future moments. That's not typical laziness. That's leverage.</p>
+
+        <p><strong>Plan what you can't yet build.</strong> The projects that need better hardware, more time, or resources I don't have yet, I write those down. The roadmap keeps moving even when I can't execute on every part of it.</p>
+
+        <hr />
+
+        <h2>Where it <em>goes</em> from here</h2>
+
+        <p>The five apps live at <a href="https://rnvizion.dev">rnvizion.dev</a>, with full source on <a href="https://github.com/RNVizion" target="_blank" rel="noopener">GitHub</a>. They're open source. They have CLIs, multi-theme UIs, cross-platform CI, real test coverage. If they're useful to you, take them.</p>
+
+        <p>The roadmap keeps going, more tools are coming. Games are coming (Unity is my main engine); I'll build properly once I have hardware that lets me iterate at the speed the work deserves. The fitness side of RNV is coming when the foundation is high enough to support it.</p>
+
+        <p>I'm not breaking the ceiling. I'm building past it.</p>
+
+        <p>If you're sitting on ideas, waiting until you can afford the right tools: consider that maybe you already have the only tools that matter.</p>
+
+        <p>Time. Curiosity. And the willingness to start with what's in front of you.</p>
+
+        <div class="bio">
+          <strong>Christian Smith</strong> (RNVizion) is a Python developer, AR/VR Sales & Support Specialist at Meta, and self-described modern-day Renaissance man. He builds desktop tools, writes fiction, makes art, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>
+
+      </div>
+    </article>
+
+    <div class="post-footer">
+      <div class="read-container">
+        <div class="post-footer-label">Keep reading</div>
+        <div class="post-footer-links">
+          <a href="/blog/">← All posts</a>
+          <a href="/">Home</a>
+          <a href="/#work">My work</a>
+          <a href="https://github.com/RNVizion" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Christian Smith · RNVizion</div>
+      <div>Built with care in Washington, DC</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
