@@ -165,8 +165,81 @@
 
     .nav-links a:hover::after { width: 100%; }
 
+    /* Hamburger button */
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      padding: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.2s ease;
+    }
+
+    .nav-toggle:hover { border-color: var(--accent); }
+
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+      background: var(--accent);
+    }
+
+    .nav-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+      background: var(--accent);
+    }
+
     @media (max-width: 640px) {
-      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed;
+        top: 73px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 15, 0.96);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-soft);
+        flex-direction: column;
+        gap: 0;
+        padding: 16px 32px 24px;
+        transform: translateY(-12px);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .nav-links a {
+        padding: 14px 0;
+        font-size: 15px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .nav-links a:last-child { border-bottom: none; }
+      .nav-links a::after { display: none; }
     }
 
     /* ---------- HERO ---------- */
@@ -612,13 +685,18 @@
         <span class="dot"></span>
         RNVizion
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="nav-links">
         <a href="#about">About</a>
         <a href="#stack">Stack</a>
         <a href="#work">Work</a>
         <a href="/blog/">Blog</a>
         <a href="#contact">Contact</a>
       </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </nav>
 
@@ -882,6 +960,23 @@
   <script>
     // Auto year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    // Close menu when a link is tapped
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
 
     // Scroll-triggered reveals
     const reveals = document.querySelectorAll('.section-title, .about-text, .about-stats, .stack-grid, .project, .contact-section h2');
