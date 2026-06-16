@@ -8,8 +8,56 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Jun 2026 01:54:44 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 16 Jun 2026 17:12:33 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Squish: The Soul That Speed Can't Generate</title>
+      <link>https://rnvizion.dev/blog/squish/</link>
+      <guid isPermaLink="true">https://rnvizion.dev/blog/squish/</guid>
+      <pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Christian Smith</dc:creator>
+      <description>On Mario, AI, and the human decision that turns software from working into loved.</description>
+      <content:encoded><![CDATA[<!-- First paragraph gets the drop-cap automatically. Open concrete. -->
+<p>I learned one of the most important words in my craft in a college classroom, and it wasn't in the syllabus.</p>
+<p>My game programming professor, Dave, pulled up a montage one afternoon: decades of games stitched together, frame by frame, all to explain a single idea. Why do people love Mario? Not respect it. Not remember it. Love it. The answer he gave us had a name: <em>squish</em>.</p>
+<p><em>Squish</em> is the feel of a thing. The weight, the response, the texture of an interaction; the part you don't see in a screenshot but feel in your thumbs. It's the difference between a button that does something and a button that feels good to press. Once Dave gave me the word, I realized I had been feeling it my whole life without being able to point at it.</p>
+<hr/>
+<h2>Mario is made of <em>squish</em></h2>
+<p>Watch what happens when Mario jumps. He doesn't just move up and come down. There's a wind-up; a crouch before the launch. At the peak there's a moment of hang, a held breath, and then the fall comes in heavier than the rise. You can feel gravity grab him. Add the double jump and the timing tightens into something your hands learn before your brain does.</p>
+<p>None of that is necessary. A character could ascend and descend in a straight functional line and the game would still technically work, but it wouldn't be Mario. It wouldn't be the thing that millions of people carry in their bodies decades later. The weight in that fall is not decoration; it is the soul of the whole experience.</p>
+<p>That's what <em>squish</em> does: it turns function into love. A game that works gets played once. A game with <em>squish</em> gets felt, and felt things get returned to.</p>
+<p>I have spent years chasing that feeling in software that has nothing to do with games. The hover state that responds just right. The animation that has weight instead of just motion. The little moment of resistance before a thing snaps into place. I build desktop tools, not platformers; the realms are completely different, but the question is identical every time: does this feel alive, or does it just function?</p>
+<hr/>
+<h2>Then speed showed up</h2>
+<p>Here is the part nobody was ready for.</p>
+<p>I can build faster now than I ever could before. Things that would have taken me years as a solo developer are achievable in months, sometimes weeks. AI handles the scaffolding, the boilerplate, the thousand small functional decisions that used to eat my nights. I'm not romantic about this; it is genuinely the most powerful leverage a builder has ever held.</p>
+<p>But speed has a cost that almost no one is naming yet.</p>
+<p>When you can generate a working app in a weekend, something gets skipped, and the thing that gets skipped is almost always the <em>squish</em>; because <em>squish</em> is slow. <em>Squish</em> is the part that doesn't show up in the demo, doesn't pass a unit test, doesn't make the deadline shorter. Speed optimizes for done. <em>Squish</em> lives in everything that comes after done.</p>
+<hr/>
+<h2>The dead software</h2>
+<p>You have used the result. We all have, more and more lately.</p>
+<p>An app with a clean UI and nothing underneath it. It works. The buttons respond. The layout is fine, and somehow it feels like standing in a model home: every surface correct, every room staged, and not a single sign that a person actually lives there.</p>
+<p>There is no defining feature. No reason to come back. No reason to tell a friend. You couldn't pick it out of a lineup of ten others built the same rushed way.</p>
+<p>It is, and I mean this precisely as someone who writes horror: uncanny. Everything is right and the whole thing feels wrong. The deadness isn't in any one detail; it's in the absence of a decision. Nobody chose how it should feel, so it doesn't feel like anything. It has no identity because no human ever insisted it have one.</p>
+<p>That is what software without <em>squish</em> actually is. Not broken — Hollow.</p>
+<hr/>
+<h2>What speed can't generate</h2>
+<p>Here is the line I keep coming back to. AI can generate function. It cannot generate the decision to give a thing a soul.</p>
+<p><em>Squish</em> doesn't come from capability; it comes from caring. From a human being looking at something that already works and saying this should feel like something, and then spending the slow, unglamorous time to make it true. The weight in Mario's fall existed because someone decided players should feel gravity in their hands. No model proposes that on its own. It is a choice, and the choice is human.</p>
+<p>So the danger of the AI era was never that the machines would build badly. It's that they build adequately, instantly, at infinite scale. Adequate is the most seductive enemy soul has ever faced. Why spend three more days on feel when the thing already works? Because the thing that already works is the thing no one will remember.</p>
+<hr/>
+<h2>Speed and soul are not enemies</h2>
+<p>I want to be clear, because the easy version of this essay is anti-AI, and I don't believe the easy version.</p>
+<p>AI didn't take my <em>squish</em> away. It gave me time for it.</p>
+<p>Every functional decision I hand to the machine is an hour I get back for the human part; the feel, the weight, the identity, the thing that makes someone return. Used with intention, speed is not the enemy of soul. It is the budget you spend buying more of it.</p>
+<p>The builders who win this era won't be the ones who ship the fastest. They'll be the ones who use the speed to afford the <em>squish</em> everyone else skipped.</p>
+<p>Dave gave me a word for a feeling in a dark classroom years ago. I've spent every project since trying to earn it. Now, with more power at my fingertips than that version of me could have dreamed, the question hasn't changed at all; it's only gotten louder.</p>
+<p><strong>Anyone can make it work. <em>Squish</em> is the part you have to think and feel.</strong></p>
+<p><em>This is the first in a series on building with a soul in a fast age. Next: why the job of a developer was never really the code; it was the thinking.</em></p>
+<div class="bio">
+<strong>Christian Smith</strong> (RNVizion) is a Python developer, AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He builds desktop tools, writes fiction, makes art, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>]]></content:encoded>
+    </item>
     <item>
       <title>I Lacked the Tools, So I Built Them: How Constraint Created a Software Suite</title>
       <link>https://rnvizion.dev/blog/i-lacked-the-tools/</link>
