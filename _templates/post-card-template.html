@@ -1,0 +1,35 @@
+<!--
+  ============================================================================
+  RNVizion blog index — POST CARD template.
+
+  COPY this <article> block into the blog index list every time you publish a
+  post. Add it at the TOP of the list (the index reads newest-first), then
+  replace every [SQUARE-BRACKET] placeholder below.
+
+  Keep these in sync with the post itself (blog/<slug>/index.html):
+    [POST-SLUG]        ->  folder name under /blog/  (must match the post's og:url)
+    [Month Day, Year]  ->  same date as the post's article:published_time
+    [X]                ->  same read-time estimate shown in the post header
+    [POST TITLE]       ->  exact post title  (plain text here, no <em>)
+
+  Card summary is its own line, written to earn the click:
+    [ONE-LINE CARD SUMMARY]  ->  a short hook for the listing. It can differ
+                                 from the post's meta description; this one is
+                                 the teaser, not the SEO line.
+
+  Typography: use curly quotes (" ") and apostrophes (') in the summary to
+  match the rest of the site, not straight (" ').
+  ============================================================================
+-->
+<article class="post-card">
+  <a href="/blog/[POST-SLUG]/" style="display: contents;">
+    <div class="container">
+      <div class="post-meta">[Month Day, Year] · ~[X] min read</div>
+      <div>
+        <h2>[POST TITLE]</h2>
+        <p>[ONE-LINE CARD SUMMARY.]</p>
+      </div>
+      <span class="read-link">Read post →</span>
+    </div>
+  </a>
+</article>
