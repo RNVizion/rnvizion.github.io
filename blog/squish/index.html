@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+<!--
+  ============================================================================
+  RNVizion blog post template.
+  To publish a new post: COPY this file to  blog/<your-slug>/index.html
+  then replace every [SQUARE-BRACKET] placeholder below.
+
+  The feed generator reads these, so don't skip them:
+    1. blog/<slug>/index.html        (folder name = the slug in og:url)
+    2. <article> ... </article>      (no <article> = the post is skipped)
+    3. article:published_time        (no date = it stamps as "today" + sorts to top)
+    4. og:url                        (the canonical link dev.to credits back to you)
+  Recommended (have fallbacks, but set them): og:title, og:description, article:author.
+  ============================================================================
+-->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Squish: The Soul That Speed Can't Generate — Christian Smith</title>
   <meta name="description" content="On Mario, AI, and the human decision that turns software from working into loved." />
+  <meta name="card:summary" content="Why people love Mario and not just play it: “squish” is the soul a human gives software, and the one thing speed can’t generate." />
 
   <!-- Open Graph -->
   <meta property="og:type" content="article" />
@@ -256,7 +270,7 @@
       font-family: var(--font-display);
       font-size: 1.85rem; font-weight: 500;
       letter-spacing: -0.02em; line-height: 1.2;
-      margin: 60px 0 24px; color: var(--text);
+      margin: 30px 0 24px; color: var(--text);
     }
 
     article h2 em {
@@ -270,7 +284,7 @@
     article hr {
       border: none;
       border-top: 1px solid var(--border-soft);
-      margin: 56px auto; width: 80px;
+      margin: 24px auto; width: 80px;
     }
 
     article ul { margin: 0 0 24px 0; padding-left: 24px; }
@@ -414,7 +428,7 @@
 
         <hr />
 
-        <h2>What speed can't generate</h2>
+        <h2>What speed can’t generate</h2>
 
         <p>Here is the line I keep coming back to. AI can generate function. It cannot generate the decision to give a thing a soul.</p>
 
