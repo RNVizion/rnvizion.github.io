@@ -1,0 +1,49 @@
+name: Build RSS feed
+
+# Regenerate feed.xml whenever a post (or the generator itself) changes.
+# feed.xml lives at the repo root, NOT under blog/, so the bot's own commit
+# does not re-trigger this workflow — no infinite loop.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "blog/**"
+      - "scripts/build_feed.py"
+      - ".github/workflows/build-feed.yml"
+  workflow_dispatch: {}   # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write          # needed so the bot can commit feed.xml back
+
+concurrency:
+  group: build-feed
+  cancel-in-progress: true
+
+jobs:
+  build-feed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install beautifulsoup4 lxml
+
+      - name: Generate feed.xml
+        run: python scripts/build_feed.py
+
+      - name: Commit feed.xml if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain feed.xml)" ]; then
+            git add feed.xml
+            git commit -m "chore: rebuild RSS feed [skip ci]"
+            git push
+            echo "feed.xml updated."
+          else
+            echo "feed.xml unchanged — nothing to commit."
+          fi
