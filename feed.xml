@@ -8,7 +8,7 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Jun 2026 18:39:58 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 16 Jun 2026 19:41:38 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Squish: The Soul That Speed Can't Generate</title>
@@ -17,8 +17,7 @@
       <pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
       <dc:creator>Christian Smith</dc:creator>
       <description>On Mario, AI, and the human decision that turns software from working into loved.</description>
-      <content:encoded><![CDATA[<!-- First paragraph gets the drop-cap automatically. Open concrete. -->
-<p>I learned one of the most important words in my craft in a college classroom, and it wasn't in the syllabus.</p>
+      <content:encoded><![CDATA[<p>I learned one of the most important words in my craft in a college classroom, and it wasn't in the syllabus.</p>
 <p>My game programming professor, Dave, pulled up a montage one afternoon: decades of games stitched together, frame by frame, all to explain a single idea. Why do people love Mario? Not respect it. Not remember it. Love it. The answer he gave us had a name: <em>squish</em>.</p>
 <p><em>Squish</em> is the feel of a thing. The weight, the response, the texture of an interaction; the part you don't see in a screenshot but feel in your thumbs. It's the difference between a button that does something and a button that feels good to press. Once Dave gave me the word, I realized I had been feeling it my whole life without being able to point at it.</p>
 <hr/>
