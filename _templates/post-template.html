@@ -20,6 +20,12 @@
   <title>[POST TITLE] — Christian Smith</title>
   <meta name="description" content="[ONE-LINE SUMMARY OF THE POST.]" />
 
+  <!-- Blog-index card teaser. The card generator reads this; keep it distinct
+       from the description above (that one is the SEO line, this one earns the
+       click). Use curly quotes (" ') inside so the attribute can't break early.
+       If omitted, the card falls back to og:description. -->
+  <meta name="card:summary" content="[ONE-LINE CARD TEASER FOR THE BLOG INDEX.]" />
+
   <!-- Open Graph -->
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://rnvizion.dev/blog/[POST-SLUG]/" />
@@ -269,7 +275,7 @@
       font-family: var(--font-display);
       font-size: 1.85rem; font-weight: 500;
       letter-spacing: -0.02em; line-height: 1.2;
-      margin: 60px 0 24px; color: var(--text);
+      margin: 30px 0 24px; color: var(--text);
     }
 
     article h2 em {
@@ -283,7 +289,7 @@
     article hr {
       border: none;
       border-top: 1px solid var(--border-soft);
-      margin: 56px auto; width: 80px;
+      margin: 24px auto; width: 80px;
     }
 
     article ul { margin: 0 0 24px 0; padding-left: 24px; }
