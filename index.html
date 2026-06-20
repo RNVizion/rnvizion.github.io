@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Christian Smith: Developer & Spatial Computing Specialist</title>
-  <meta name="description" content="Christian Smith (RNVizion) Python developer, AR/VR specialist at Meta, building polished desktop tools." />
+  <meta name="description" content="Christian Smith (RNVizion): Python developer and AR/VR specialist at Meta, building polished desktop tools and AI systems." />
 
   <!-- Open Graph (LinkedIn, Facebook, etc.) -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://rnvizion.dev" />
   <meta property="og:title" content="Christian Smith, Developer & Spatial Computing Specialist" />
-  <meta property="og:description" content="Python developer, AR/VR specialist at Meta, and creator of the RNVizion toolkit, a suite of five professional desktop applications." />
+  <meta property="og:description" content="Python developer and AR/VR specialist at Meta, building polished desktop tools and AI systems." />
   <meta property="og:image" content="https://rnvizion.dev/assets/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -18,12 +18,14 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Christian Smith, Developer & Spatial Computing Specialist" />
-  <meta name="twitter:description" content="Python developer, AR/VR specialist at Meta, and creator of the RNVizion toolkit." />
+  <meta name="twitter:description" content="Python developer and AR/VR specialist at Meta, building polished desktop tools and AI systems." />
   <meta name="twitter:image" content="https://rnvizion.dev/assets/og-image.png" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Warm up the connection to the live demo's host so the embed loads faster -->
+  <link rel="preconnect" href="https://rnvizion-ask-the-corpus.hf.space" />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
@@ -606,6 +608,27 @@
       padding: 16px;
     }
 
+    /* ---------- LIVE DEMO EMBED ---------- */
+    .demo-intro {
+      color: var(--text-dim);
+      max-width: 720px;
+      margin-bottom: 36px;
+      font-size: 1.05rem;
+    }
+
+    .demo-frame {
+      width: 100%;
+      height: 720px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-3);
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      .demo-frame { height: 600px; }
+    }
+
     /* ---------- CONTACT ---------- */
     .contact-section {
       text-align: center;
@@ -707,13 +730,13 @@
       <div class="container">
         <div class="hero-tag">
           <span class="dot"></span>
-          Open to Developer Advocate &amp; Solutions Engineer roles
+          Open to Solutions Engineer, Developer Advocate &amp; AI roles
         </div>
         <h1>
-          Christian Smith : building <em>polished</em> tools where software meets spatial computing.
+          Christian Smith : building <em>polished</em> tools, from desktop apps to AI systems.
         </h1>
         <p class="hero-subtitle">
-          Python developer, AR/VR specialist at Meta, and creator of the RNVizion toolkit, a suite of five professional desktop applications.
+          Python developer and AR/VR specialist at Meta. I ship desktop applications and AI systems; retrieval, agents, and tooling that turns complex technology into something people actually use.
         </p>
         <div class="hero-actions">
           <a class="btn primary" href="#work">
@@ -749,14 +772,14 @@
         <div class="about-grid">
           <div class="about-text">
             <p>By day I work in AR/VR at Meta, where I help customers discover Ray-Ban Meta smart glasses and the Meta Quest headset family; spanning live product demos, consultative selling, and hands-on technical support across the full spatial computing lineup.</p>
-            <p>Outside of that, I maintain the RNVizion toolkit, five professional desktop applications focused on text transformation, color management, and icon generation. Each ships with full CLI support, multi-theme UIs, cross-platform CI, and comprehensive test coverage.</p>
+            <p>Outside of that, I build under the RNVizion banner. The toolkit is five professional desktop applications for text transformation, color management, and icon generation; each ships with full CLI support, multi-theme UIs, cross-platform CI, and comprehensive test coverage. Lately I've been building AI systems on top of that foundation: a retrieval-augmented assistant over my own writing, and an MCP publishing agent, both running on the Claude API.</p>
             <p>My background spans game programming, IT support (Google IT Support certified), technical content development, and customer-facing work in regulated industries. I'm targeting Developer Advocate and Solutions Engineer roles where I can build, communicate, and support developers, all at once.</p>
           </div>
 
           <div class="about-stats">
             <div class="stat">
-              <div class="stat-value">5</div>
-              <div class="stat-label">Apps Shipped</div>
+              <div class="stat-value">7</div>
+              <div class="stat-label">Projects Shipped</div>
             </div>
             <div class="stat">
               <div class="stat-value">786</div>
@@ -801,9 +824,9 @@
             </ul>
           </div>
           <div class="stack-cat">
-            <h4>AR/VR &amp; 3D</h4>
+            <h4>AI &amp; AR/VR</h4>
             <ul>
-              <li>Meta Quest</li><li>Ray-Ban Meta</li><li>zBrush</li><li>3DS Max</li><li>Substance</li>
+              <li>Claude API</li><li>RAG</li><li>ChromaDB</li><li>MCP</li><li>Meta Quest</li><li>Ray-Ban Meta</li>
             </ul>
           </div>
         </div>
@@ -814,126 +837,16 @@
     <section id="work">
       <div class="container">
         <div class="section-label">Selected Work</div>
-        <h2 class="section-title">The RNVizion <em>toolkit</em>.</h2>
+        <h2 class="section-title">Building tools, and the <em>AI</em> that uses them.</h2>
 
         <div class="projects">
 
           <!-- PROJECT 1 -->
           <article class="project">
             <div>
-              <div class="project-number">01 / TEXT</div>
-              <h3>RNV Text Transformer</h3>
-              <p class="project-desc">11 transformation modes across 9+ file formats with regex builder, folder watching, compare view, and a full CLI. Backed by 786 tests at ~76% coverage running on Linux and Windows CI.</p>
-              <div class="project-tags">
-                <span class="tag">Python</span>
-                <span class="tag">PyQt6</span>
-                <span class="tag">CLI</span>
-                <span class="tag">pytest</span>
-                <span class="tag">GitHub Actions</span>
-              </div>
-              <a class="project-link" href="https://github.com/RNVizion/rnv-text-transformer" target="_blank" rel="noopener">
-                View on GitHub →
-              </a>
-            </div>
-            <div class="project-image">
-              <img src="assets/text-transformer.png" alt="RNV Text Transformer screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">assets/text-transformer.png</div>
-            </div>
-          </article>
-
-          <!-- PROJECT 2 -->
-          <article class="project">
-            <div>
-              <div class="project-number">02 / COLOR</div>
-              <h3>RNV Color Palette Manager</h3>
-              <p class="project-desc">Professional palette management for designers and developers: 16+ export formats, 7 color mixing algorithms, and built-in WCAG accessibility tools.</p>
-              <div class="project-tags">
-                <span class="tag">Python</span>
-                <span class="tag">PyQt6</span>
-                <span class="tag">WCAG</span>
-                <span class="tag">Color Science</span>
-              </div>
-              <a class="project-link" href="https://github.com/RNVizion/rnv-color-palette-manager" target="_blank" rel="noopener">
-                View on GitHub →
-              </a>
-            </div>
-            <div class="project-image">
-              <img src="assets/color-palette-manager.png" alt="RNV Color Palette Manager screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">assets/color-palette-manager.png</div>
-            </div>
-          </article>
-
-          <!-- PROJECT 3 -->
-          <article class="project">
-            <div>
-              <div class="project-number">03 / PICKER</div>
-              <h3>RNV Color Picker</h3>
-              <p class="project-desc">Screen color extraction with a magnifier, WCAG contrast checker, and color harmony generation. Built for designers and developers who need precision color workflows.</p>
-              <div class="project-tags">
-                <span class="tag">Python</span>
-                <span class="tag">PyQt6</span>
-                <span class="tag">Screen Capture</span>
-              </div>
-              <a class="project-link" href="https://github.com/RNVizion/rnv-color-picker" target="_blank" rel="noopener">
-                View on GitHub →
-              </a>
-            </div>
-            <div class="project-image">
-              <img src="assets/color-picker.png" alt="RNV Color Picker screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">assets/color-picker.png</div>
-            </div>
-          </article>
-
-          <!-- PROJECT 4 -->
-          <article class="project">
-            <div>
-              <div class="project-number">04 / ICONS</div>
-              <h3>RNV Icon Builder</h3>
-              <p class="project-desc">Multi-resolution ICO creation from PNG, SVG, and ICO sources. Cross-platform exports for Android, iOS, and favicons with batch processing, folder watching, and a full CLI.</p>
-              <div class="project-tags">
-                <span class="tag">Python</span>
-                <span class="tag">PyQt6</span>
-                <span class="tag">CLI</span>
-                <span class="tag">Cross-platform</span>
-              </div>
-              <a class="project-link" href="https://github.com/RNVizion/rnv-icon-builder" target="_blank" rel="noopener">
-                View on GitHub →
-              </a>
-            </div>
-            <div class="project-image">
-              <img src="assets/icon-builder.png" alt="RNV Icon Builder screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">assets/icon-builder.png</div>
-            </div>
-          </article>
-
-          <!-- PROJECT 5 -->
-          <article class="project">
-            <div>
-              <div class="project-number">05 / MIXER</div>
-              <h3>RNV Color Mixer</h3>
-              <p class="project-desc">A desktop paint-mixing application simulating real-world color mixing using Kubelka-Munk theory. Bridges physical color theory with digital workflows.</p>
-              <div class="project-tags">
-                <span class="tag">Python</span>
-                <span class="tag">PyQt6</span>
-                <span class="tag">Kubelka-Munk</span>
-                <span class="tag">Color Theory</span>
-              </div>
-              <a class="project-link" href="https://github.com/RNVizion/rnv-color-mixer" target="_blank" rel="noopener">
-                View on GitHub →
-              </a>
-            </div>
-            <div class="project-image">
-              <img src="assets/color-mixer.png" alt="RNV Color Mixer screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">assets/color-mixer.png</div>
-            </div>
-          </article>
-
-          <!-- PROJECT 6 -->
-          <article class="project">
-            <div>
-              <div class="project-number">06 / RAG</div>
+              <div class="project-number">01 / RAG</div>
               <h3>Ask the Corpus</h3>
-              <p class="project-desc">A retrieval-augmented chatbot over my published writing. It embeds every blog post into a vector index, pulls the passages relevant to a question, and answers only from them; grounded in the source, guardrailed against off-topic prompts, and honest when the posts don't cover something. Built on the Claude API and deployed live on Hugging Face.</p>
+              <p class="project-desc">A retrieval-augmented chatbot over my published writing. It embeds every blog post into a vector index, pulls the passages relevant to a question, and answers only from them; grounded in the source, guardrailed against off-topic prompts, and honest when the corpus doesn't cover something. Built on the Claude API and deployed live on Hugging Face.</p>
               <div class="project-tags">
                 <span class="tag">Python</span>
                 <span class="tag">RAG</span>
@@ -956,8 +869,135 @@
               <div class="placeholder" style="display:none;">assets/ask-the-corpus.png</div>
             </div>
           </article>
-          
+
+          <!-- PROJECT 2 -->
+          <article class="project">
+            <div>
+              <div class="project-number">02 / TEXT</div>
+              <h3>RNV Text Transformer</h3>
+              <p class="project-desc">11 transformation modes across 9+ file formats with regex builder, folder watching, compare view, and a full CLI. Backed by 786 tests at ~76% coverage running on Linux and Windows CI.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">CLI</span>
+                <span class="tag">pytest</span>
+                <span class="tag">GitHub Actions</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-text-transformer" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/text-transformer.png" alt="RNV Text Transformer screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/text-transformer.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 3 -->
+          <article class="project">
+            <div>
+              <div class="project-number">03 / COLOR</div>
+              <h3>RNV Color Palette Manager</h3>
+              <p class="project-desc">Professional palette management for designers and developers: 16+ export formats, 7 color mixing algorithms, and built-in WCAG accessibility tools.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">WCAG</span>
+                <span class="tag">Color Science</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-color-palette-manager" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/color-palette-manager.png" alt="RNV Color Palette Manager screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/color-palette-manager.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 4 -->
+          <article class="project">
+            <div>
+              <div class="project-number">04 / PICKER</div>
+              <h3>RNV Color Picker</h3>
+              <p class="project-desc">Screen color extraction with a magnifier, WCAG contrast checker, and color harmony generation. Built for designers and developers who need precision color workflows.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">Screen Capture</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-color-picker" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/color-picker.png" alt="RNV Color Picker screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/color-picker.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 5 -->
+          <article class="project">
+            <div>
+              <div class="project-number">05 / ICONS</div>
+              <h3>RNV Icon Builder</h3>
+              <p class="project-desc">Multi-resolution ICO creation from PNG, SVG, and ICO sources. Cross-platform exports for Android, iOS, and favicons with batch processing, folder watching, and a full CLI.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">CLI</span>
+                <span class="tag">Cross-platform</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-icon-builder" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/icon-builder.png" alt="RNV Icon Builder screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/icon-builder.png</div>
+            </div>
+          </article>
+
+          <!-- PROJECT 6 -->
+          <article class="project">
+            <div>
+              <div class="project-number">06 / MIXER</div>
+              <h3>RNV Color Mixer</h3>
+              <p class="project-desc">A desktop paint-mixing application simulating real-world color mixing using Kubelka-Munk theory. Bridges physical color theory with digital workflows.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PyQt6</span>
+                <span class="tag">Kubelka-Munk</span>
+                <span class="tag">Color Theory</span>
+              </div>
+              <a class="project-link" href="https://github.com/RNVizion/rnv-color-mixer" target="_blank" rel="noopener">
+                View on GitHub →
+              </a>
+            </div>
+            <div class="project-image">
+              <img src="assets/color-mixer.png" alt="RNV Color Mixer screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">assets/color-mixer.png</div>
+            </div>
+          </article>
+
         </div>
+      </div>
+    </section>
+
+    <!-- TRY IT LIVE -->
+    <section id="try-it">
+      <div class="container">
+        <div class="section-label">Live</div>
+        <h2 class="section-title">Try <em>Ask the Corpus</em>.</h2>
+        <p class="demo-intro">
+          The RAG demo, running live and embedded right here. Ask it about my work; it answers only from published sources, and tells you when something isn't covered. It's on free hosting, so it naps when idle: it starts waking the moment this page loads, and should be ready by the time you scroll down to it.
+        </p>
+        <iframe
+          class="demo-frame"
+          src="https://rnvizion-ask-the-corpus.hf.space"
+          title="Ask the Corpus — live RAG demo"
+          loading="lazy"
+        ></iframe>
       </div>
     </section>
 
@@ -989,6 +1029,10 @@
   <script>
     // Auto year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Wake the Hugging Face Space the moment the page loads, so the embedded
+    // demo lower down is warm by the time the visitor scrolls to it.
+    fetch("https://rnvizion-ask-the-corpus.hf.space", { mode: "no-cors", cache: "no-store" }).catch(() => {});
 
     // Mobile nav toggle
     const navToggle = document.getElementById('nav-toggle');
