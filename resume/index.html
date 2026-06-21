@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Résumé — Christian Smith</title>
+  <meta name="description" content="The résumé of Christian “RNVizion” Smith — Python developer and AR/VR specialist at Meta. Two production AI systems, a five-app desktop toolkit, and a background in technical content and support." />
+
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://rnvizion.dev/resume/" />
+  <meta property="og:title" content="Résumé — Christian Smith" />
+  <meta property="og:description" content="Python developer and AR/VR specialist at Meta. Two production AI systems, a five-app desktop toolkit, technical content and support." />
+  <meta property="og:image" content="https://rnvizion.dev/assets/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11111a;
+      --bg-3: #1a1a26;
+      --border: #25253a;
+      --border-soft: #1e1e2e;
+      --text: #e8e8f0;
+      --text-dim: #9a9ab0;
+      --text-faint: #5a5a72;
+      --accent: #d2bc93;
+      --max-width: 1200px;
+      --read-width: 820px;
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(210, 188, 147, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 188, 147, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none; z-index: 0;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%);
+    }
+
+    main, nav, footer { position: relative; z-index: 2; }
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+    .read-container { max-width: var(--read-width); margin: 0 auto; padding: 0 32px; }
+
+    nav {
+      position: sticky; top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0; z-index: 100;
+    }
+    nav .container { display: flex; justify-content: space-between; align-items: center; }
+    .logo {
+      font-family: var(--font-mono); font-weight: 600; font-size: 14px;
+      letter-spacing: -0.5px; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo .dot {
+      width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent); animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .nav-links { display: flex; gap: 28px; font-family: var(--font-mono); font-size: 13px; }
+    .nav-links a { color: var(--text-dim); }
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .nav-links a.active { color: var(--accent); }
+
+    /* ---- résumé header ---- */
+    .resume-header { padding: 72px 0 28px; }
+    .resume-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 6vw, 3.4rem);
+      font-weight: 500; letter-spacing: -0.03em; line-height: 1.05;
+    }
+    .resume-header h1 em { font-family: var(--font-serif); font-style: italic; color: var(--accent); }
+    .resume-header .tagline { color: var(--text-dim); font-size: 1.05rem; margin-top: 10px; }
+    .contact {
+      font-family: var(--font-mono); font-size: 12.5px; color: var(--text-faint);
+      margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center;
+    }
+    .contact a { color: var(--text-dim); }
+    .contact a:hover { color: var(--accent); }
+    .contact .sep { color: var(--border); }
+
+    .actions { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      font-family: var(--font-mono); font-size: 12.5px;
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 9px 16px; color: var(--text-dim); transition: all 0.2s ease;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .btn-primary { border-color: var(--accent); color: var(--accent); }
+
+    /* ---- sections ---- */
+    section { padding: 18px 0; }
+    .section-label {
+      font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.18em;
+      padding-bottom: 10px; margin-bottom: 18px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .summary { color: var(--text); font-size: 1.02rem; }
+
+    .skill-row { margin-bottom: 10px; }
+    .skill-row .k { color: var(--accent); font-weight: 600; }
+    .skill-row .v { color: var(--text-dim); }
+
+    .entry { margin-bottom: 22px; }
+    .entry-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      flex-wrap: wrap; gap: 4px 16px;
+    }
+    .entry-head .org { font-weight: 600; color: var(--text); font-size: 1.05rem; }
+    .entry-head .date { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); white-space: nowrap; }
+    .entry-sub {
+      display: flex; justify-content: space-between; align-items: baseline;
+      flex-wrap: wrap; gap: 2px 16px; margin: 2px 0 10px;
+    }
+    .entry-sub .role { font-style: italic; color: var(--text-dim); }
+    .entry-sub .loc { font-style: italic; color: var(--text-faint); font-size: 0.92rem; white-space: nowrap; }
+
+    ul { list-style: none; }
+    ul li {
+      position: relative; padding-left: 20px; margin-bottom: 8px;
+      color: var(--text-dim); font-size: 0.97rem;
+    }
+    ul li::before { content: '▹'; position: absolute; left: 0; color: var(--accent); }
+    ul li strong { color: var(--text); font-weight: 600; }
+    ul li .proj { color: var(--accent); font-weight: 600; }
+
+    .cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; }
+    @media (max-width: 560px) { .cert-grid { grid-template-columns: 1fr; } }
+
+    footer {
+      border-top: 1px solid var(--border-soft);
+      margin-top: 40px; padding: 28px 0;
+      font-family: var(--font-mono); font-size: 12px; color: var(--text-faint);
+    }
+    footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="/" class="logo"><span class="dot"></span> RNVizion</a>
+      <div class="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#work">Work</a>
+        <a href="/blog/">Blog</a>
+        <a href="/resume/" class="active">Résumé</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <header class="resume-header">
+      <div class="read-container">
+        <h1>Christian <em>Smith</em></h1>
+        <p class="tagline">Python developer &amp; AR/VR specialist at Meta. Building, communicating, and supporting developers.</p>
+        <div class="contact">
+          <span>Washington, DC</span>
+          <span class="sep">·</span>
+          <a href="https://rnvizion.dev">rnvizion.dev</a>
+          <span class="sep">·</span>
+          <a href="https://github.com/RNVizion" target="_blank" rel="noopener">github.com/RNVizion</a>
+          <span class="sep">·</span>
+          <a href="https://www.linkedin.com/in/christian-smith-40b957161/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="actions">
+          <a class="btn" href="https://www.linkedin.com/in/christian-smith-40b957161/" target="_blank" rel="noopener">Connect on LinkedIn →</a>
+          <a class="btn btn-primary" href="https://huggingface.co/spaces/RNVizion/ask-the-corpus" target="_blank" rel="noopener">Ask the Corpus →</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="read-container">
+
+      <section>
+        <div class="section-label">Summary</div>
+        <p class="summary">Technical specialist and Python developer combining hands-on AR/XR product experience at Meta, Google IT Support certification, and a portfolio of seven shipped projects: five professional desktop applications plus two production AI systems on the Claude API. Bachelor of Science in Game Programming with a proven track record of bridging complex technical concepts and end-user understanding through documentation, training content, and live customer engagement. Targeting Developer Advocate, Solutions Engineer, and AI Solutions Architect roles where building, communicating, and supporting developers all matter.</p>
+      </section>
+
+      <section>
+        <div class="section-label">Technical Skills</div>
+        <div class="skill-row"><span class="k">Languages:</span> <span class="v">Python, C++, C#, Java, JavaScript, SQL, HTML, PowerShell</span></div>
+        <div class="skill-row"><span class="k">Frameworks &amp; Tools:</span> <span class="v">PyQt6, Git, Unity, Unreal Engine, Active Directory, Jira, ServiceNow, Google Workspace, Google Cloud Platform, Microsoft 365, Zoom, Slack, VPN, Wireshark</span></div>
+        <div class="skill-row"><span class="k">AI / ML:</span> <span class="v">Claude API (Anthropic), RAG (retrieval-augmented generation), vector search (ChromaDB), embeddings (sentence-transformers), MCP (Model Context Protocol) / FastMCP, LLM agent orchestration, Gradio, Hugging Face Spaces</span></div>
+        <div class="skill-row"><span class="k">Testing &amp; DevOps:</span> <span class="v">pytest, pytest-qt, hypothesis, syrupy, coverage.py, GitHub Actions (Linux + Windows CI)</span></div>
+        <div class="skill-row"><span class="k">Security &amp; Networking:</span> <span class="v">Network protocols, OS hardening, DNS, DHCP, TCP/IP, firewalls, VPN, intrusion detection, threat modeling</span></div>
+        <div class="skill-row"><span class="k">AR/VR &amp; 3D:</span> <span class="v">Meta Ray-Ban smart glasses, Meta Quest VR headsets, zBrush, 3DS Max, Substance Painter/Designer</span></div>
+        <div class="skill-row"><span class="k">Creative Suite:</span> <span class="v">Adobe Photoshop, Illustrator, InDesign, After Effects, Premiere</span></div>
+        <div class="skill-row"><span class="k">Operating Systems:</span> <span class="v">Windows, macOS, Linux, Android</span></div>
+      </section>
+
+      <section>
+        <div class="section-label">Professional Experience</div>
+
+        <div class="entry">
+          <div class="entry-head"><span class="org">Meta</span><span class="date">Sep 2025 – Present</span></div>
+          <div class="entry-sub"><span class="role">AR/VR Sales &amp; Support Specialist (Best Buy retail program)</span><span class="loc">Annapolis, MD</span></div>
+          <ul>
+            <li>Drive in-store sales and customer education across the full Meta spatial computing lineup, including Ray-Ban Meta smart glasses and the Meta Quest VR headset family, through live product demonstrations and consultative selling.</li>
+            <li>Provide tier-1 and tier-2 technical support spanning hardware setup, controller pairing, mobile app integration, Meta account configuration, firmware updates, connectivity troubleshooting, and immersive content onboarding.</li>
+            <li>Translate complex AR, VR, and mixed-reality concepts into clear, accessible explanations for non-technical customers, drawing on a background in technical documentation and content development.</li>
+            <li>Surface recurring customer pain points and product feedback across both AR and VR product lines to inform onboarding improvements and reduce support friction.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-head"><span class="org">Hotbox DC</span><span class="date">Sep 2023 – Aug 2025</span></div>
+          <div class="entry-sub"><span class="role">Manager, Systems &amp; Operations</span><span class="loc">Washington, DC</span></div>
+          <ul>
+            <li>Built and managed end-to-end retail operations for a regulated startup from launch, owning IT systems, point-of-sale infrastructure, compliance, security, and staff development.</li>
+            <li>Designed and maintained physical and digital security systems, including access control, surveillance, and risk management frameworks.</li>
+            <li>Oversaw regulatory compliance across local, state, and federal regulations, including licensing and age verification protocols.</li>
+            <li>Led staff training and performance management while delivering hands-on technical and customer-facing support.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-head"><span class="org">The Excalibur Group</span><span class="date">Mar 2024 – May 2024</span></div>
+          <div class="entry-sub"><span class="role">Google IT Support Specialist Trainee</span><span class="loc">Washington, DC</span></div>
+          <ul>
+            <li>Completed intensive Google IT Support training covering Google Workspace, Google Cloud Platform, Android OS, network fundamentals, and incident management.</li>
+            <li>Documented and analyzed technical issues using structured troubleshooting frameworks, reinforcing foundational systems administration and customer-facing support skills.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-head"><span class="org">Vitalyst</span><span class="date">Apr 2022 – Aug 2023</span></div>
+          <div class="entry-sub"><span class="role">Content Developer → Managed Help Desk Agent → Productivity Consultant</span><span class="loc">Remote</span></div>
+          <ul>
+            <li><strong>Content Developer:</strong> Produced technical educational content — written guides, scripts, audio, and video walkthroughs — to help enterprise users adopt productivity tools. Direct precedent for Developer Advocate content work.</li>
+            <li><strong>Managed Help Desk Agent:</strong> Delivered tier-1 and tier-2 technical support across Microsoft 365 and Google Workspace, resolving tickets with measurable client satisfaction.</li>
+            <li><strong>Productivity Consultant:</strong> Analyzed client workflows, designed change management plans, and led cross-functional initiatives to drive measurable productivity improvements.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-head"><span class="org">Southern New Hampshire University</span><span class="date">Jan 2016 – Mar 2019</span></div>
+          <div class="entry-sub"><span class="role">Fitness Center Supervisor → Fitness Center Attendant</span><span class="loc">Manchester, NH</span></div>
+          <ul>
+            <li>Supervised facility operations and a team of attendants while completing a BS in Game Programming and Development.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">Featured Projects</div>
+        <p class="summary" style="margin-bottom:16px;">Two production AI systems on the Claude API, plus the RNVizion toolkit: five professional PyQt6 desktop applications, each with full CLI support, multi-theme UI, cross-platform CI, and comprehensive test coverage.</p>
+        <ul>
+          <li><span class="proj">Ask the Corpus —</span> Live retrieval-augmented (RAG) assistant answering questions over my published writing: sentence-transformers embeddings + ChromaDB vector search, grounded through Claude with source citations, plus rate limiting and per-call cost guardrails. Gradio UI, deployed live on Hugging Face Spaces.</li>
+          <li><span class="proj">MCP Publishing Agent —</span> FastMCP server exposing four tools, orchestrated by a Claude agent loop to automate a content-publishing workflow; built and tested in GitHub Codespaces.</li>
+          <li><span class="proj">RNV Text Transformer —</span> 11 transformation modes, 9+ file formats, regex builder, folder watching, full CLI. 786 tests, ~76% coverage, CI on Linux + Windows.</li>
+          <li><span class="proj">RNV Color Palette Manager —</span> Professional palette management with 16+ export formats, 7 mixing algorithms, and WCAG accessibility tools.</li>
+          <li><span class="proj">RNV Color Picker —</span> Screen color extraction with magnifier, WCAG contrast checker, and color harmony generation.</li>
+          <li><span class="proj">RNV Icon Builder —</span> Multi-resolution ICO creation from PNG, SVG, and ICO sources with platform-specific exports for Android, iOS, and favicons.</li>
+          <li><span class="proj">RNV Color Mixer —</span> Real-world paint mixing simulation using Kubelka-Munk theory in a digital palette.</li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="section-label">Certifications</div>
+        <ul class="cert-grid">
+          <li>Google IT Support Professional Certificate</li>
+          <li>Google: System Administration &amp; IT Infrastructure Services</li>
+          <li>Google: IT Security — Defense Against the Digital Dark Arts</li>
+          <li>Google: Operating Systems and You — Becoming a Power User</li>
+          <li>Google: Technical Support Fundamentals</li>
+          <li>Google: The Bits and Bytes of Computer Networking</li>
+          <li>Google: Connect and Protect — Networks and Network Security</li>
+          <li>Google: Foundations of Cybersecurity</li>
+          <li>Google: Play It Safe — Manage Security Risks</li>
+          <li>IBM: Artificial Intelligence Fundamentals</li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="section-label">Education</div>
+        <div class="entry">
+          <div class="entry-head"><span class="org">Southern New Hampshire University</span><span class="date">Dec 2019</span></div>
+          <div class="entry-sub"><span class="role">Bachelor of Science, Game Programming and Development</span><span class="loc">Manchester, NH</span></div>
+          <ul><li><strong>Minors:</strong> Information Technology, Graphic Design</li></ul>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Christian Smith · RNVizion</div>
+      <div>Washington, DC</div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
