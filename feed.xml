@@ -8,8 +8,37 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Jun 2026 18:10:54 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2026 15:49:20 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lazy in the Right Way Is Leverage</title>
+      <link>https://rnvizion.dev/blog/sloth/</link>
+      <guid isPermaLink="true">https://rnvizion.dev/blog/sloth/</guid>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Christian Smith</dc:creator>
+      <description>I built a machine to publish my blog, and it refused to ship a broken post. The two kinds of lazy, and why aiming effort at the future is leverage.</description>
+      <content:encoded><![CDATA[<p>I told a machine to publish a post, and it refused.</p>
+<p>Not an error. Not a crash. A decision. I sent a post; it came back and told me, in plain words, the post was missing what it needed and it wouldn’t ship something broken. I sat with that, a bit longer than I’d like to admit. I built that refusal myself, that same afternoon; it still caught me off guard to watch it hold the line.</p>
+<p>Let me back up.</p>
+<p>I publish to my own site by hand, and publishing is more steps than it sounds. Write the post. Generate the little card that shows it on the index. Check that the post carries the right tags in its head, the ones the feed reads to know the thing exists. Insert the card at the top of the list, newest first. Push. None of that is hard; what it is, is the kind of repetitive that doesn’t tax you so much as wear you, the same trivial moves every time, each a quiet chance to fat-finger something and not notice for a week.</p>
+<hr/>
+<p>Here’s the part I want to sit on. There are two ways to be lazy about a repetitive chore.</p>
+<p>The first is to keep doing it by hand, because it’s “only a few minutes,” and a few minutes never feels worth fixing. That’s the lazy that wins today and loses every day after; you save one afternoon and pay the few minutes forever.</p>
+<p>The second is to spend the time building the thing that does the process for you, turning lost time into margin. That’s lazy too; I’m not dressing it up as discipline. It’s just laziness aimed at the future instead of the present: maximum economy of effort, measured across every post I’ll ever publish instead of only the next one.</p>
+<p>I built the second kind.</p>
+<p>Both share the same drive: do less. The difference is direction. Aimed at right now, “do less” keeps you stuck with the chore. Aimed at the future, “do less” is the engine behind every tool anyone has ever made. Same instinct, opposite fruit.</p>
+<p>And here’s what wasn’t true a few years ago: the future-facing kind of lazy just got cheap. What I built in an afternoon would have been a week of work not long ago, easily more. The slow, one-time investment that buys you out of the fast, repetitive forever, the trade that used to be too expensive to bother with, now costs an afternoon. Speed didn’t cut my work; it cut the price of ending the chore for good.</p>
+<p>That’s the leverage. Not the machine doing my thinking. The machine letting me do my thinking once and keep the result.</p>
+<hr/>
+<p>Which brings me back to the post it refused.</p>
+<p>I didn’t teach it to publish so much as to judge. I taught it what a good post needs, and to refuse anything short of it: does this have its tags, its card, its place in the list, and if something’s missing, don’t ship it. One time, with a clear head. Now it runs that judgment on every post, including the ones I’d wave through past midnight, tired and just wanting the thing live. The refusal isn’t the machine overruling me. It’s me, from a better moment — standing watch over me at a weaker one.</p>
+<p>I did the slow work once; it does the fast work forever, carefully.</p>
+<p>That’s the whole trick, and it has nothing to do with working hard. <strong>Lazy in the right way is leverage.</strong></p>
+<p class="post-teaser">Next: an assistant that earns trust by knowing when to say “I don’t know.”</p>
+<div class="bio">
+<strong>Christian Smith</strong> (RNVizion) is a Python developer, AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He builds desktop tools, writes fiction, makes art, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>]]></content:encoded>
+    </item>
     <item>
       <title>Squish: The Soul That Speed Can't Generate</title>
       <link>https://rnvizion.dev/blog/squish/</link>
