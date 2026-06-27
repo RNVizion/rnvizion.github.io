@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Christian Smith: Developer & Spatial Computing Specialist</title>
-  <meta name="description" content="Christian Smith (RNVizion): Python developer and AR/VR specialist at Meta, building polished desktop tools and AI systems." />
+  <title>Christian Smith: AI Engineer & Developer</title>
+  <meta name="description" content="Christian Smith (RNVizion): Python developer building production AI systems on the Claude API: RAG, LLM agents, and a published MCP server; plus a suite of polished developer tools. AR/VR specialist at Meta." />
 
   <!-- Open Graph (LinkedIn, Facebook, etc.) -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://rnvizion.dev" />
-  <meta property="og:title" content="Christian Smith, Developer & Spatial Computing Specialist" />
-  <meta property="og:description" content="Python developer and AR/VR specialist at Meta, building polished desktop tools and AI systems." />
+  <meta property="og:title" content="Christian Smith, AI Engineer & Developer" />
+  <meta property="og:description" content="Python developer building production AI systems on the Claude API: RAG, LLM agents, and a published MCP server. AR/VR specialist at Meta." />
   <meta property="og:image" content="https://rnvizion.dev/assets/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Christian Smith, Developer & Spatial Computing Specialist" />
-  <meta name="twitter:description" content="Python developer and AR/VR specialist at Meta, building polished desktop tools and AI systems." />
+  <meta name="twitter:title" content="Christian Smith, AI Engineer & Developer" />
+  <meta name="twitter:description" content="Python developer building production AI systems on the Claude API: RAG, LLM agents, and a published MCP server. AR/VR specialist at Meta." />
   <meta name="twitter:image" content="https://rnvizion.dev/assets/og-image.png" />
 
   <!-- Fonts -->
@@ -608,6 +608,65 @@
       padding: 16px;
     }
 
+    /* ---------- WRITING ---------- */
+    .writing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+      margin-top: 36px;
+    }
+
+    .writing-card {
+      background: var(--bg-2);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: background 0.3s ease;
+    }
+
+    .writing-card:hover { background: var(--bg-3); }
+
+    .writing-card .essay-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .writing-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .writing-card p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      flex-grow: 1;
+    }
+
+    .writing-card .project-link { margin-top: 8px; }
+
+    .writing-more {
+      margin-top: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .writing-more:hover { border-bottom-color: var(--accent); }
+
     /* ---------- LIVE DEMO EMBED ---------- */
     .demo-intro {
       color: var(--text-dim);
@@ -712,6 +771,7 @@
         <a href="#about">About</a>
         <a href="#stack">Stack</a>
         <a href="#work">Work</a>
+        <a href="#writing">Writing</a>
         <a href="/blog/">Blog</a>
         <a href="#contact">Contact</a>
       </div>
@@ -730,13 +790,13 @@
       <div class="container">
         <div class="hero-tag">
           <span class="dot"></span>
-          Open to Solutions Engineer, Developer Advocate &amp; AI roles
+          Open to remote AI Engineer &amp; Solutions Engineer roles
         </div>
         <h1>
-          Christian Smith : building <em>polished</em> tools, from desktop apps to AI systems.
+          Christian Smith : I build <em>production</em> AI systems, and the tools they run on.
         </h1>
         <p class="hero-subtitle">
-          Python developer and AR/VR specialist at Meta. I ship desktop applications and AI systems; retrieval, agents, and tooling that turns complex technology into something people actually use.
+          Python developer building production AI on the Claude API: retrieval systems, LLM agents, and an MCP server any model can call. I ship polished developer tools, and I write about the craft. AR/VR specialist at Meta by day.
         </p>
         <div class="hero-actions">
           <a class="btn primary" href="#work">
@@ -758,8 +818,8 @@
     <!-- MARQUEE -->
     <div class="marquee">
       <div class="marquee-track">
-        <span>Python</span><span>PyQt6</span><span>AR/VR</span><span>Meta Quest</span><span>Spatial Computing</span><span>Developer Tools</span><span>Solutions Engineering</span>
-        <span>Python</span><span>PyQt6</span><span>AR/VR</span><span>Meta Quest</span><span>Spatial Computing</span><span>Developer Tools</span><span>Solutions Engineering</span>
+        <span>Python</span><span>Claude API</span><span>RAG</span><span>LLM Agents</span><span>MCP</span><span>PyQt6</span><span>Developer Tools</span><span>Technical Writing</span><span>AR/VR</span><span>Solutions Engineering</span>
+        <span>Python</span><span>Claude API</span><span>RAG</span><span>LLM Agents</span><span>MCP</span><span>PyQt6</span><span>Developer Tools</span><span>Technical Writing</span><span>AR/VR</span><span>Solutions Engineering</span>
       </div>
     </div>
 
@@ -772,8 +832,8 @@
         <div class="about-grid">
           <div class="about-text">
             <p>By day I work in AR/VR at Meta, where I help customers discover Ray-Ban Meta smart glasses and the Meta Quest headset family; spanning live product demos, consultative selling, and hands-on technical support across the full spatial computing lineup.</p>
-            <p>Outside of that, I build under the RNVizion banner. The toolkit is five professional desktop applications for text transformation, color management, and icon generation; each ships with full CLI support, multi-theme UIs, cross-platform CI, and comprehensive test coverage. Lately I've been building AI systems on top of that foundation: a retrieval-augmented assistant over my own writing, and an MCP publishing agent, both running on the Claude API.</p>
-            <p>My background spans game programming, IT support (Google IT Support certified), technical content development, and customer-facing work in regulated industries. I'm targeting Developer Advocate and Solutions Engineer roles where I can build, communicate, and support developers, all at once.</p>
+            <p>Outside of that, I build under the RNVizion banner, lately centered on AI. I've shipped a retrieval-augmented assistant over my own writing, an agentic publishing pipeline, and rnv-color-mcp, a server published to the official Model Context Protocol registry that any LLM can call; all on the Claude API. They sit on top of the RNVizion toolkit: five professional desktop apps for text transformation, color management, and icon generation, each with full CLI support, multi-theme UIs, cross-platform CI, and comprehensive test coverage.</p>
+            <p>I also write: an ongoing series on building with intention in the AI era, part of a wider renaissance-man practice that runs from software into design and craft. My background spans game programming, IT support (Google IT Support certified), technical content development, and customer-facing work in regulated industries. I'm targeting remote AI Engineer and Solutions Engineer roles where building, communicating, and shipping production systems all matter.</p>
           </div>
 
           <div class="about-stats">
@@ -1022,6 +1082,41 @@
       </div>
     </section>
 
+    <!-- WRITING -->
+    <section id="writing">
+      <div class="container">
+        <div class="section-label">Writing</div>
+        <h2 class="section-title">Building with <em>intention</em>, in public.</h2>
+        <p class="demo-intro">An ongoing series on what AI can be when it's built to deepen real work, not replace the thinking behind it. Part of a wider renaissance-man practice; the same instinct that ships the tools writes about the craft.</p>
+
+        <div class="writing-grid">
+          <!-- Swap each href below for the specific post URL once slugs are set -->
+          <article class="writing-card">
+            <span class="essay-tag">Essay</span>
+            <h3>I Lacked the Tools, So I Built Them</h3>
+            <p>On constraint as a creative force: why the gap between what you have and what you need is an invitation, not a wall.</p>
+            <a class="project-link" href="/blog/" target="_self">Read it →</a>
+          </article>
+
+          <article class="writing-card">
+            <span class="essay-tag">Essay</span>
+            <h3>Squish</h3>
+            <p>The human decision that turns software from working into loved; the soul that speed alone can't generate.</p>
+            <a class="project-link" href="/blog/" target="_self">Read it →</a>
+          </article>
+
+          <article class="writing-card">
+            <span class="essay-tag">Essay</span>
+            <h3>Lazy in the Right Way Is Leverage</h3>
+            <p>Strategic economy of effort: doing less on purpose, so the energy lands where it actually moves the work.</p>
+            <a class="project-link" href="/blog/" target="_self">Read it →</a>
+          </article>
+        </div>
+
+        <a class="writing-more" href="/blog/">Read the full blog →</a>
+      </div>
+    </section>
+
     <!-- TRY IT LIVE -->
     <section id="try-it">
       <div class="container">
@@ -1043,7 +1138,7 @@
     <section id="contact" class="contact-section">
       <div class="container">
         <h2>Let's <em>build</em> something.</h2>
-        <p>Open to Developer Advocate, Solutions Engineer, and AR/VR Technical Specialist roles. Always happy to talk tools, spatial computing, or the craft of polished software.</p>
+        <p>Open to remote AI Engineer, Solutions Engineer, and Developer Advocate roles. Always happy to talk production AI, developer tooling, or the craft of building things that feel right.</p>
         <div class="contact-links">
           <a class="btn primary" href="mailto:vizionaryfx@yahoo.com">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -1090,7 +1185,7 @@
     });
 
     // Scroll-triggered reveals
-    const reveals = document.querySelectorAll('.section-title, .about-text, .about-stats, .stack-grid, .project, .contact-section h2');
+    const reveals = document.querySelectorAll('.section-title, .about-text, .about-stats, .stack-grid, .project, .writing-card, .contact-section h2');
     reveals.forEach(el => el.classList.add('reveal'));
 
     const io = new IntersectionObserver((entries) => {
