@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AIII: The Artificial Intelligence Identification Initiative — RNVizion</title>
+<meta name="description" content="An open coordination layer for AI and agent identity, built on one rule: resolve or refuse, never guess. A working proposal by Christian 'RNVizion' Smith." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0a0f;
+    --surface:#13131c;
+    --surface-2:#0f0f17;
+    --gold:#d2bc93;
+    --gold-dim:rgba(210,188,147,.52);
+    --hair:rgba(210,188,147,.18);
+    --ink:#e7e3d8;
+    --ink-mute:#9b978c;
+    --ink-faint:#6f6c64;
+    --display:'Bricolage Grotesque',system-ui,-apple-system,sans-serif;
+    --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--display);
+    font-weight:340;
+    line-height:1.75;
+    font-size:1.12rem;
+    letter-spacing:.002em;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  .wrap{
+    max-width:692px;
+    margin:0 auto;
+    padding:clamp(2.4rem,6vw,5rem) clamp(1.25rem,5vw,1.75rem) 5rem;
+  }
+
+  /* ---- load motion ---- */
+  .rise{opacity:0;transform:translateY(14px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards;}
+  .d1{animation-delay:.05s;} .d2{animation-delay:.16s;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .rise{animation:none;opacity:1;transform:none;}
+  }
+
+  /* ---- masthead ---- */
+  .kicker{
+    font-family:var(--mono);
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.26em;
+    text-transform:uppercase;
+    color:var(--gold-dim);
+    margin:0 0 1.9rem;
+  }
+  .wordmark{
+    font-family:var(--mono);
+    font-weight:700;
+    color:var(--gold);
+    font-size:clamp(3.4rem,15vw,6rem);
+    letter-spacing:.04em;
+    line-height:.9;
+    margin:0;
+  }
+  h1.title{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(1.5rem,4.4vw,2.15rem);
+    line-height:1.18;
+    letter-spacing:-.012em;
+    color:var(--ink);
+    margin:.85rem 0 0;
+    max-width:18ch;
+  }
+  .dek{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(1.35rem,3.6vw,1.7rem);
+    line-height:1.4;
+    color:var(--gold);
+    margin:1.5rem 0 0;
+    max-width:34ch;
+  }
+  .byline{
+    font-family:var(--mono);
+    font-size:.78rem;
+    letter-spacing:.04em;
+    color:var(--ink-faint);
+    margin:1.8rem 0 0;
+  }
+  .byline a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid var(--hair);}
+  .byline a:hover{color:var(--gold);}
+
+  .rule{
+    height:1px;
+    background:linear-gradient(90deg,var(--gold-dim),rgba(210,188,147,0));
+    border:0;
+    margin:2.8rem 0 2.6rem;
+  }
+
+  /* ---- body ---- */
+  .body p{margin:0 0 1.45rem;}
+  .body p.lede{
+    font-size:1.2rem;
+    color:#efece2;
+  }
+  .pull{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:1.08em;}
+  .beat{display:block;margin:1.9rem 0;font-size:1.34rem;line-height:1.3;color:var(--ink);font-weight:420;letter-spacing:-.01em;}
+  .beat .x{color:var(--gold);font-family:var(--mono);font-weight:700;letter-spacing:.02em;}
+
+  .sc{font-variant:small-caps;letter-spacing:.04em;font-weight:600;}
+
+  /* ---- signature: the trust stack ---- */
+  figure.stack{
+    margin:2.9rem 0;
+    padding:0;
+  }
+  .stack-head{
+    font-family:var(--mono);
+    font-size:.68rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 1rem;
+  }
+  .grp-label{
+    font-family:var(--mono);
+    font-size:.66rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--gold-dim);
+    margin:0 0 .6rem;
+    display:block;
+  }
+  .layer{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:.2rem 1rem;
+    align-items:baseline;
+    padding:.85rem 1rem;
+    margin-bottom:.5rem;
+    border-radius:3px;
+  }
+  .layer .code{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:.92rem;
+    letter-spacing:.04em;
+  }
+  .layer .name{font-weight:520;color:var(--ink);line-height:1.3;}
+  .layer .desc{
+    grid-column:2;
+    font-family:var(--mono);
+    font-size:.74rem;
+    letter-spacing:.01em;
+    color:var(--ink-mute);
+    line-height:1.5;
+  }
+
+  .layer.solved{
+    background:rgba(210,188,147,.07);
+    border-left:2px solid var(--gold);
+  }
+  .layer.solved .code{color:var(--gold);}
+
+  .layer.open{
+    background:repeating-linear-gradient(135deg,rgba(210,188,147,.03) 0 8px,transparent 8px 16px);
+    border-left:2px dashed rgba(210,188,147,.4);
+  }
+  .layer.open .code{color:var(--gold-dim);}
+  .layer.open .name{color:var(--ink-mute);}
+
+  .threshold{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin:1.1rem 0 1.1rem;
+  }
+  .threshold::before,.threshold::after{
+    content:"";
+    flex:1;
+    height:0;
+    border-top:1px dashed var(--gold-dim);
+  }
+  .threshold span{
+    font-family:var(--mono);
+    font-size:.66rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    white-space:nowrap;
+  }
+  figcaption{
+    font-family:var(--mono);
+    font-size:.72rem;
+    line-height:1.6;
+    letter-spacing:.01em;
+    color:var(--ink-faint);
+    margin-top:1.1rem;
+    padding-left:1rem;
+    border-left:1px solid var(--hair);
+  }
+
+  /* ---- aphorism landing ---- */
+  .landing{
+    margin:3.2rem 0 1rem;
+    padding-top:2.4rem;
+    border-top:1px solid var(--hair);
+  }
+  .landing strong{
+    display:block;
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(1.5rem,4.6vw,2rem);
+    line-height:1.28;
+    letter-spacing:-.014em;
+    color:var(--gold);
+    max-width:24ch;
+  }
+
+  /* ---- grounding ---- */
+  .grounding{
+    margin-top:4rem;
+    padding-top:2rem;
+    border-top:1px solid var(--hair);
+  }
+  .grounding h2{
+    font-family:var(--mono);
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--gold-dim);
+    margin:0 0 1.4rem;
+  }
+  .grounding dl{margin:0;font-size:.92rem;line-height:1.6;}
+  .grounding dt{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-mute);
+    margin:1.1rem 0 .2rem;
+  }
+  .grounding dd{margin:0;color:var(--ink-mute);font-size:.95rem;line-height:1.55;}
+
+  footer.foot{
+    margin-top:4rem;
+    font-family:var(--mono);
+    font-size:.74rem;
+    letter-spacing:.03em;
+    color:var(--ink-faint);
+    line-height:1.7;
+  }
+  footer.foot a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid var(--hair);}
+  footer.foot a:hover{color:var(--gold);}
+
+  a:focus-visible,.byline a:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px;}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <p class="kicker rise">Working draft · in active development</p>
+    <p class="wordmark rise d1">AIII</p>
+    <h1 class="title rise d1">The Artificial Intelligence Identification Initiative</h1>
+    <p class="dek rise d2">An open coordination layer for AI and agent identity, built on one rule: resolve or refuse, never guess.</p>
+    <p class="byline rise d2">Christian &ldquo;RNVizion&rdquo; Smith &nbsp;·&nbsp; <a href="https://rnvizion.dev">rnvizion.dev</a></p>
+  </header>
+
+  <hr class="rule" />
+
+  <article class="body">
+
+    <p class="lede">I build small servers that let an AI call a tool. The model decides what it wants; the tool hands back the exact value, or it declines. Living in that loop for a year taught me to notice a question nobody answers cleanly yet: who is asking, and are they cleared to?</p>
+
+    <p>Here&rsquo;s how concrete the gap is. A recent survey looked at roughly two thousand of those servers running in the wild. Every one lacked authentication. Not most; all of them. The agents are already here, already calling tools, already acting for people and companies, and the layer that says <span class="pull">which agent, run by whom, permitted to do what</span> doesn&rsquo;t exist where the work actually happens.</p>
+
+    <p>That&rsquo;s one corner of a much larger hole.</p>
+
+    <p>Step back and it&rsquo;s the same at every scale. By 2026 the defining question about digital media is no longer can the model fake it; that war is lost. It&rsquo;s can the viewer verify it. The answer the industry converged on is provenance: C2PA Content Credentials, now an ISO standard, sign a file the moment it&rsquo;s made; SynthID and its kin hide a watermark that can survive a screenshot. Good work. Necessary work.</p>
+
+    <p>And still not enough, for a reason that&rsquo;s easy to walk past. A missing credential proves nothing. The signature strips on a re-encode; the watermark marks only what its issuer chose to mark. Absence of a label is not evidence of authenticity, and it never will be. Provenance tells you something when a thing is signed. It can&rsquo;t, by itself, tell you what to trust when it isn&rsquo;t.</p>
+
+    <p>So I went looking for who&rsquo;s building the harder half, and I found the shape of the problem written into the work itself.</p>
+
+    <p>The IETF has at least ten active drafts on agent identity right now, written in isolation at NVIDIA, Okta, OpenAI, AWS, and a dozen other desks, with no working group holding them together. Read side by side, they describe a single stack: identity provenance, then verification, then authorization, then structural enforcement, then cross-organizational trust. Five layers, L1 through L5.</p>
+
+    <figure class="stack">
+      <p class="stack-head">The agent-trust stack, as the active drafts describe it</p>
+
+      <span class="grp-label">One deployment can resolve this</span>
+      <div class="layer solved">
+        <span class="code">L1</span><span class="name">Identity provenance</span>
+        <span class="desc">who issued this agent</span>
+      </div>
+      <div class="layer solved">
+        <span class="code">L2</span><span class="name">Verification</span>
+        <span class="desc">is the claim cryptographically real</span>
+      </div>
+      <div class="layer solved">
+        <span class="code">L3</span><span class="name">Authorization</span>
+        <span class="desc">what it&rsquo;s scoped to do</span>
+      </div>
+
+      <div class="threshold"><span>Where every active draft stops</span></div>
+
+      <span class="grp-label">No single operator · unclaimed</span>
+      <div class="layer open">
+        <span class="code">L4</span><span class="name">Structural enforcement</span>
+        <span class="desc">held to that scope across systems</span>
+      </div>
+      <div class="layer open">
+        <span class="code">L5</span><span class="name">Cross-organizational trust</span>
+        <span class="desc">trusted beyond the deployment that made it</span>
+      </div>
+
+      <figcaption>AIII operates the layer below the line, and coordinates the work above it.</figcaption>
+    </figure>
+
+    <p>Every one of those drafts stops in the same place. L3.</p>
+
+    <p>The reason is the most honest thing in the field. L1 through L3 are problems one organization can solve, because the data lives inside one deployment; you can specify identity, verification, and authorization when you own the ground they stand on. L4 and L5 are a different animal. Cross-organizational trust has no single party to operate it, so no draft can specify it. <span class="pull">Not won&rsquo;t; can&rsquo;t.</span> The authors stop at L3 because past L3 there is nobody to be the answer.</p>
+
+    <p>I&rsquo;ve spent a year building on one principle: resolve or refuse, never guess. A tool returns the value it can prove or it declines; the one move it must never make is faking a confidence it hasn&rsquo;t earned. Reading those drafts, I saw the best people in agent identity already living by it. They specify what a deployment can resolve, and they refuse, in plain language, to specify what it can&rsquo;t. The empty space at L4 and L5 isn&rsquo;t negligence; it&rsquo;s integrity. It&rsquo;s a whole field declining to guess.</p>
+
+    <p>A refusal that clean is also an invitation. Somebody has to become the party that operates the cross-organizational layer, or it stays empty for good.</p>
+
+    <span class="beat">That&rsquo;s what <span class="x">AIII</span> is for.</span>
+
+    <p>Not a regulator. Not a treaty waiting on governments to agree in a decade. Look at the most serious attempt going: the EU AI Act runs a public database where high-risk systems register before they ship, and its Commission just issued a code of practice for labelling AI-generated content. Real work, and still not the thing. Regulation registers a system inside one border and labels what it puts out; it can&rsquo;t vouch for one company&rsquo;s agent to another&rsquo;s across the line, and the high-risk clock already slipped to 2027 while the agents kept shipping. A registry is a list. Trust is an operation, and somebody has to operate it.</p>
+
+    <p>The internet didn&rsquo;t standardize itself from the top down; it grew through rough consensus and running code, RFCs that earned their authority by being implemented and interoperating. AIII takes that model on purpose, because AI moves at the internet&rsquo;s pace, not aviation&rsquo;s.</p>
+
+    <p>So AIII is two things at once. The first: the coordinating layer the ten orphaned drafts are missing, so the field stops rebuilding the same primitives blind to each other. The second: the operator of record for the layer none of them can claim alone, an open, neutral, shared system whose whole job is to answer, across boundaries, is this AI, who controls it, and what is it cleared to do; honestly, or with an explicit unknown.</p>
+
+    <p>A proposal is a position paper until something runs. So the first artifact isn&rsquo;t a manifesto; it&rsquo;s code, at the layer I already stand in.</p>
+
+    <p>The timing is right: MCP was contributed to the Agentic AI Foundation, a vendor-neutral directed fund under the Linux Foundation, co-founded by Anthropic, Block, and OpenAI; that makes it the natural proving ground. Two thousand servers, zero authentication, one open question with my name already on it. The first deliverable is a small, deterministic identity-and-authorization layer for MCP servers that answers who controls this agent and what it may do, built the way I build everything: it resolves what it can prove, and refuses the rest out loud. Running code that demonstrates L1 through L3 cleanly, and shows exactly where L4 has to begin.</p>
+
+    <p>And the door is already open. AAIF takes new projects through a public proposal process, so this isn&rsquo;t a pitch into the void; it&rsquo;s a build with an address. The goal is plain: get the layer to working level, then submit it as a project where MCP already lives.</p>
+
+    <p><span class="pull">Prove the layer where I stand. Map the layer no one can stand on alone.</span> That&rsquo;s the order, and that&rsquo;s the work.</p>
+
+    <p>The field has quietly agreed on something most of the world hasn&rsquo;t caught up to: the dangerous answer was never the wrong one, it was the confident one. A false yes travels further than an honest blank, and cleans up worse.</p>
+
+    <p>So the standard AIII holds itself to is the one its best engineers already keep, only written down and made shared: resolve what you can prove, name what you can&rsquo;t, and when the honest answer is no &mdash; say <span class="sc">no</span>.</p>
+
+    <div class="landing">
+      <strong>A system that can say <span class="sc">no</span> is the only one worth trusting with yes.</strong>
+    </div>
+
+  </article>
+
+  <section class="grounding">
+    <h2>Grounding</h2>
+    <dl>
+      <dt>Content provenance</dt>
+      <dd>C2PA Content Credentials (ISO/IEC 22144); Google DeepMind SynthID watermarking. The signed-file and embedded-watermark layers the proposal builds past.</dd>
+
+      <dt>Agent identity</dt>
+      <dd>Active IETF Internet-Drafts on agent identity (datatracker.ietf.org), e.g. draft-klrc-aiagent-auth and draft-prakash-aip; the W3C Agent Identity Registry Protocol Community Group.</dd>
+
+      <dt>The five-layer model</dt>
+      <dd>L1 identity provenance through L5 cross-organizational behavioral trust, synthesized across the active drafts; the L3 boundary is where each declares the next layer out of scope.</dd>
+
+      <dt>Infrastructure</dt>
+      <dd>Agentic AI Foundation (AAIF), an open-source consortium and directed fund under the Linux Foundation, co-founded by Anthropic, Block, and OpenAI; the contributed home of the Model Context Protocol and the natural proving ground for a reference implementation. MCP donated December 9, 2025.</dd>
+
+      <dt>Capability &amp; governance precedents</dt>
+      <dd>International AI Safety Report (2026), chaired by Yoshua Bengio; Singapore IMDA Model AI Governance Framework for Agentic AI; the EU AI Act, whose high-risk registration database (Articles 49 and 71) is now phased to December 2027, with a Commission code of practice on labelling AI-generated content issued June 2026.</dd>
+    </dl>
+  </section>
+
+  <footer class="foot">
+    A living proposal, in active development. Comments, holes, and prior art welcome.<br />
+    Christian &ldquo;RNVizion&rdquo; Smith &nbsp;·&nbsp; <a href="https://rnvizion.dev">rnvizion.dev</a> &nbsp;·&nbsp; <a href="https://github.com/RNVizion">github.com/RNVizion</a>
+  </footer>
+
+</main>
+</body>
+</html>
