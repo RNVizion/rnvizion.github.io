@@ -191,12 +191,12 @@
         <div class="about-grid">
           <div class="about-text">
             <p>By day I work in AR/VR at Meta, where I help customers discover Ray-Ban Meta smart glasses and the Meta Quest headset family; spanning live product demos, consultative selling, and hands-on technical support across the full spatial computing lineup.</p>
-            <p>Outside of that, I build under the RNVizion banner, lately centered on AI. I've shipped a retrieval-augmented assistant over my own writing and an agentic publishing pipeline, both on the Claude API, plus rnv-color-mcp, a server published to the official Model Context Protocol registry that any LLM can call. They sit on top of the RNVizion toolkit: five professional desktop apps for text transformation, color management, and icon generation, each with full CLI support, multi-theme UIs, cross-platform CI, and comprehensive test coverage.</p>
+            <p>Outside of that, I build under the RNVizion banner, lately centered on AI. I've shipped a retrieval-augmented assistant over my own writing and an agentic publishing pipeline, both on the Claude API, plus rnv-color-mcp, a server published to the official Model Context Protocol registry that any LLM can call, and AIII, an open standard for AI agent identity with a reference implementation. They sit on top of the RNVizion toolkit: five professional desktop apps for text transformation, color management, and icon generation, each with full CLI support, multi-theme UIs, cross-platform CI, and comprehensive test coverage.</p>
             <p>I also write: an ongoing series on building with intention in the AI era, part of a wider renaissance-man practice that runs from software into design and craft. My background spans game programming, IT support (Google IT Support certified), technical content development, and customer-facing work in regulated industries. I'm targeting remote AI Engineer and Solutions Engineer roles where building, communicating, and shipping production systems all matter.</p>
           </div>
           <div class="about-stats">
-            <div class="stat"><div class="stat-value">8</div><div class="stat-label">Projects Shipped</div></div>
-            <div class="stat"><div class="stat-value">786</div><div class="stat-label">Tests Written</div></div>
+            <div class="stat"><div class="stat-value">9</div><div class="stat-label">Projects Shipped</div></div>
+            <div class="stat"><div class="stat-value">5,003</div><div class="stat-label">Tests Written</div></div>
             <div class="stat"><div class="stat-value">10</div><div class="stat-label">Certifications</div></div>
             <div class="stat"><div class="stat-value">B.S.</div><div class="stat-label">Game Programming</div></div>
           </div>
@@ -222,10 +222,23 @@
         <div class="section-label">Selected Work</div>
         <h2 class="section-title">Building tools, and the <em>AI</em> that uses them.</h2>
         <div class="projects">
+          <article class="project">
+            <div>
+              <div class="project-number">01 / STANDARD</div>
+              <h3>AIII</h3>
+              <p class="project-desc">Artificial Intelligence Identification Initiative: an open proposal and Apache-2.0 reference implementation for AI agent identity. An L1–L3 identity-and-authorization layer for MCP servers, built on one principle: resolve or refuse, never guess. Holder-of-key verification, declarative per-tool authorization, 46 tests with property-based eval gates, and a runnable FastMCP demo.</p>
+              <div class="project-tags"><span class="tag">Open Standard</span><span class="tag">MCP</span><span class="tag">Identity</span><span class="tag">FastMCP</span><span class="tag">Apache-2.0</span></div>
+              <div style="display:flex; flex-wrap:wrap; gap:24px;">
+                <a class="project-link" href="https://rnvizion.dev/aiii" target="_blank" rel="noopener">Read the proposal →</a>
+                <a class="project-link" href="https://github.com/RNVizion/rnv-mcp-identity" target="_blank" rel="noopener">View on GitHub →</a>
+              </div>
+            </div>
+            <div class="project-image"><img src="assets/aiii.png" alt="AIII proposal" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><div class="placeholder" style="display:none;">assets/aiii.png</div></div>
+          </article>
 
           <article class="project">
             <div>
-              <div class="project-number">01 / RAG</div>
+              <div class="project-number">02 / RAG</div>
               <h3>Ask the Corpus</h3>
               <p class="project-desc">A retrieval-augmented chatbot over my published writing. It embeds every blog post into a vector index, pulls the passages relevant to a question, and answers only from them; grounded in the source, guardrailed against off-topic prompts, and honest when the corpus doesn't cover something. Built on the Claude API and deployed live on Hugging Face.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">RAG</span><span class="tag">ChromaDB</span><span class="tag">Gradio</span><span class="tag">Claude API</span><span class="tag">Hugging Face</span></div>
@@ -239,7 +252,7 @@
 
           <article class="project">
             <div>
-              <div class="project-number">02 / MCP</div>
+              <div class="project-number">03 / MCP</div>
               <h3>RNV Color MCP</h3>
               <p class="project-desc">My desktop color engine, lifted out and exposed once as a remote MCP server; an AI assistant calls it today, my own apps call the same backend tomorrow. Nine tools cover mixing (including Kubelka-Munk paint physics), conversion, harmony, Delta-E difference, and WCAG contrast, plus a persistent palette memory; it resolves hex, CSS, and brand color names, and refuses an unknown color rather than guessing. Published to the official MCP registry and running live on Hugging Face.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">MCP</span><span class="tag">FastMCP</span><span class="tag">Color Science</span><span class="tag">WCAG</span><span class="tag">Hugging Face</span></div>
@@ -256,7 +269,7 @@
 
           <article class="project">
             <div>
-              <div class="project-number">03 / TEXT</div>
+              <div class="project-number">04 / TEXT</div>
               <h3>RNV Text Transformer</h3>
               <p class="project-desc">11 transformation modes across 9+ file formats with regex builder, folder watching, compare view, and a full CLI. Backed by 786 tests at ~76% coverage running on Linux and Windows CI.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">PyQt6</span><span class="tag">CLI</span><span class="tag">pytest</span><span class="tag">GitHub Actions</span></div>
@@ -267,7 +280,7 @@
 
           <article class="project">
             <div>
-              <div class="project-number">04 / COLOR</div>
+              <div class="project-number">05 / COLOR</div>
               <h3>RNV Color Palette Manager</h3>
               <p class="project-desc">Professional palette management for designers and developers: 16+ export formats, 7 color mixing algorithms, and built-in WCAG accessibility tools.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">PyQt6</span><span class="tag">WCAG</span><span class="tag">Color Science</span></div>
@@ -278,7 +291,7 @@
 
           <article class="project">
             <div>
-              <div class="project-number">05 / PICKER</div>
+              <div class="project-number">06 / PICKER</div>
               <h3>RNV Color Picker</h3>
               <p class="project-desc">Screen color extraction with a magnifier, WCAG contrast checker, and color harmony generation. Built for designers and developers who need precision color workflows.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">PyQt6</span><span class="tag">Screen Capture</span></div>
@@ -289,7 +302,7 @@
 
           <article class="project">
             <div>
-              <div class="project-number">06 / ICONS</div>
+              <div class="project-number">07 / ICONS</div>
               <h3>RNV Icon Builder</h3>
               <p class="project-desc">Multi-resolution ICO creation from PNG, SVG, and ICO sources. Cross-platform exports for Android, iOS, and favicons with batch processing, folder watching, and a full CLI.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">PyQt6</span><span class="tag">CLI</span><span class="tag">Cross-platform</span></div>
@@ -300,7 +313,7 @@
 
           <article class="project">
             <div>
-              <div class="project-number">07 / MIXER</div>
+              <div class="project-number">08 / MIXER</div>
               <h3>RNV Color Mixer</h3>
               <p class="project-desc">A desktop paint-mixing application simulating real-world color mixing using Kubelka-Munk theory. Bridges physical color theory with digital workflows.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">PyQt6</span><span class="tag">Kubelka-Munk</span><span class="tag">Color Theory</span></div>
@@ -368,7 +381,7 @@
   <footer>
     <div class="container">
       <div>© <span id="year"></span> Christian Smith · RNVizion</div>
-      <div><a href="/aiii/">AIII</a> · <a href="/bio/">Bio</a> · <a href="/resume/">Résumé</a> · Washington, DC</div>
+      <div><a href="/bio/">Bio</a> · <a href="/resume/">Résumé</a> · Washington, DC</div>
     </div>
   </footer>
 
