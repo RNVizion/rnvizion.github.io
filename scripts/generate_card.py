@@ -132,7 +132,9 @@ def find_template(explicit):
 
 
 def fill_card(template_html, *, slug, date, minutes, title, summary):
-    card = strip_comments(template_html).strip()
+    # Strip only surrounding blank lines, not the card's own indentation, so the
+    # first line keeps its leading spaces and lines up with the rest of the block.
+    card = strip_comments(template_html).strip("\n")
     replacements = {
         "[POST-SLUG]": slug,
         "[Month Day, Year]": date,
