@@ -1,8 +1,9 @@
 name: Build RSS feed
 
-# Regenerate feed.xml whenever a post (or the generator itself) changes.
-# feed.xml lives at the repo root, NOT under blog/, so the bot's own commit
-# does not re-trigger this workflow — no infinite loop.
+# Regenerate feed.xml and blog/index.html whenever a post (or the generator
+# itself) changes. The bot commits both back. blog/index.html sits under the
+# blog/** trigger path, so the loop is broken by the [skip ci] tag in the commit
+# message; a GITHUB_TOKEN push also won't start a new run. No infinite loop.
 on:
   push:
     branches: [main]
@@ -13,7 +14,7 @@ on:
   workflow_dispatch: {}   # lets you run it by hand from the Actions tab
 
 permissions:
-  contents: write          # needed so the bot can commit feed.xml back
+  contents: write          # needed so the bot can commit feed.xml + the index back
 
 concurrency:
   group: build-feed
@@ -32,18 +33,18 @@ jobs:
       - name: Install dependencies
         run: pip install beautifulsoup4 lxml
 
-      - name: Generate feed.xml
+      - name: Generate feed.xml and blog index
         run: python scripts/build_feed.py
 
-      - name: Commit feed.xml if it changed
+      - name: Commit feed and index if they changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git status --porcelain feed.xml)" ]; then
-            git add feed.xml
-            git commit -m "chore: rebuild RSS feed [skip ci]"
+          if [ -n "$(git status --porcelain feed.xml blog/index.html)" ]; then
+            git add feed.xml blog/index.html
+            git commit -m "chore: rebuild RSS feed and blog index [skip ci]"
             git push
-            echo "feed.xml updated."
+            echo "feed.xml and blog/index.html updated."
           else
-            echo "feed.xml unchanged — nothing to commit."
+            echo "feed and index unchanged — nothing to commit."
           fi
