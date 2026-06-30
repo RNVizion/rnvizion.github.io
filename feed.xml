@@ -8,8 +8,51 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Jun 2026 17:36:07 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Jun 2026 15:50:47 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Honest Machine</title>
+      <link>https://rnvizion.dev/blog/ask-the-corpus/</link>
+      <guid isPermaLink="true">https://rnvizion.dev/blog/ask-the-corpus/</guid>
+      <pubDate>Tue, 30 Jun 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Christian Smith</dc:creator>
+      <description>I built a retrieval assistant that answers only from my published work, and refuses everything else. The refusal was the point.</description>
+      <content:encoded><![CDATA[<p>After a full day of grinding out connections, deploying the machine, setting the model, tweaking the UI, one question was left standing: did it work?</p>
+<p>Not function. Function is the floor: a user asks, the thing answers, the lights come on. I was after something deeper. I wanted it to hand back something real and curated, pulled from what I'd actually written; not the same flat response played back every time the same question came in.</p>
+<p>So I asked it the foundation question. What is squish? Not once. Not twice. Three times, watching each answer for the thing I was testing: a unique reply every pass, built from my own words, never a recording on loop. It answered the way I'd hoped, but answering was only half the standard.</p>
+<p>The other half was the denial. So I asked it something I'd never written a word about, something I knew it had no business knowing, and waited to see what it would do with a question it couldn't honestly take. The refusal came back clean: <em>The corpus has knowledge, but the information you seek will not be found here.</em></p>
+<p>That was it. Not function — Work. It didn't just respond; it knew the edge of what it could honestly say, and it stopped there. The standard was set. The corpus was operational.</p>
+<hr/>
+<h2>What it actually <em>is</em></h2>
+<p>Here's what it is, before how it works. Ask the Corpus is a question box for everything I've published. You type a question about my work; it answers, in plain language, using only what I've actually written. Not the whole internet's take on a subject. Not a model's best guess at what I <em>probably</em> think. Just my own published words, found and handed back to you.</p>
+<hr/>
+<h2>How it answers</h2>
+<p>So how does it actually answer? Less magic than it looks, and better for it.</p>
+<p>When you ask a question, the machine doesn't go reach into some vague cloud of everything-it-knows. It does something narrower and more honest. First it takes your question and finds the passages in my writing that sit closest to it: not by keyword matching, but by meaning, so "what makes software feel alive?" can surface the squish essay even if it never says the word <em>meaning</em>. That's retrieval. It pulls the handful of pieces most likely to hold the answer.</p>
+<p>Then, and only then, the model gets to work. It reads those passages and writes an answer <em>from them</em>, in plain language, and tells you which of my pieces it drew from. The retrieval decides what's on the table; the model just speaks from what's there. It never gets to improvise past the edge of what I've written, because the only thing in front of it is the handful of passages retrieval handed over.</p>
+<p>That's the whole engine. Find the closest real writing, answer only from it, name the source. Nothing reaches outside the corpus, because nothing is <em>allowed</em> to.</p>
+<hr/>
+<h2>The part that <em>matters</em></h2>
+<p>Now the part that matters. Everything I just described, the retrieval, the answering, the citing, is the function. It's the floor. Any competent build does that much. The thing I actually set out to make wasn't an assistant that answers; it was an assistant that refuses.</p>
+<p>Think about what every other AI you've used does when it hits the edge of what it knows. It keeps talking. It fills the gap with something plausible, something shaped like an answer, and hands it over with total confidence. The machine never says <em>I don't have this.</em> <strong>It would rather be wrong than be silent</strong>, because sounding helpful is the thing it was tuned to do.</p>
+<p>I built mine to do the opposite. When the answer isn't in my work, it doesn't reach for the next-best guess. It stops. <em>The corpus has knowledge, but the information you seek will not be found here.</em> That line isn't an error message; it's the whole point. It's the machine refusing to pretend, declining to launder a guess into something that looks like fact.</p>
+<p>That refusal was the design goal, not a side effect. Anyone can build a thing that answers. The hard part, the human part, was deciding it should sometimes say no, and then making the no real. Grounded, or nothing. The machine makes it run; I make it honest.</p>
+<hr/>
+<h2>The temptation to <em>fill in</em></h2>
+<p>Here's the temptation, and it's real. It would be easy to let it fill in the gaps with fabricated information. Retrieval comes back thin on some question, the model clearly <em>knows</em> the general answer from its own training, and you're one line of code away from letting it just... help. Answer anyway. Sound smarter. Never leave a visitor empty-handed. Every instinct in the AI era pushes that direction: more capability, more coverage, more yes.</p>
+<p>I built the walls instead. The refusal that stops it at the edge of my work. The caps that keep each answer lean. The limits that say this is a demo, not an open tap. None of those are things the machine wanted; they're things I decided. A tool without guardrails isn't more powerful, it's just less trustworthy.</p>
+<p>The same restraint shows up in a quieter place: the model itself. The reflex is to reach for the biggest, smartest one available, because it's there and it's impressive. I didn't. I chose the smaller, cheaper one, because the job didn't need a genius; it needed something fast and honest to speak from passages I'd already handed it. Matching the tool to the work instead of grabbing the most powerful thing on the shelf is the same move as the refusal: taking only what the task asks for, and no more.</p>
+<hr/>
+<h2>What the machine <em>can't</em> choose</h2>
+<p>The corpus runs quietly now. People ask it things; it answers from my work, or it tells them it can't. That's the tell that it's working: honesty is invisible when it holds, the way you never notice good squish, you just feel the thing is alive.</p>
+<p>But every refusal is a small, real event. A machine declining to make something up. In an age where confident nonsense is the house style, mine does the rare thing: it knows where it ends, and it stops there.</p>
+<p>That was never the hard part to be proud of. Retrieval was harder to wire; deployment took longer to land. The refusal was one decision and a handful of lines. But it's the part with my name on it, because it's the part no model would have chosen for me. Everything else, the machine could do. Knowing when to stay silent, somebody had to want.</p>
+<p><strong>Confident nonsense is costly; an honest <span style="font-variant: small-caps;">no</span> is priceless.</strong></p>
+<p style="color: var(--text-faint); font-family: var(--font-mono); font-size: 0.85rem; margin-top: 40px;">Next: why the code was never the job; only where the thinking showed.</p>
+<div class="bio">
+<strong>Christian Smith</strong> (RNVizion) is a Python developer, AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He builds desktop tools, writes fiction, makes art, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>]]></content:encoded>
+    </item>
     <item>
       <title>Lazy in the Right Way Is Leverage</title>
       <link>https://rnvizion.dev/blog/sloth/</link>
