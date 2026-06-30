@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 """
-build_feed.py — generate /feed.xml for rnvizion.dev from the blog post HTML files.
+build_feed.py — generate /feed.xml AND /blog/index.html for rnvizion.dev from the
+blog post HTML files.
 
-Each post lives at blog/<slug>/index.html and carries its metadata in the <head>:
-  <title>, <meta name="description">, <meta property="og:url|og:title|og:description">,
-  <meta property="article:author">, <meta property="article:published_time">.
+Each post lives at blog/<slug>/index.html and carries its metadata in the <head>.
 The post body is whatever sits inside <article>.
 
-The script reads every post, sorts newest-first by published_time, and writes an
-RSS 2.0 feed to feed.xml at the repo root (served at https://rnvizion.dev/feed.xml).
-dev.to's RSS import reads <link> for the canonical cross-link and <content:encoded>
-for the body, so both are emitted.
+The script reads every post once, sorts newest-first by published_time, then writes:
+  - feed.xml at the repo root (served at https://rnvizion.dev/feed.xml)
+  - the post-card list in blog/index.html, between the <!-- posts:start --> and
+    <!-- posts:end --> markers (the surrounding page shell is left untouched)
+
+The index cards are rendered by generate_card.py — the SAME renderer and template
+the publishing agent uses — so a card here and a card the agent inserts are
+byte-identical. There is one definition of a card (post-card-template.html); both
+the agent and this script fill it. (generate_card.py must sit beside this file in
+scripts/, which it does.)
 
 Run from the repo root:  python scripts/build_feed.py
 """
@@ -26,6 +31,8 @@ from xml.sax.saxutils import escape
 
 from bs4 import BeautifulSoup
 
+import generate_card as gc  # the shared card renderer (same folder)
+
 # ----- Site constants: edit these for your channel-level metadata --------------
 SITE_URL = "https://rnvizion.dev"
 FEED_URL = f"{SITE_URL}/feed.xml"
@@ -37,6 +44,9 @@ SITE_DESCRIPTION = (
 SITE_LANGUAGE = "en-us"
 BLOG_DIR = Path("blog")
 OUTPUT = Path("feed.xml")
+INDEX_FILE = BLOG_DIR / "index.html"
+POSTS_START = "<!-- posts:start -->"
+POSTS_END = "<!-- posts:end -->"
 # ------------------------------------------------------------------------------
 
 
@@ -59,7 +69,6 @@ def parse_pubdate(raw: str | None) -> datetime:
     try:
         dt = datetime.fromisoformat(raw)
     except ValueError:
-        # Fall back to date-only formats
         for fmt in ("%Y-%m-%d", "%Y/%m/%d"):
             try:
                 dt = datetime.strptime(raw[:10], fmt)
@@ -84,7 +93,8 @@ def absolutize(soup_fragment: BeautifulSoup, base: str) -> None:
 
 
 def extract_post(html_path: Path) -> dict | None:
-    """Pull title, link, description, pubdate, author, and body HTML from one post file."""
+    """Pull the fields the FEED needs from one post file, plus the path (so the
+    index step can render its card from the same file via generate_card)."""
     soup = BeautifulSoup(html_path.read_text(encoding="utf-8"), "lxml")
 
     slug = html_path.parent.name
@@ -92,7 +102,6 @@ def extract_post(html_path: Path) -> dict | None:
 
     title = meta(soup, prop="og:title")
     if not title and soup.title:
-        # Strip a trailing " — Name" suffix if present
         title = soup.title.get_text().split("—")[0].strip()
     title = title or slug
 
@@ -104,7 +113,6 @@ def extract_post(html_path: Path) -> dict | None:
     if article is None:
         print(f"  ! skipping {html_path}: no <article> element", file=sys.stderr)
         return None
-    # Prefer the inner reading column if present, to drop wrapper noise.
     body_root = article.find(class_="read-container") or article
     absolutize(body_root, permalink)
     body_html = body_root.decode_contents().strip()
@@ -117,6 +125,7 @@ def extract_post(html_path: Path) -> dict | None:
         "author": author,
         "pubdate": pubdate,
         "body": body_html,
+        "path": html_path,
     }
 
 
@@ -132,12 +141,49 @@ def build_item(post: dict) -> str:
     </item>"""
 
 
+def write_index(posts: list[dict]) -> None:
+    """Regenerate the post-card region of blog/index.html, newest-first, using
+    generate_card's renderer so cards match the agent's exactly. The page shell
+    outside the markers is never touched."""
+    if not INDEX_FILE.exists():
+        print(f"  ! {INDEX_FILE} not found; skipping index regeneration", file=sys.stderr)
+        return
+    html = INDEX_FILE.read_text(encoding="utf-8")
+    if POSTS_START not in html or POSTS_END not in html:
+        print(f"  ! markers not found in {INDEX_FILE}; skipping index regeneration", file=sys.stderr)
+        return
+    try:
+        template = gc.read(gc.find_template(None))
+    except SystemExit as e:
+        # find_template exits if the template is missing; don't take the feed down with it.
+        print(f"  ! {e}; skipping index regeneration", file=sys.stderr)
+        return
+
+    cards = []
+    for p in posts:
+        ph = gc.read(str(p["path"]))
+        cards.append(gc.fill_card(
+            template,
+            slug=gc.extract_slug(ph),
+            date=gc.pretty_date(ph),
+            minutes=gc.read_minutes(ph, 200),
+            title=gc.extract_title(ph),
+            summary=gc.pick_summary(ph, None),
+        ))
+    block = "\n\n".join(cards)
+    before = html.split(POSTS_START)[0]
+    after = html.split(POSTS_END, 1)[1]
+    INDEX_FILE.write_text(
+        f"{before}{POSTS_START}\n{block}\n      {POSTS_END}{after}", encoding="utf-8"
+    )
+    print(f"Wrote {INDEX_FILE} with {len(cards)} card(s)")
+
+
 def main() -> int:
     if not BLOG_DIR.is_dir():
         print(f"error: '{BLOG_DIR}' not found — run this from the repo root.", file=sys.stderr)
         return 1
 
-    # blog/<slug>/index.html only; this naturally excludes blog/index.html (the listing page).
     post_files = sorted(BLOG_DIR.glob("*/index.html"))
     posts = [p for f in post_files if (p := extract_post(f))]
     posts.sort(key=lambda p: p["pubdate"], reverse=True)
@@ -166,6 +212,9 @@ def main() -> int:
 """
     OUTPUT.write_text(feed, encoding="utf-8")
     print(f"Wrote {OUTPUT} with {len(posts)} post(s): {', '.join(p['slug'] for p in posts)}")
+
+    # Same posts, same pass, shared renderer: the index can't drift from the feed.
+    write_index(posts)
     return 0
 
 
