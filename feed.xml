@@ -8,8 +8,43 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 30 Jun 2026 17:52:44 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jul 2026 12:10:13 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Job Was Never Coding</title>
+      <link>https://rnvizion.dev/blog/the-job-was-never-coding/</link>
+      <guid isPermaLink="true">https://rnvizion.dev/blog/the-job-was-never-coding/</guid>
+      <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Christian Smith</dc:creator>
+      <description>AI didn’t automate the developer; it automated the translation. The thinking was always the job. The typing was just where it showed.</description>
+      <content:encoded><![CDATA[<p>There’s a fear running through my field right now, and I understand why people feel it. AI can write code. Not toy code; real, working, deployed code. So the conclusion writes itself: if the machine can do the coding, the coders are finished.</p>
+<p>I want to say this as plainly as I can. If you believe AI replacing coders is the end of developers, you never understood what the job was.</p>
+<p>Coding was always the visible tip of an invisible act. The typing was never the work; the typing was the output of the work. The work happened before a single line was written, in the part nobody films for the montage: deciding what to build, deciding why, deciding how it should behave when everything goes right and what it should do when everything goes wrong. The work was the thinking. The code was just the thinking translated into machine language.</p>
+<hr/>
+<h2>What the job actually was</h2>
+<p>Watch what a developer actually does, and you’ll see the typing is the smallest part of it. Someone hands you a problem. They tell you what they want, except they don’t really know what they want; they know what’s bothering them, and it’s your job to find the real shape underneath the request. You decide what to build and what to refuse to build. You imagine the person on the other end and how they’ll navigate and interact with it. You hold the whole system in your head and feel where it will crack before it cracks. Then, after all of that, you write the code.</p>
+<p>I know this because I lived it building my own software suite. The AI got better at coding every single day I worked on it, but here is what the AI was actually doing: it was translating. I handed it intent, and it gave me syntax back. It could do the math, the physics, the heavy lifting; all of it, fast. What it could not do was imagine how a human would use the thing, react to it, or feel about it. It could not decide what was worth building. That part never left my hands, because that part was the job.</p>
+<hr/>
+<h2>So what did AI actually automate?</h2>
+<p>Be precise about it. AI did not automate the developer. <strong>It automated the translation.</strong> The machine is the fastest typist who ever lived, and it has no idea what’s worth typing. Hand it a clear thought and it renders that thought beautifully. Hand it nothing and it gives you nothing worth keeping, or worse, it hallucinates something that runs and means nothing. It can produce a fully functioning app. It can make a program do the one thing a program is technically required to do: run; however, “runs” and “worth using” live in different universes, and the distance between them is human.</p>
+<p>So the thing AI replaced was never the job. It was the grunt work inside the job. The boilerplate, the scaffolding, the thousand small translations that used to eat my nights. Being freed from grunt work is not losing your job. It’s finally getting to do it. The math is the machine’s now; the meaning is still mine.</p>
+<hr/>
+<h2>Now the part nobody wants to say</h2>
+<p>Here’s where the comfortable version of this essay stops, and I’m not going to stop there.</p>
+<p>Some people genuinely are exposed. Not “the industry is changing, we’ll all adapt.” Exposed. The developers whose entire value was translation, who took someone else’s thought and rendered it in syntax and never once did the thinking themselves, those people are in real trouble. Because translation is exactly the thing the machine just learned to do better, faster, and cheaper than any human.</p>
+<p>If you only ever typed, you were never doing the job. You were doing the part of the job that was always going to be automated eventually, and eventually arrived. That’s not cruelty; it’s clarity. The reassurance was never “everyone is safe.” It was always something harder and more honest: the job was thinking, and if you were actually doing that job, you just became more valuable, not less. The ground only opened up under the people who were standing on the part that was never solid.</p>
+<hr/>
+<h2>Where man and machine actually shine</h2>
+<p>I’m not anti-AI. I built five open-source applications with it; I’d be a fool and a liar to pretend it took something from me.</p>
+<p>It gave me time. Every translation I hand to the machine is an hour I get back for the human part: thinking like a human, feeling like a human, operating like a human. Making the thing user-friendly. Making it squishy. The combination of man and machine shines in exactly one place, and it’s the place the machine can’t reach on its own: when a human eye takes the slow time to make a working thing into a thing worth using.</p>
+<p>The machine makes it run. The human makes it matter. That was always the division of labor; AI just drew the line in bright, undeniable ink.</p>
+<p>So no, the developers are not finished. The typists might be — and those were never the same people.</p>
+<p>The code was never the job. The code was just where the thinking showed.</p>
+<p><em>Second in a series on building with a soul in a fast age. Next: why AI doesn’t change what one person can charge; it changes what one person gets to keep.</em></p>
+<div class="bio">
+<strong>Christian Smith</strong> (RNVizion) is a Python developer, AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He builds desktop tools, writes fiction, makes art, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>]]></content:encoded>
+    </item>
     <item>
       <title>The Honest Machine</title>
       <link>https://rnvizion.dev/blog/ask-the-corpus/</link>
