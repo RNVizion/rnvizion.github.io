@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AIII: The Artificial Intelligence Identification Initiative — RNVizion</title>
-  <meta name="description" content="An open coordination layer for AI and agent identity, built on one rule: resolve or refuse, never guess. A working proposal by Christian 'RNVizion' Smith." />
+  <meta name="description" content="An identity and authorization gate for MCP servers, built on one rule: resolve or refuse, never guess. The build record, and an honest map of where agent identity actually gets solved." />
 
   <!-- Open Graph / social -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://rnvizion.dev/aiii/" />
   <meta property="og:title" content="AIII: Artificial Intelligence Identification Initiative" />
-  <meta property="og:description" content="An open coordination layer for AI and agent identity, built on one rule: resolve or refuse, never guess." />
+  <meta property="og:description" content="An identity and authorization gate for MCP servers, built on one rule: resolve or refuse, never guess. The build record." />
   <meta property="og:image" content="https://rnvizion.dev/assets/brand/aiii-og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="AIII: Artificial Intelligence Identification Initiative" />
-  <meta name="twitter:description" content="An open coordination layer for AI and agent identity, built on one rule: resolve or refuse, never guess." />
+  <meta name="twitter:description" content="An identity and authorization gate for MCP servers, built on one rule: resolve or refuse, never guess. The build record." />
   <meta name="twitter:image" content="https://rnvizion.dev/assets/brand/aiii-og.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -286,10 +286,10 @@
 <main class="wrap">
 
   <header>
-    <p class="kicker rise">Working draft · in active development</p>
+    <p class="kicker rise">Build record · complete at v0.1.0</p>
     <p class="wordmark rise d1">AIII</p>
     <h1 class="title rise d1">The Artificial Intelligence Identification Initiative</h1>
-    <p class="dek rise d2">An open coordination layer for AI and agent identity, built on one rule: resolve or refuse, never guess.</p>
+    <p class="dek rise d2">An identity and authorization gate for MCP servers, built on one rule: resolve or refuse, never guess.</p>
     <p class="byline rise d2">Christian &ldquo;RNVizion&rdquo; Smith &nbsp;·&nbsp; <a href="https://rnvizion.dev">rnvizion.dev</a></p>
     <p class="byline rise d2">Reference implementation: <a href="https://github.com/RNVizion/rnv-mcp-identity">github.com/RNVizion/rnv-mcp-identity</a> &nbsp;·&nbsp; <a href="https://huggingface.co/spaces/RNVizion/rnv-mcp-identity">live demo</a></p>
   </header>
@@ -298,24 +298,20 @@
 
   <article class="body">
 
-    <p class="lede">I build small servers that let an AI call a tool. The model decides what it wants; the tool hands back the exact value, or it declines. Living in that loop for a year taught me to notice a question nobody answers cleanly yet: who is asking, and are they cleared to?</p>
+    <p class="lede">A request arrives carrying a valid identity token and a proof with four characters changed. The gate returns three things: a denial, the machine-readable reason <span class="pull">proof_invalid</span>, and the exact step in the sequence where it stopped. It doesn&rsquo;t guess, and it doesn&rsquo;t fail open. The demo runs that scenario live, along with five others, in about ten seconds.</p>
 
-    <p>Here&rsquo;s how concrete the gap is. A recent survey looked at roughly two thousand of those servers running in the wild. Every one lacked authentication. Not most; all of them. The agents are already here, already calling tools, already acting for people and companies, and the layer that says <span class="pull">which agent, run by whom, permitted to do what</span> doesn&rsquo;t exist where the work actually happens.</p>
+    <p>That gate is <span class="pull">rnv-mcp-identity</span>, and this page is the record of building it.</p>
 
-    <p>That&rsquo;s one corner of a much larger hole.</p>
+    <p>It answers two questions a Model Context Protocol server has no standard way to ask on its own: who is calling, and are they cleared to do this? It runs the sequence in a fixed order: read the presented identity, resolve whether the issuer is recognized, verify the signature and the holder-of-key proof, then check the requested action against policy. It returns exactly one of three outcomes: allow, deny, or unknown. Unknown is never quietly upgraded into allow, because an unverified caller does not act.</p>
 
-    <p>Step back and it’s the same at every scale. It’s 2026, and the defining question about digital media is no longer whether the model can fake it; that war is lost. It’s whether the viewer can verify it. The answer the industry converged on is provenance: C2PA Content Credentials, now an ISO standard, sign a file the moment it’s made; SynthID and its kin hide a watermark that can survive a screenshot. Good work. Necessary work.</p> 
+    <p>The engineering around it is the part I&rsquo;d point a reviewer at. Forty-six tests run on every push, across Linux and Windows, on Python 3.10 through 3.12. Every commit carries a Developer Certificate of Origin sign-off, enforced in continuous integration rather than requested in a document. Releases ship a CycloneDX software bill of materials and a manifest signed with Sigstore, keylessly, through the release workflow&rsquo;s own identity, so there is no signing key to store or lose. Dependencies are audited on every pull request; the source is scanned on every push.</p>
 
-    <p>And still not enough, for a reason that&rsquo;s easy to walk past. A missing credential proves nothing. The signature strips on a re-encode; the watermark marks only what its issuer chose to mark. Absence of a label is not evidence of authenticity, and it never will be. Provenance tells you something when a thing is signed. It can&rsquo;t, by itself, tell you what to trust when it isn&rsquo;t.</p>
-
-    <p>So I went looking for who&rsquo;s building the harder half, and I found the shape of the problem written into the work itself.</p>
-
-    <p>The IETF has at least ten active drafts on agent identity right now, written in isolation at NVIDIA, Okta, OpenAI, AWS, and a dozen other desks, with no working group holding them together. Read side by side, they describe a single stack: identity provenance, then verification, then authorization, then structural enforcement, then cross-organizational trust. Five layers, L1 through L5.</p>
+    <p>I submitted the project against the OpenSSF Best Practices baseline in July 2026, with one control marked unmet. QA-07.01 asks for a non-author human review before every merge, and I&rsquo;m one maintainer; a second account clicking approve would satisfy the form and nothing else. Marking it met would have been the only dishonest line in the submission, on a project whose whole argument is that an honest no beats a convenient yes.</p>
 
     <figure class="stack">
-      <p class="stack-head">The agent-trust stack, as the active drafts describe it</p>
+      <p class="stack-head">The agent-trust stack, and where the answers landed</p>
 
-      <span class="grp-label">One deployment can resolve this</span>
+      <span class="grp-label">L1&ndash;L3 · what one deployment resolves · built</span>
       <div class="layer solved">
         <span class="code">L1</span><span class="name">Identity provenance</span>
         <span class="desc">who issued this agent</span>
@@ -329,9 +325,9 @@
         <span class="desc">what it&rsquo;s scoped to do</span>
       </div>
 
-      <div class="threshold"><span>Where every active draft stops</span></div>
+      <div class="threshold"><span>Where a single deployment stops</span></div>
 
-      <span class="grp-label">No single operator · unclaimed</span>
+      <span class="grp-label">L4&ndash;L5 · beyond one deployment</span>
       <div class="layer open">
         <span class="code">L4</span><span class="name">Structural enforcement</span>
         <span class="desc">held to that scope across systems</span>
@@ -341,36 +337,26 @@
         <span class="desc">trusted beyond the deployment that made it</span>
       </div>
 
-      <figcaption>AIII operates the layer below the line, and coordinates the work above it.</figcaption>
+      <figcaption>rnv-mcp-identity implements L1 through L3, and stops where a single deployment stops. As of mid-2026, the layers above are being answered by the bodies with the convening power to do it.</figcaption>
     </figure>
 
-    <p>Every one of those drafts stops in the same place. L3.</p>
+    <p>Now the part that&rsquo;s more useful than the build: what I got wrong.</p>
 
-    <p>The reason is the most honest thing in the field. L1 through L3 are problems one organization can solve, because the data lives inside one deployment; you can specify identity, verification, and authorization when you own the ground they stand on. L4 and L5 are a different animal. Cross-organizational trust has no single party to operate it, so no draft can specify it. <span class="pull">Not won&rsquo;t; can&rsquo;t.</span> The authors stop at L3 because past L3 there is nobody to be the answer.</p>
+    <p>When I first wrote this page, I read the active drafts on agent identity and found them all stopping in the same place. Identity, verification, authorization: one organization can resolve those, because it owns the ground they stand on. Past that, structural enforcement and cross-organizational trust have no single party to operate them, so no draft specified them. That refusal to specify was the most honest thing in the field. My conclusion was that somebody had to become the party that operates the layer nobody could claim alone.</p>
 
-    <p>I&rsquo;ve spent a year building on one principle: resolve or refuse, never guess. A tool returns the value it can prove or it declines; the one move it must never make is faking a confidence it hasn&rsquo;t earned. Reading those drafts, I saw the best people in agent identity already living by it. They specify what a deployment can resolve, and they refuse, in plain language, to specify what it can&rsquo;t. The empty space at L4 and L5 isn&rsquo;t negligence; it&rsquo;s integrity. It&rsquo;s a whole field declining to guess.</p>
+    <span class="beat">Somebody did. Not a company &mdash; <span class="x">DNS</span>.</span>
 
-    <p>A refusal that clean is also an invitation. Somebody has to become the party that operates the cross-organizational layer, or it stays empty for good.</p>
+    <p>In June 2026 the Linux Foundation announced the Agent Name Service: identity, verification, and discovery for agents anchored to the domain name system and public-key infrastructure, authored as an IETF draft, federated by construction. No new registry, no central operator, no proprietary root. Agent operators use the domains they already own. The cross-organizational layer never needed an operator of record; it needed to be anchored to infrastructure that nobody owns, which is the same move the web has been running for thirty years. I was right about the gap and wrong about its shape.</p>
 
-    <span class="beat">That&rsquo;s what <span class="x">AIII</span> is for.</span>
+    <p>The layers underneath filled in just as quickly, and by the bodies positioned to fill them. The OpenID Foundation&rsquo;s AuthZEN Working Group holds authorization: its Authorization API 1.0 was approved as a Final Specification in January 2026, and in June the group approved a profile called COAZ that maps MCP tool calls and their parameters into that model, so a server can ask a policy decision point whether this agent, acting for this user, may call this tool with these arguments. That is, almost exactly, the question my L3 answers. The IETF&rsquo;s Identity Assertion JWT Authorization Grant went past draft status into shipping code: MCP&rsquo;s enterprise-managed authorization extension stabilized in June 2026 and implements it, so an enterprise identity provider brokers the decision before an agent ever reaches the server. Convening the identity conversation across all of it is the OpenID Foundation&rsquo;s Artificial Intelligence Identity Management group, chartered deliberately as a community group rather than a specification factory.</p>
 
-    <p>Not a regulator. Not a treaty waiting on governments to agree in a decade. Look at the most serious attempt going: the EU AI Act runs a public database where high-risk systems register before they ship, and its Commission just issued a code of practice for labelling AI-generated content. Real work, and still not the thing. Regulation registers a system inside one border and labels what it puts out; it can&rsquo;t vouch for one company&rsquo;s agent to another&rsquo;s across the line, and the high-risk clock already slipped to 2027 while the agents kept shipping. A registry is a list. Trust is an operation, and somebody has to operate it.</p>
+    <p>None of that is a defeat; it&rsquo;s an education, and it cost me a repository I would have built anyway. It does settle a question I had been holding open.</p>
 
-    <p>The internet didn&rsquo;t standardize itself from the top down; it grew through rough consensus and running code, RFCs that earned their authority by being implemented and interoperating. AIII takes that model on purpose, because AI moves at the internet&rsquo;s pace, not aviation&rsquo;s.</p>
+    <p><span class="pull">Standards don&rsquo;t win on merit; they win on convening power.</span> The OpenID Foundation can put its membership in a room and hold a ratification vote. The Linux Foundation can gather a hundred and eighty member organizations and hand them naming infrastructure the whole internet already trusts. One maintainer with a clean repository cannot supply that, and no amount of correct engineering substitutes for it. Knowing which of those two things you&rsquo;re holding is worth more than pretending they&rsquo;re the same.</p>
 
-    <p>So AIII is two things at once. The first: the coordinating layer the ten orphaned drafts are missing, so the field stops rebuilding the same primitives blind to each other. The second: the operator of record for the layer none of them can claim alone, an open, neutral, shared system whose whole job is to answer, across boundaries, is this AI, who controls it, and what is it cleared to do; honestly, or with an explicit unknown.</p>
+    <p>So AIII is not a bid to become a standard, and it isn&rsquo;t looking for adopters. It&rsquo;s the name on a build: a working L1 through L3 gate, a public repository, a security posture I can defend line by line, and a map of a problem space I read more precisely now than when I started. The initiative was the wrong shape. The work was not.</p>
 
-    <p>A proposal is a position paper until something runs. So the first artifact isn&rsquo;t a manifesto; it&rsquo;s code, at the layer I already stand in.</p>
-
-    <p>The timing is right: MCP was contributed to the Agentic AI Foundation, a vendor-neutral directed fund under the Linux Foundation, co-founded by Anthropic, Block, and OpenAI; that makes it the natural proving ground. Two thousand servers, zero authentication, one open question with my name already on it. The first deliverable is a small, deterministic identity-and-authorization layer for MCP servers that answers who controls this agent and what it may do, built the way I build everything: it resolves what it can prove, and refuses the rest out loud. Running code that demonstrates L1 through L3 cleanly, and shows exactly where L4 has to begin.</p>
-
-    <p>And the door is already open. AAIF takes new projects through a public proposal process, so this isn&rsquo;t a pitch into the void; it&rsquo;s a build with an address. The goal is plain: get the layer to working level, then submit it as a project where MCP already lives.</p>
-
-    <p><span class="pull">Prove the layer where I stand. Map the layer no one can stand on alone.</span> That&rsquo;s the order, and that&rsquo;s the work.</p>
-
-    <p>The field has quietly agreed on something most of the world hasn&rsquo;t caught up to: the dangerous answer was never the wrong one, it was the confident one. A false yes travels further than an honest blank, and cleans up worse.</p>
-
-    <p>So the standard AIII holds itself to is the one its best engineers already keep, only written down and made shared: resolve what you can prove, name what you can&rsquo;t, and when the honest answer is no &mdash; say <span class="sc">no</span>.</p>
+    <p>What survives is the rule the whole thing was built on: resolve or refuse, never guess. That was never going to be a standard; it&rsquo;s a discipline, and a discipline doesn&rsquo;t need a foundation behind it to be worth keeping. It&rsquo;s in a gate that returns unknown instead of a plausible yes. It&rsquo;s in a submission that marks a control unmet instead of met. It goes into everything I build after this, which is the part no committee was ever going to award me.</p>
 
     <div class="landing">
       <strong>A system that can say <span class="sc">no</span> is the only one worth trusting with yes.</strong>
@@ -381,25 +367,28 @@
   <section class="grounding">
     <h2>Grounding</h2>
     <dl>
-      <dt>Content provenance</dt>
-      <dd>C2PA Content Credentials (ISO/IEC 22144); Google DeepMind SynthID watermarking. The signed-file and embedded-watermark layers the proposal builds past.</dd>
+      <dt>The build</dt>
+      <dd>rnv-mcp-identity, Apache-2.0, released at v0.1.0: an L1&ndash;L3 identity and authorization layer for MCP servers, with a framework-agnostic decision engine and a FastMCP adapter. Source and specification on GitHub; the identity gate runs live on Hugging Face Spaces.</dd>
 
-      <dt>Agent identity</dt>
-      <dd>Active IETF Internet-Drafts on agent identity (datatracker.ietf.org), e.g. draft-klrc-aiagent-auth and draft-prakash-aip; the W3C Agent Identity Registry Protocol Community Group.</dd>
+      <dt>Authorization</dt>
+      <dd>The OpenID Foundation&rsquo;s AuthZEN Working Group: Authorization API 1.0, approved as an OpenID Final Specification in January 2026; the AARP and COAZ working group drafts approved in June 2026, COAZ being the AuthZEN profile for Model Context Protocol tool authorization.</dd>
 
-      <dt>The five-layer model</dt>
-      <dd>L1 identity provenance through L5 cross-organizational behavioral trust, synthesized across the active drafts; the L3 boundary is where each declares the next layer out of scope.</dd>
+      <dt>Identity in the protocol</dt>
+      <dd>The IETF&rsquo;s Identity Assertion JWT Authorization Grant (draft-ietf-oauth-identity-assertion-authz-grant), a profile of RFC 7523 building on identity chaining across trust domains; implemented by the Model Context Protocol&rsquo;s enterprise-managed authorization extension, stabilized June 2026.</dd>
 
-      <dt>Infrastructure</dt>
-      <dd>Agentic AI Foundation (AAIF), an open-source consortium and directed fund under the Linux Foundation, co-founded by Anthropic, Block, and OpenAI; the contributed home of the Model Context Protocol and the natural proving ground for a reference implementation. MCP donated December 9, 2025.</dd>
+      <dt>Naming and discovery</dt>
+      <dd>The Linux Foundation&rsquo;s Agent Name Service, announced June 2026: agent identity, verification, and discovery anchored to DNS and public-key infrastructure, authored as an IETF draft, alongside the DNS-AID agent discovery project.</dd>
 
-      <dt>Capability &amp; governance precedents</dt>
-      <dd>International AI Safety Report (2026), chaired by Yoshua Bengio; Singapore IMDA Model AI Governance Framework for Agentic AI; the EU AI Act, whose high-risk registration database (Articles 49 and 71) is now phased to December 2027, with a Commission code of practice on labelling AI-generated content issued June 2026.</dd>
+      <dt>Convening</dt>
+      <dd>The OpenID Foundation&rsquo;s Artificial Intelligence Identity Management Community Group, chartered to convene rather than to publish specifications; the W3C Agent Identity Registry Protocol Community Group; the Agentic AI Foundation under the Linux Foundation, the contributed home of the Model Context Protocol.</dd>
+
+      <dt>Currency</dt>
+      <dd>The landscape above is accurate as of July 2026, and this space moves quickly; verify current status at the source before relying on any of it.</dd>
     </dl>
   </section>
 
   <footer class="foot">
-    A living proposal, in active development. Comments, holes, and prior art welcome.<br />
+    A build record. The code is public and complete at v0.1.0; corrections and prior art are still welcome.<br />
     Christian &ldquo;RNVizion&rdquo; Smith 
     <div><a href="https://rnvizion.dev">rnvizion.dev</a> · <a href="https://github.com/RNVizion">github.com/RNVizion</a> · <a href="https://huggingface.co/spaces/RNVizion/rnv-mcp-identity">live demo</a></div>
     <div><a href="/bio/">Bio</a> · <a href="/resume/">Résumé</a> · Washington, DC</div>
