@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Résumé — Christian Smith</title>
-  <meta name="description" content="The résumé of Christian “RNVizion” Smith — Python developer building production AI systems on the Claude API: RAG, an agentic publishing pipeline, and a published MCP server, plus a five-app desktop toolkit. AR/VR specialist at Meta." />
+  <meta name="description" content="The résumé of Christian “RNVizion” Smith — Python developer building production AI systems on the Claude API: a CI-gated RAG assistant, an agentic publishing pipeline, and an MCP server in the official registry with OAuth 2.1. AR/VR specialist at Meta." />
 
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://rnvizion.dev/resume/" />
   <meta property="og:title" content="Résumé — Christian Smith" />
-  <meta property="og:description" content="Python developer building production AI on the Claude API: RAG, an agentic publishing pipeline, and a published MCP server, plus a five-app desktop toolkit. AR/VR specialist at Meta." />
+  <meta property="og:description" content="Python developer building production AI on the Claude API: a CI-gated RAG assistant, an agentic publishing pipeline, and an MCP server in the official registry with OAuth 2.1. AR/VR specialist at Meta." />
   <meta property="og:image" content="https://rnvizion.dev/assets/og-image.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -154,8 +154,12 @@
     ul li strong { color: var(--text); font-weight: 600; }
     ul li .proj { color: var(--accent); font-weight: 600; }
 
-    .cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; }
-    @media (max-width: 560px) { .cert-grid { grid-template-columns: 1fr; } }
+    /* visible-URL treatment on project entries */
+    .proj-url { font-family: var(--font-mono); font-size: 0.82em; color: var(--text-faint); }
+    .proj-url:hover { color: var(--accent); }
+
+    .cert-line { color: var(--text-dim); margin-bottom: 8px; font-size: 0.97rem; }
+    .cert-line strong { color: var(--text); font-weight: 600; }
 
     footer {
       border-top: 1px solid var(--border-soft);
@@ -204,19 +208,42 @@
 
       <section>
         <div class="section-label">Summary</div>
-        <p class="summary">Python developer building production AI systems on the Claude API: a retrieval-augmented assistant and an agentic publishing pipeline, plus rnv-color-mcp, a Model Context Protocol server published to the official MCP registry that any LLM can call, and AIII, an Apache-2.0 reference implementation for AI agent identity. These sit on top of the RNVizion toolkit of five professional desktop applications: nine shipped projects in all. Hands-on AR/VR product experience at Meta and Google IT Support certification, with a Bachelor of Science in Game Programming and a proven track record of turning complex technical concepts into clear documentation, training content, and live customer engagement. Targeting remote AI Engineer, Solutions Engineer, and Developer Advocate roles where building, communicating, and shipping production systems all matter.</p>
+        <p class="summary">Python developer building production AI systems on the Claude API, with nine shipped projects and 5,021 tests across the portfolio. I build and publish Model Context Protocol servers, including one in the official MCP registry that implements OAuth 2.1 with RFC 9728 protected-resource metadata and enforced per-tool scopes, alongside a retrieval-augmented assistant and an agentic publishing pipeline. Hands-on AR/VR product experience at Meta and a Bachelor of Science in Game Programming, with a proven track record of turning complex technical concepts into clear documentation, training content, and live customer engagement. Targeting remote AI Engineer, Solutions Engineer, and Developer Advocate roles where building, communicating, and shipping production systems all matter.</p>
       </section>
 
       <section>
         <div class="section-label">Technical Skills</div>
-        <div class="skill-row"><span class="k">Languages:</span> <span class="v">Python, C++, C#, Java, JavaScript, SQL, HTML, PowerShell</span></div>
-        <div class="skill-row"><span class="k">Frameworks &amp; Tools:</span> <span class="v">PyQt6, Git, Unity, Unreal Engine, Active Directory, Jira, ServiceNow, Google Workspace, Google Cloud Platform, Microsoft 365, Zoom, Slack, VPN, Wireshark</span></div>
-        <div class="skill-row"><span class="k">AI / ML:</span> <span class="v">Claude API (Anthropic), RAG (retrieval-augmented generation), vector search (ChromaDB), embeddings (sentence-transformers), MCP (Model Context Protocol) / FastMCP, LLM agent orchestration, Gradio, Hugging Face Spaces</span></div>
-        <div class="skill-row"><span class="k">Testing &amp; DevOps:</span> <span class="v">pytest, pytest-qt, hypothesis, syrupy, coverage.py, GitHub Actions (Linux + Windows CI)</span></div>
-        <div class="skill-row"><span class="k">Security &amp; Networking:</span> <span class="v">Network protocols, OS hardening, DNS, DHCP, TCP/IP, firewalls, VPN, intrusion detection, threat modeling</span></div>
-        <div class="skill-row"><span class="k">AR/VR &amp; 3D:</span> <span class="v">Meta Ray-Ban smart glasses, Meta Quest VR headsets, zBrush, 3DS Max, Substance Painter/Designer</span></div>
-        <div class="skill-row"><span class="k">Creative Suite:</span> <span class="v">Adobe Photoshop, Illustrator, InDesign, After Effects, Premiere</span></div>
-        <div class="skill-row"><span class="k">Operating Systems:</span> <span class="v">Windows, macOS, Linux, Android</span></div>
+        <div class="skill-row"><span class="k">Languages:</span> <span class="v">Python, JavaScript, SQL, C++, C#, Java, HTML, PowerShell</span></div>
+        <div class="skill-row"><span class="k">AI / ML:</span> <span class="v">Claude API (Anthropic), MCP (Model Context Protocol) / FastMCP, LLM agent orchestration, RAG (retrieval-augmented generation), vector search (ChromaDB), embeddings (sentence-transformers), Gradio, Hugging Face Spaces</span></div>
+        <div class="skill-row"><span class="k">Security &amp; Identity:</span> <span class="v">OAuth 2.1 resource servers, RFC 9728 protected-resource metadata, holder-of-key verification (RFC 7800/7638), per-tool authorization scopes, threat modeling, network protocols, OS hardening</span></div>
+        <div class="skill-row"><span class="k">Testing &amp; DevOps:</span> <span class="v">pytest, pytest-qt, hypothesis (property-based), syrupy (snapshot), coverage.py, CI-gated LLM evaluation suites, GitHub Actions (Linux + Windows CI), DCO enforcement, Sigstore signing, CycloneDX SBOM, pip-audit, bandit SAST</span></div>
+        <div class="skill-row"><span class="k">Platforms &amp; Tools:</span> <span class="v">Git, GitHub Codespaces, PyQt6, Google Cloud Platform, Jira, ServiceNow, Google Workspace, Microsoft 365, Slack, Zoom</span></div>
+      </section>
+
+      <section>
+        <div class="section-label">Selected Projects</div>
+        <ul>
+          <li>
+            <a class="proj" href="https://rnvizion.dev/aiii/">AIII: Artificial Intelligence Identification Initiative</a>
+            ·&nbsp;<a class="proj-url" href="https://rnvizion.dev/aiii/">rnvizion.dev/aiii</a> —
+            Apache-2.0 reference implementation for AI agent identity: an L1–L3 identity-and-authorization layer for MCP servers, built on one principle: resolve or refuse, never guess. Holder-of-key verification (RFC 7800/7638), declarative per-tool authorization, 46 tests with property-based eval gates, and cross-platform CI with lint and SAST. Supply chain: DCO enforced in CI, Sigstore-signed release manifests, a CycloneDX SBOM per release, and an OpenSSF Best Practices Baseline submission at 20 of 21 controls, with the one exception documented rather than hidden. Source at <a class="proj-url" href="https://github.com/RNVizion/rnv-mcp-identity">github.com/RNVizion/rnv-mcp-identity</a>, with a <a href="https://huggingface.co/spaces/RNVizion/rnv-mcp-identity">live demo</a> on Hugging Face Spaces.
+          </li>
+          <li>
+            <a class="proj" href="https://github.com/RNVizion/rnv-color-mcp">rnv-color-mcp</a>
+            ·&nbsp;<a class="proj-url" href="https://github.com/RNVizion/rnv-color-mcp">github.com/RNVizion/rnv-color-mcp</a> —
+            Color-computation server on the Model Context Protocol (FastMCP), published to the official MCP registry and listed in awesome-mcp-servers. Nine deterministic tools spanning color conversion, harmony generation, mixing, palette management, WCAG contrast (AA/AAA), and perceptual difference (CIEDE2000). Also an OAuth 2.1 resource server: RFC 9728 protected-resource metadata and enforced per-tool scopes over a read and write split, 18 tests green in CI. One shared engine, callable by any LLM client: the model decides intent, the tool owns the exact value. MIT licensed, live on Hugging Face Spaces.
+          </li>
+          <li>
+            <a class="proj" href="https://huggingface.co/spaces/RNVizion/ask-the-corpus">Ask the Corpus</a>
+            ·&nbsp;<a class="proj-url" href="https://huggingface.co/spaces/RNVizion/ask-the-corpus">huggingface.co/spaces/RNVizion/ask-the-corpus</a> —
+            Live retrieval-augmented (RAG) assistant answering questions over my published writing: sentence-transformers embeddings and ChromaDB vector search, grounded through Claude with source citations, plus rate limiting and per-call cost guardrails. Quality is CI-gated: a 40-case evaluation suite (22 in-corpus, 18 out-of-corpus, including deliberate traps) runs on every change to the app, the ingestion path, or the corpus, and fails the build if any of three thresholds regresses: retrieval accuracy at or above 85%, out-of-corpus refusal at or above 90%, and false-refusal rate at or below 10%. Gradio UI, deployed live on Hugging Face Spaces.
+          </li>
+          <li>
+            <a class="proj" href="https://github.com/RNVizion/publishing-agent">MCP Publishing Agent</a>
+            ·&nbsp;<a class="proj-url" href="https://github.com/RNVizion/publishing-agent">github.com/RNVizion/publishing-agent</a> —
+            FastMCP server exposing four tools, orchestrated by a Claude agent loop to automate an end-to-end content-publishing workflow; built and tested in GitHub Codespaces.
+          </li>
+        </ul>
       </section>
 
       <section>
@@ -262,46 +289,49 @@
             <li><strong>Productivity Consultant:</strong> Analyzed client workflows, designed change management plans, and led cross-functional initiatives to drive measurable productivity improvements.</li>
           </ul>
         </div>
-
-        <div class="entry">
-          <div class="entry-head"><span class="org">Southern New Hampshire University</span><span class="date">Jan 2016 – Mar 2019</span></div>
-          <div class="entry-sub"><span class="role">Fitness Center Supervisor → Fitness Center Attendant</span><span class="loc">Manchester, NH</span></div>
-          <ul>
-            <li>Supervised facility operations and a team of attendants while completing a BS in Game Programming and Development.</li>
-          </ul>
-        </div>
       </section>
 
       <section>
-        <div class="section-label">Featured Projects</div>
-        <p class="summary" style="margin-bottom:16px;">Two production AI systems on the Claude API, a published Model Context Protocol server, and AIII, an Apache-2.0 reference implementation for AI agent identity, plus the RNVizion toolkit: five professional PyQt6 desktop applications, each with full CLI support, multi-theme UI, cross-platform CI, and comprehensive test coverage.</p>
+        <div class="section-label">Additional Projects</div>
         <ul>
-          <li><a class="proj" href="https://rnvizion.dev/aiii/">AIII: Artificial Intelligence Identification Initiative —</a> Apache-2.0 reference implementation (<a href="https://github.com/RNVizion/rnv-mcp-identity">rnv-mcp-identity</a>) for AI agent identity, with the build record at <a href="https://rnvizion.dev/aiii/">rnvizion.dev/aiii</a> and a <a href="https://huggingface.co/spaces/RNVizion/rnv-mcp-identity">live demo</a> on Hugging Face Spaces. An L1–L3 identity-and-authorization layer for MCP servers, built on one principle: resolve or refuse, never guess. Holder-of-key verification (RFC 7800/7638), declarative per-tool authorization, 46 tests with property-based eval gates, and cross-platform CI with lint and SAST. Supply chain: DCO enforced in CI, Sigstore-signed release manifests, a CycloneDX SBOM per release, and an OpenSSF Best Practices Baseline submission at 20 of 21 controls, with the one exception documented rather than hidden. v0.1.0.</li>
-          <li><a class="proj" href="https://huggingface.co/spaces/RNVizion/ask-the-corpus">Ask the Corpus —</a> Live retrieval-augmented (RAG) assistant answering questions over my published writing: sentence-transformers embeddings + ChromaDB vector search, grounded through Claude with source citations, plus rate limiting and per-call cost guardrails. Gradio UI, deployed live on Hugging Face Spaces.</li>
-          <li><a class="proj" href="https://github.com/RNVizion/publishing-agent">MCP Publishing Agent —</a> FastMCP server exposing four tools, orchestrated by a Claude agent loop to automate a content-publishing workflow; built and tested in GitHub Codespaces.</li>
-          <li><a class="proj" href="https://github.com/RNVizion/rnv-color-mcp">rnv-color-mcp —</a> Color-computation server on the Model Context Protocol (FastMCP), published to the official MCP registry and listed in awesome-mcp-servers. Nine deterministic tools spanning color conversion, harmony generation, mixing, palette management, WCAG contrast (AA/AAA), and perceptual difference (CIEDE2000). One shared engine, callable by any LLM client: the model decides intent, the tool owns the exact value, resolving or refusing rather than guessing. Also an OAuth 2.1 resource server: RFC 9728 protected-resource metadata and enforced per-tool scopes over a read and write split, 18 tests green in CI. MIT licensed, live on Hugging Face Spaces.</li>
-          <li><a class="proj" href="https://github.com/RNVizion/rnv-text-transformer">RNV Text Transformer —</a> 11 transformation modes, 9+ file formats, regex builder, folder watching, full CLI. 786 tests, ~76% coverage, CI on Linux + Windows.</li>
-          <li><a class="proj" href="https://github.com/RNVizion/rnv-color-palette-manager">RNV Color Palette Manager —</a> Professional palette management with 16+ export formats, 7 mixing algorithms, and WCAG accessibility tools.</li>
-          <li><a class="proj" href="https://github.com/RNVizion/rnv-color-picker">RNV Color Picker —</a> Screen color extraction with magnifier, WCAG contrast checker, and color harmony generation.</li>
-          <li><a class="proj" href="https://github.com/RNVizion/rnv-icon-builder">RNV Icon Builder —</a> Multi-resolution ICO creation from PNG, SVG, and ICO sources with platform-specific exports for Android, iOS, and favicons.</li>
-          <li><a class="proj" href="https://github.com/RNVizion/rnv-color-mixer">RNV Color Mixer —</a> Real-world paint mixing simulation using Kubelka-Munk theory in a digital palette.</li>
+          <li>
+            <a class="proj" href="https://rnvizion.dev/blog/">Engineering essay series</a>
+            ·&nbsp;<a class="proj-url" href="https://rnvizion.dev/blog/">rnvizion.dev/blog</a> —
+            Ongoing series on building with intention in the AI era, each post turning real production work into developer-facing writing. Self-published on a site I build and deploy via GitHub Pages, syndicated to dev.to over RSS; the same writing is the corpus behind Ask the Corpus.
+          </li>
+          <li>
+            <a class="proj" href="https://github.com/RNVizion/rnv-text-transformer">RNV Text Transformer</a>
+            ·&nbsp;<a class="proj-url" href="https://github.com/RNVizion/rnv-text-transformer">github.com/RNVizion/rnv-text-transformer</a> —
+            11 transformation modes, 9+ file formats, regex builder, folder watching, full CLI. 786 tests, ~76% coverage, CI on Linux + Windows.
+          </li>
+          <li>
+            <a class="proj" href="https://github.com/RNVizion/rnv-color-palette-manager">RNV Color Palette Manager</a>
+            ·&nbsp;<a class="proj-url" href="https://github.com/RNVizion/rnv-color-palette-manager">github.com/RNVizion/rnv-color-palette-manager</a> —
+            Professional palette management with 16+ export formats, 7 mixing algorithms, and WCAG accessibility tools.
+          </li>
+          <li>
+            <a class="proj" href="https://github.com/RNVizion/rnv-color-picker">RNV Color Picker</a>
+            ·&nbsp;<a class="proj-url" href="https://github.com/RNVizion/rnv-color-picker">github.com/RNVizion/rnv-color-picker</a> —
+            Screen color extraction with magnifier, WCAG contrast checker, and color harmony generation.
+          </li>
+          <li>
+            <a class="proj" href="https://github.com/RNVizion/rnv-icon-builder">RNV Icon Builder</a>
+            ·&nbsp;<a class="proj-url" href="https://github.com/RNVizion/rnv-icon-builder">github.com/RNVizion/rnv-icon-builder</a> —
+            Multi-resolution ICO creation from PNG, SVG, and ICO sources with platform-specific exports for Android, iOS, and favicons.
+          </li>
+          <li>
+            <a class="proj" href="https://github.com/RNVizion/rnv-color-mixer">RNV Color Mixer</a>
+            ·&nbsp;<a class="proj-url" href="https://github.com/RNVizion/rnv-color-mixer">github.com/RNVizion/rnv-color-mixer</a> —
+            Real-world paint mixing simulation using Kubelka-Munk theory in a digital palette.
+          </li>
         </ul>
       </section>
 
       <section>
         <div class="section-label">Certifications</div>
-        <ul class="cert-grid">
-          <li>Google IT Support Professional Certificate</li>
-          <li>Google: System Administration &amp; IT Infrastructure Services</li>
-          <li>Google: IT Security — Defense Against the Digital Dark Arts</li>
-          <li>Google: Operating Systems and You — Becoming a Power User</li>
-          <li>Google: Technical Support Fundamentals</li>
-          <li>Google: The Bits and Bytes of Computer Networking</li>
-          <li>Google: Connect and Protect — Networks and Network Security</li>
-          <li>Google: Foundations of Cybersecurity</li>
-          <li>Google: Play It Safe — Manage Security Risks</li>
-          <li>IBM: Artificial Intelligence Fundamentals</li>
-        </ul>
+        <p class="cert-line"><strong>Google IT Support Professional Certificate</strong> — including System Administration and IT Infrastructure Services, IT Security, Operating Systems, Technical Support Fundamentals, and Computer Networking.</p>
+        <p class="cert-line"><strong>Google Cybersecurity coursework</strong> — Foundations of Cybersecurity · Connect and Protect: Networks and Network Security · Play It Safe: Manage Security Risks.</p>
+        <p class="cert-line"><strong>IBM</strong> — Artificial Intelligence Fundamentals.</p>
       </section>
 
       <section>
