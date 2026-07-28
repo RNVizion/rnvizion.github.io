@@ -1,14 +1,26 @@
-name: Build OG images
+name: Build images
 
-# Render a per-post Open Graph image (assets/og/<slug>.png) for every blog post
-# whenever a post — or the generator or the font script — changes, then commit
-# the rendered PNGs back to the repo.
+# Renders the two kinds of generated image this site uses, then commits them
+# back to the repo:
 #
-# No infinite loop, by the same logic build-feed.yml uses: the output lives in
-# assets/og/, which is OUTSIDE this workflow's blog/** trigger path, and the
-# commit is marked [skip ci]. The bot's own commit can't re-trigger the run.
+#   1. assets/og/<slug>.png   a per-post Open Graph share image, one per blog
+#                             post, from scripts/generate_og.py
+#   2. assets/<slug>.png      a project card for any project on the homepage
+#                             whose image is referenced but absent, from
+#                             scripts/generate_project_card.py --all-missing.
+#                             This covers headless projects (an MCP server, an
+#                             agent loop) that have no UI to screenshot. It
+#                             only fills gaps: a real screenshot already on
+#                             disk is never overwritten.
 #
-# This is now the single source of truth for OG images. The local publish
+# No infinite loop, by the same logic build-feed.yml uses: every output lives
+# under assets/, which is OUTSIDE this workflow's trigger paths, and the commit
+# is marked [skip ci]. The bot's own commit can't re-trigger the run.
+#
+# index.html is a trigger path because project cards read their title, label,
+# and tags out of it — edit a project's markup and its card rebuilds to match.
+#
+# This is the single source of truth for generated images. The local publish
 # pipeline no longer needs to generate or commit them; CI owns it, every time,
 # deterministically.
 on:
@@ -16,7 +28,9 @@ on:
     branches: [main]
     paths:
       - "blog/**"
+      - "index.html"
       - "scripts/generate_og.py"
+      - "scripts/generate_project_card.py"
       - "font.sh"
       - ".github/workflows/build-og.yml"
   workflow_dispatch: {}   # run by hand from the Actions tab (use this to backfill)
@@ -52,21 +66,25 @@ jobs:
             python scripts/generate_og.py "$post"
           done
 
-      - name: Commit any new or changed OG images
+      - name: Render a project card for any project missing one
+        run: python scripts/generate_project_card.py --all-missing
+
+      - name: Commit any new or changed images
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -z "$(git status --porcelain assets/og)" ]; then
-            echo "OG images unchanged — nothing to commit."
+          # assets/fonts/ is gitignored, so font.sh's downloads are never staged
+          if [ -z "$(git status --porcelain assets)" ]; then
+            echo "Generated images unchanged — nothing to commit."
             exit 0
           fi
-          git add assets/og
-          git commit -m "chore: rebuild OG images [skip ci]"
+          git add assets
+          git commit -m "chore: rebuild generated images [skip ci]"
           # build-feed.yml can push to main on the same event; rebase and retry
           # so whichever bot lands second doesn't fail on a moved ref.
           for attempt in 1 2 3; do
             if git pull --rebase --autostash origin main && git push; then
-              echo "OG images updated."
+              echo "Generated images updated."
               exit 0
             fi
             echo "push race — retrying ($attempt)…"
