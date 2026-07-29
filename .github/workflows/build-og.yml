@@ -5,7 +5,12 @@ name: Build images
 #
 #   1. assets/og/<slug>.png   a per-post Open Graph share image, one per blog
 #                             post, from scripts/generate_og.py
-#   2. assets/<slug>.png      a project card for any project on the homepage
+#   2. assets/og-image.png    the site-wide Open Graph card shown for the
+#                             homepage, /resume/, and /bio/, from
+#                             scripts/generate_site_og.py. Its values are read
+#                             out of index.html, which is why index.html is a
+#                             trigger path below.
+#   3. assets/<slug>.png      a project card for any project on the homepage
 #                             whose image is referenced but absent, from
 #                             scripts/generate_project_card.py --all-missing.
 #                             This covers headless projects (an MCP server, an
@@ -31,6 +36,7 @@ on:
       - "index.html"
       - "scripts/generate_og.py"
       - "scripts/generate_project_card.py"
+      - "scripts/generate_site_og.py"
       - "font.sh"
       - ".github/workflows/build-og.yml"
   workflow_dispatch: {}   # run by hand from the Actions tab (use this to backfill)
@@ -68,6 +74,12 @@ jobs:
 
       - name: Render a project card for any project missing one
         run: python scripts/generate_project_card.py --all-missing
+
+      - name: Rebuild the site-wide OG card
+        # Reads the name, tagline, and stat block out of index.html, so the
+        # card can never disagree with the page. Cheap enough to run every
+        # time rather than trying to detect whether it changed.
+        run: python scripts/generate_site_og.py
 
       - name: Commit any new or changed images
         run: |
