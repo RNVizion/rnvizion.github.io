@@ -34,6 +34,7 @@ on:
     paths:
       - "blog/**"
       - "index.html"
+      - "resume/index.html"
       - "scripts/generate_og.py"
       - "scripts/generate_project_card.py"
       - "scripts/generate_site_og.py"
@@ -75,11 +76,13 @@ jobs:
       - name: Render a project card for any project missing one
         run: python scripts/generate_project_card.py --all-missing
 
-      - name: Rebuild the site-wide OG card
-        # Reads the name, tagline, and stat block out of index.html, so the
-        # card can never disagree with the page. Cheap enough to run every
-        # time rather than trying to detect whether it changed.
-        run: python scripts/generate_site_og.py
+      - name: Rebuild the shared OG cards
+        # Renders every card in the script's PAGES list: the site-wide card
+        # from index.html, and the resume card from resume/index.html. Each
+        # reads its values out of the page it represents, so a card cannot
+        # disagree with its own page. Cheap enough to run every time rather
+        # than trying to detect whether anything changed.
+        run: python scripts/generate_site_og.py --all
 
       - name: Commit any new or changed images
         run: |
