@@ -1,0 +1,17 @@
+{
+  // Fresh Codespaces ship without Pillow, so scripts/generate_og.py,
+  // generate_project_card.py, and generate_site_og.py all die on
+  // "No module named 'PIL'" until it's installed by hand. CI already installs
+  // it in build-og.yml; this does the same for the editor, and fetches the
+  // brand fonts so a card rendered locally matches one rendered in CI.
+  "name": "rnvizion.github.io",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "postCreateCommand": "pip install --user Pillow && bash font.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
+}
