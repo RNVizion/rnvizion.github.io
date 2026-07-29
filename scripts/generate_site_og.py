@@ -8,17 +8,29 @@ made by hand, which is how it ended up claiming 5,003 tests while the homepage
 said 5,021.
 
 SOURCE OF TRUTH
-Every value is read out of index.html, the same discipline generate_og.py and
-generate_project_card.py already follow:
-  name     <- <h1>, up to the colon
-  tagline  <- .hero-subtitle, first clause
-  stats    <- the .about-stats block (value + label per tile)
-Nothing is hand-typed, so the card cannot disagree with the page it represents.
+Every value is read out of the page it represents, the same discipline
+generate_og.py and generate_project_card.py already follow. Two page shapes:
+
+  homepage (index.html)
+    name     <- <h1>, up to the colon
+    tagline  <- <h1> after the colon, else .hero-subtitle
+    footer   <- .about-stats tiles, rendered as value + label
+
+  résumé (resume/index.html) and any page like it
+    kicker   <- og:title, the part before the em dash ("Résumé")
+    name     <- <h1>
+    tagline  <- .tagline
+    footer   <- <meta name="card:anchors">, a separator-delimited list
+
+card:anchors reuses the card: meta namespace already used for card:summary on
+blog posts. Putting the anchors in the page rather than in this script keeps
+the no-drift property: edit the page, the card follows.
 
 USAGE (run from the repo root)
-  python scripts/generate_site_og.py            # rebuild the card
-  python scripts/generate_site_og.py --check    # compare card vs page, render nothing
-  python scripts/generate_site_og.py --tagline "Custom line"
+  python scripts/generate_site_og.py            # site-wide card from index.html
+  python scripts/generate_site_og.py --page resume/index.html -o assets/og-resume.png
+  python scripts/generate_site_og.py --all      # every card configured in PAGES
+  python scripts/generate_site_og.py --check    # compare cards vs pages, render nothing
 
   # override the stat tiles picked up from the page:
   python scripts/generate_site_og.py --stats "9:PROJECTS,5021:TESTS,10:CERTS"
@@ -53,6 +65,12 @@ REPO = HERE.parent
 FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "fonts"))
 DEFAULT_OUT = REPO / "assets" / "og-image.png"
 
+# Every card this script owns: source page -> output file.
+PAGES = [
+    ("index.html", "assets/og-image.png"),
+    ("resume/index.html", "assets/og-resume.png"),
+]
+
 
 # --------------------------------------------------------------------------
 # reading the page
@@ -72,35 +90,55 @@ def strip_tags(s):
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", s)).strip()
 
 
-def read_page(index_path):
-    """Pull the name, role line, tagline, and stat tiles out of index.html."""
-    html = index_path.read_text(encoding="utf-8")
+def read_page(page_path):
+    """Pull kicker, name, tagline, and footer items out of a page.
+
+    Shape-aware: a page carrying .about-stats gets a stats footer; a page
+    carrying <meta name="card:anchors"> gets an anchors footer.
+    """
+    html = page_path.read_text(encoding="utf-8")
 
     h1 = re.search(r"<h1>(.*?)</h1>", html, re.DOTALL)
     name = strip_tags(h1.group(1)) if h1 else "Christian Smith"
-    # "Christian Smith : I build production AI systems..." -> name, then the rest
+    tagline = ""
     if ":" in name:
         name, _, remainder = name.partition(":")
-        name = name.strip()
-        remainder = remainder.strip()
-    else:
-        remainder = ""
+        name, tagline = name.strip(), remainder.strip()
 
-    sub = re.search(r'hero-subtitle">(.*?)</p>', html, re.DOTALL)
-    subtitle = strip_tags(sub.group(1)) if sub else ""
-    # first sentence up to the first colon reads best at card size
-    tagline = remainder or subtitle.split(":")[0].strip()
+    # kicker: og:title up to the em dash, when it names something else
+    # A kicker only exists when og:title is "<Label> \u2014 <Name>": the em dash
+    # is what marks the label. Without it (the homepage reads "Christian Smith,
+    # AI Engineer & Developer") there is no kicker, and the whole title must not
+    # be mistaken for one.
+    kicker = ""
+    og = re.search(r'og:title"\s+content="(.*?)"', html)
+    if og and "\u2014" in og.group(1):
+        head = og.group(1).split("\u2014")[0].strip()
+        if head and len(head) <= 20 and head.lower() not in name.lower():
+            kicker = head.upper()
 
-    stats = []
+    if not tagline:
+        for pattern in (r'hero-subtitle">(.*?)</p>', r'class="tagline">(.*?)</p>'):
+            m = re.search(pattern, html, re.DOTALL)
+            if m:
+                tagline = strip_tags(m.group(1)).split(":")[0].strip()
+                break
+
+    stats, anchors = [], []
     for value, label in re.findall(
         r'stat-value">(.*?)</div>\s*<div class="stat-label">(.*?)</div>', html, re.DOTALL
     ):
         v, l = strip_tags(value), strip_tags(label).upper()
-        # keep the numeric tiles; the degree tile doesn't read at this size
         if re.search(r"\d", v):
             stats.append((v, short_label(l)))
 
-    return {"name": name, "tagline": tagline, "stats": stats[:3]}
+    if not stats:
+        m = re.search(r'name="card:anchors"\s+content="(.*?)"', html)
+        if m:
+            anchors = [a.strip() for a in re.split(r"[\u00b7|]", m.group(1)) if a.strip()]
+
+    return {"kicker": kicker, "name": name, "tagline": tagline,
+            "stats": stats[:3], "anchors": anchors[:4]}
 
 
 # --------------------------------------------------------------------------
@@ -150,9 +188,15 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
     d.text((MARGIN + 2 * dot_r + 12, MARGIN), " ".join("RNVIZION"), font=mono_sm, fill=GOLD)
 
+    # optional kicker (e.g. "RÉSUMÉ") above the name
+    name_y = MARGIN + 78
+    if data.get("kicker"):
+        kick = load_font(FONT_DIR / "JetBrainsMono.ttf", 22, weights=("Medium", "Bold"))
+        d.text((MARGIN, name_y - 6), " ".join(data["kicker"]), font=kick, fill=DIM)
+        name_y += 34
+
     # name
     name_font = load_font(FONT_DIR / "BricolageGrotesque.ttf", 88)
-    name_y = MARGIN + 78
     d.text((MARGIN, name_y), data["name"], font=name_font, fill=TEXT)
 
     # role line + tagline
@@ -171,6 +215,24 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
     # domain, bottom-left
     domain_font = load_font(FONT_DIR / "JetBrainsMono.ttf", 30, weights=("Medium", "Bold"))
     d.text((MARGIN, H - MARGIN - 56), "rnvizion.dev", font=domain_font, fill=GOLD)
+
+    # anchors footer: gold-dotted phrases, right-aligned (résumé-shaped pages)
+    if data.get("anchors") and not data["stats"]:
+        af = load_font(FONT_DIR / "JetBrainsMono.ttf", 24, weights=("Medium", "Bold"))
+        gap, dot_gap, r = 34, 14, 4
+        widths = [d.textlength(a, font=af) for a in data["anchors"]]
+        total = sum(widths) + sum(2 * r + dot_gap for _ in widths) + gap * (len(widths) - 1)
+        x = W - MARGIN - total
+        cy = H - MARGIN - 34
+        for a, w in zip(data["anchors"], widths):
+            d.ellipse([x, cy - r, x + 2 * r, cy + r], fill=GOLD)
+            x += 2 * r + dot_gap
+            d.text((x, cy - 15), a, font=af, fill=DIM)
+            x += w + gap
+        out = Path(out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        img.save(out, "PNG")
+        return out
 
     # stat tiles, bottom-right, right-aligned as a group
     val_font = load_font(FONT_DIR / "BricolageGrotesque.ttf", 40)
@@ -200,7 +262,10 @@ def main():
     ap = argparse.ArgumentParser(description="Render the site-wide Open Graph card.")
     ap.add_argument("--check", action="store_true",
                     help="report whether the card is current; render nothing")
-    ap.add_argument("--index", default=str(REPO / "index.html"))
+    ap.add_argument("--page", "--index", dest="page", default=str(REPO / "index.html"),
+                    help="source page to read (default index.html)")
+    ap.add_argument("--all", action="store_true",
+                    help="render every card in PAGES")
     ap.add_argument("-o", "--output", default=str(DEFAULT_OUT))
     ap.add_argument("--tagline", help="override the tagline read from the page")
     ap.add_argument("--role", default="Python developer · AR/VR at Meta",
@@ -208,7 +273,23 @@ def main():
     ap.add_argument("--stats", help='override stat tiles, e.g. "9:PROJECTS,5021:TESTS,10:CERTS"')
     args = ap.parse_args()
 
-    index_path = Path(args.index)
+    if args.all:
+        rc = 0
+        for src, dst in PAGES:
+            sp, op = REPO / src, REPO / dst
+            if not sp.exists():
+                print(f"skip   {src} not found"); rc = 1; continue
+            data = read_page(sp)
+            if args.check:
+                stale = not op.exists() or op.stat().st_mtime < sp.stat().st_mtime
+                print(f"{'STALE ' if stale else 'ok    '} {dst}  <- {src}")
+                rc = rc or int(stale)
+            else:
+                render(data, op, role_line=args.role)
+                print(f"wrote  {dst}  <- {src}")
+        return rc
+
+    index_path = Path(args.page)
     if not index_path.exists():
         print(f"error: {index_path} not found. Run from the repo root.", file=sys.stderr)
         return 2
@@ -221,10 +302,17 @@ def main():
 
     out = Path(args.output)
 
-    print(f"from {index_path.name}:")
+    print(f"from {index_path}:")
+    if data.get("kicker"):
+        print(f"  kicker  {data['kicker']}")
     print(f"  name    {data['name']}")
     print(f"  tagline {data['tagline']}")
-    print(f"  stats   {' · '.join(f'{v} {l}' for v, l in data['stats'])}")
+    if data["stats"]:
+        print(f"  stats   {' · '.join(f'{v} {l}' for v, l in data['stats'])}")
+    if data["anchors"]:
+        print(f"  anchors {' · '.join(data['anchors'])}")
+    if not data["stats"] and not data["anchors"]:
+        print("  footer  (none: no .about-stats and no card:anchors meta)")
 
     if args.check:
         if not out.exists():
