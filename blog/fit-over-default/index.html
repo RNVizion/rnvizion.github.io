@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  ============================================================================
+  RNVizion blog post — Fit Over Default
+  Copied from post-template.html; placeholders filled.
+  ============================================================================
+-->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fit Over Default — Christian Smith</title>
+  <meta name="description" content="I built two systems and picked the smaller model on purpose; why fit, not the flagship, is the discipline." />
+
+  <!-- Blog-index card teaser. -->
+  <meta name="card:summary" content="The reflex is to grab the biggest model. I built two systems and chose the opposite on purpose; here&#8217;s why fit beats default." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://rnvizion.dev/blog/fit-over-default/" />
+  <meta property="og:title" content="Fit Over Default" />
+  <meta property="og:description" content="I built two systems and picked the smaller model on purpose; why fit, not the flagship, is the discipline." />
+  <meta property="og:image" content="https://rnvizion.dev/assets/og/fit-over-default.png" />
+  <meta property="article:author" content="Christian Smith" />
+  <meta property="article:published_time" content="2026-07-30" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11111a;
+      --bg-3: #1a1a26;
+      --border: #25253a;
+      --border-soft: #1e1e2e;
+      --text: #e8e8f0;
+      --text-dim: #9a9ab0;
+      --text-faint: #5a5a72;
+      --accent: #d2bc93;
+      --max-width: 1200px;
+      --read-width: 720px;
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(210, 188, 147, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 188, 147, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%);
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    main, nav, footer, article { position: relative; z-index: 2; }
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+    .read-container { max-width: var(--read-width); margin: 0 auto; padding: 0 32px; }
+
+    nav {
+      position: sticky; top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0; z-index: 100;
+    }
+
+    nav .container {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-weight: 600; font-size: 14px;
+      letter-spacing: -0.5px; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .logo .dot {
+      width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex; gap: 32px;
+      font-family: var(--font-mono); font-size: 13px;
+    }
+
+    .nav-links a { color: var(--text-dim); position: relative; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a:hover { text-decoration: none; }
+
+    .nav-links a::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 1px; background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 40px; height: 40px;
+      cursor: pointer; padding: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.2s ease;
+    }
+
+    .nav-toggle:hover { border-color: var(--accent); }
+
+    .nav-toggle span {
+      display: block; width: 18px; height: 1.5px;
+      background: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+      background: var(--accent);
+    }
+
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+      background: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed; top: 73px; left: 0; right: 0;
+        background: rgba(10, 10, 15, 0.96);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-soft);
+        flex-direction: column; gap: 0;
+        padding: 16px 32px 24px;
+        transform: translateY(-12px);
+        opacity: 0; pointer-events: none;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0); opacity: 1; pointer-events: auto;
+      }
+
+      .nav-links a {
+        padding: 14px 0; font-size: 15px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .nav-links a:last-child { border-bottom: none; }
+      .nav-links a::after { display: none; }
+    }
+
+    .article-header { padding: 100px 0 60px; text-align: center; }
+
+    .article-meta {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 24px;
+    }
+
+    .article-meta .accent { color: var(--accent); }
+
+    .article-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 500; letter-spacing: -0.03em;
+      line-height: 1.1; margin-bottom: 32px;
+    }
+
+    .article-header h1 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    .article-subtitle {
+      font-size: 1.15rem; color: var(--text-dim);
+      max-width: 600px; margin: 0 auto;
+    }
+
+    .byline {
+      font-family: var(--font-mono); font-size: 13px;
+      color: var(--text-dim); margin-top: 28px;
+      display: flex; justify-content: center;
+      align-items: center; gap: 16px;
+    }
+
+    .byline-divider {
+      width: 4px; height: 4px;
+      background: var(--accent); border-radius: 50%;
+    }
+
+    article { padding: 40px 0 80px; }
+
+    article p {
+      margin-bottom: 24px; color: var(--text);
+    }
+
+    article p:first-of-type::first-letter {
+      font-family: var(--font-serif);
+      font-size: 4.2rem; float: left;
+      line-height: 0.9;
+      padding: 8px 14px 0 0;
+      color: var(--accent);
+    }
+
+    article h2 {
+      font-family: var(--font-display);
+      font-size: 1.85rem; font-weight: 500;
+      letter-spacing: -0.02em; line-height: 1.2;
+      margin: 30px 0 24px; color: var(--text);
+    }
+
+    article h2 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    article strong { color: var(--accent); font-weight: 600; }
+    article em { font-style: italic; }
+
+    article hr {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 24px auto; width: 80px;
+    }
+
+    article ul { margin: 0 0 24px 0; padding-left: 24px; }
+    article ul li { margin-bottom: 12px; color: var(--text); }
+
+    .bio {
+      margin-top: 64px; padding: 32px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-2); border-radius: 6px;
+      font-size: 0.95rem; color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .bio strong { color: var(--text); font-weight: 600; }
+
+    .post-footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 48px 0; text-align: center;
+    }
+
+    .post-footer-label {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .post-footer-links {
+      display: flex; gap: 24px;
+      justify-content: center; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: 14px;
+    }
+
+    .post-footer-links a { color: var(--text-dim); }
+    .post-footer-links a:hover { color: var(--accent); text-decoration: none; }
+
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 32px 0;
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    footer .container {
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#stack">Stack</a>
+        <a href="/#work">Work</a>
+        <a href="/blog/" class="active">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+
+    <header class="article-header">
+      <div class="read-container">
+        <div class="article-meta">
+          <span class="accent">&#9679;</span> July 30, 2026 · ~4 min read
+        </div>
+        <h1><em>Fit</em> Over Default</h1>
+        <p class="article-subtitle">On two systems where I picked the smaller model on purpose, and why the biggest one is rarely the right one.</p>
+        <div class="byline">
+          <span>by Christian Smith</span>
+          <span class="byline-divider"></span>
+          <span>RNVizion</span>
+        </div>
+      </div>
+    </header>
+
+    <article>
+      <div class="read-container">
+
+        <p>I was speccing two projects when the number stopped me.</p>
+
+        <p>I document everything before I build. When I co-build with an AI, I write the full spec first: restore points, break points, a paper trail I can walk back if a session goes sideways. So I was sitting there mapping what each project would need, and somewhere in the resource column I started thinking about the potential cost of tokens.</p>
+
+        <p>A single message to a flagship model on its heaviest reasoning setting doesn&#8217;t cost what one message looks like it should. The whole conversation rides along with every turn, so the spend compounds as the session deepens; a long one runs into tens of thousands of tokens, and the deep ones climb from there. Now picture that as the default engine behind an open, public demo: every curious visitor, every idle question, every bit of abuse, metered at the most expensive model on the shelf. Usage caps and a spending limit can fence off the worst of it, sure, but the question that actually stuck was quieter: if the worst case came anyway, how do I make the blow land soft?</p>
+
+        <p>So I stopped speccing and started asking a different question. Not &#8220;what&#8217;s the best model,&#8221; but &#8220;what does this job actually need?&#8221; I didn&#8217;t need a genius to grind through physics. I needed a chatbot that could recall what I&#8217;d written and hand it back in a curated way, and an agent that had to get a multi-step job exactly right, every time. Two different jobs. Neither one asked for the biggest brain in the room.</p>
+
+        <hr />
+
+        <h2>The <em>default</em> reflex</h2>
+
+        <p>Here&#8217;s the reflex everyone has, me included. You reach for the biggest, smartest model because it&#8217;s there, because it&#8217;s impressive, because &#8220;best available&#8221; feels like the safe call. Nobody gets second-guessed for picking the flagship. It&#8217;s the path of least resistance dressed up as diligence: you skip the question of fit entirely and let raw capability stand in for thought. The reach feels like rigor. It&#8217;s the opposite.</p>
+
+        <hr />
+
+        <h2>Two systems, <em>opposite</em> calls</h2>
+
+        <p>I&#8217;ve built two systems where I chose oppositely, on purpose, and the reasons are the whole argument.</p>
+
+        <p>The publishing agent runs on Sonnet. Its job is orchestration: call the right tools in the right order, never drop a step, because a dropped step means a broken publish. Correctness is the entire game there, and the call volume is low; I&#8217;m not running it thousands of times a day, so the cost of a capable model barely registers. The work asked for reliability over thrift, so I paid for reliability.</p>
+
+        <p>Ask the Corpus runs on Haiku. It&#8217;s a public, rate-limited demo, which means spend per call isn&#8217;t a footnote; it&#8217;s the design constraint. The job itself is narrow by design: retrieval has already found the passages, so the model just has to speak a grounded answer from what&#8217;s sitting in front of it. That&#8217;s exactly what a small, fast model does well. Handing that task to Opus wouldn&#8217;t make the answer any more true; it would only make it cost more. The work asked for thrift and grounding, so I picked the model built for thrift and grounding.</p>
+
+        <p>Same builder. Opposite calls. One principle underneath both.</p>
+
+        <hr />
+
+        <h2>The <em>discipline</em></h2>
+
+        <p>The biggest model is rarely the right one. Fit is the discipline; default is the absence of it. Choosing by the shape of the work, what it actually demands and what it plainly doesn&#8217;t, is the thing that separates a built system from an assembled one. Default-to-biggest isn&#8217;t a decision. It&#8217;s the place you land when you decline to make one.</p>
+
+        <hr />
+
+        <h2>What restraint <em>costs</em>, and what it saves</h2>
+
+        <p>The pull the other way is real, so let me name it. Over-provisioning feels safe. Reach for the most powerful thing on the shelf and you&#8217;ll never get caught underpowered; you&#8217;ll never have to explain why you picked the lesser model when something went wrong. The flagship is a kind of insurance against blame. Insurance you don&#8217;t need is just cost, and cost in an open demo is the one thing I set out to contain.</p>
+
+        <p>The truth is the restraint was the actual work. Wiring in any of these models took the same afternoon; the function was free. The discipline was the work: sitting with each job long enough to know what it really needed, and then taking only what the task asks for, and no more.</p>
+
+        <p>The flagship will always be there, humming, more than enough for anything. That&#8217;s exactly why reaching for it by default is so easy, and so rarely right. The job was never to wield the most power available. It was to know how much the work actually asked for &#8212; and to stop there.</p>
+
+        <p><strong>Appetite consumes all within reach; discipline takes only what the task demands.</strong></p>
+
+        <p style="color: var(--text-faint); font-family: var(--font-mono); font-size: 0.85rem; margin-top: 40px;">Next: I built a second machine to check the first; it kept catching me instead.</p>
+
+        <div class="bio">
+          <strong>Christian Smith</strong> (RNVizion) is a Python developer, AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He builds desktop tools, writes fiction, makes art, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>
+
+      </div>
+    </article>
+
+    <div class="post-footer">
+      <div class="read-container">
+        <div class="post-footer-label">Keep reading</div>
+        <div class="post-footer-links">
+          <a href="/blog/">← All posts</a>
+          <a href="/">Home</a>
+          <a href="/#work">My work</a>
+          <a href="https://github.com/RNVizion" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Christian Smith · RNVizion</div>
+      <div><a href="/aiii/">AIII</a> · <a href="/bio/">Bio</a> · <a href="/resume/">Résumé</a> · Washington, DC</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+</body>
+</html>
