@@ -8,8 +8,42 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 29 Jul 2026 13:59:27 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 30 Jul 2026 15:59:08 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fit Over Default</title>
+      <link>https://rnvizion.dev/blog/fit-over-default/</link>
+      <guid isPermaLink="true">https://rnvizion.dev/blog/fit-over-default/</guid>
+      <pubDate>Thu, 30 Jul 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Christian Smith</dc:creator>
+      <description>I built two systems and picked the smaller model on purpose; why fit, not the flagship, is the discipline.</description>
+      <content:encoded><![CDATA[<p>I was speccing two projects when the number stopped me.</p>
+<p>I document everything before I build. When I co-build with an AI, I write the full spec first: restore points, break points, a paper trail I can walk back if a session goes sideways. So I was sitting there mapping what each project would need, and somewhere in the resource column I started thinking about the potential cost of tokens.</p>
+<p>A single message to a flagship model on its heaviest reasoning setting doesn’t cost what one message looks like it should. The whole conversation rides along with every turn, so the spend compounds as the session deepens; a long one runs into tens of thousands of tokens, and the deep ones climb from there. Now picture that as the default engine behind an open, public demo: every curious visitor, every idle question, every bit of abuse, metered at the most expensive model on the shelf. Usage caps and a spending limit can fence off the worst of it, sure, but the question that actually stuck was quieter: if the worst case came anyway, how do I make the blow land soft?</p>
+<p>So I stopped speccing and started asking a different question. Not “what’s the best model,” but “what does this job actually need?” I didn’t need a genius to grind through physics. I needed a chatbot that could recall what I’d written and hand it back in a curated way, and an agent that had to get a multi-step job exactly right, every time. Two different jobs. Neither one asked for the biggest brain in the room.</p>
+<hr/>
+<h2>The <em>default</em> reflex</h2>
+<p>Here’s the reflex everyone has, me included. You reach for the biggest, smartest model because it’s there, because it’s impressive, because “best available” feels like the safe call. Nobody gets second-guessed for picking the flagship. It’s the path of least resistance dressed up as diligence: you skip the question of fit entirely and let raw capability stand in for thought. The reach feels like rigor. It’s the opposite.</p>
+<hr/>
+<h2>Two systems, <em>opposite</em> calls</h2>
+<p>I’ve built two systems where I chose oppositely, on purpose, and the reasons are the whole argument.</p>
+<p>The publishing agent runs on Sonnet. Its job is orchestration: call the right tools in the right order, never drop a step, because a dropped step means a broken publish. Correctness is the entire game there, and the call volume is low; I’m not running it thousands of times a day, so the cost of a capable model barely registers. The work asked for reliability over thrift, so I paid for reliability.</p>
+<p>Ask the Corpus runs on Haiku. It’s a public, rate-limited demo, which means spend per call isn’t a footnote; it’s the design constraint. The job itself is narrow by design: retrieval has already found the passages, so the model just has to speak a grounded answer from what’s sitting in front of it. That’s exactly what a small, fast model does well. Handing that task to Opus wouldn’t make the answer any more true; it would only make it cost more. The work asked for thrift and grounding, so I picked the model built for thrift and grounding.</p>
+<p>Same builder. Opposite calls. One principle underneath both.</p>
+<hr/>
+<h2>The <em>discipline</em></h2>
+<p>The biggest model is rarely the right one. Fit is the discipline; default is the absence of it. Choosing by the shape of the work, what it actually demands and what it plainly doesn’t, is the thing that separates a built system from an assembled one. Default-to-biggest isn’t a decision. It’s the place you land when you decline to make one.</p>
+<hr/>
+<h2>What restraint <em>costs</em>, and what it saves</h2>
+<p>The pull the other way is real, so let me name it. Over-provisioning feels safe. Reach for the most powerful thing on the shelf and you’ll never get caught underpowered; you’ll never have to explain why you picked the lesser model when something went wrong. The flagship is a kind of insurance against blame. Insurance you don’t need is just cost, and cost in an open demo is the one thing I set out to contain.</p>
+<p>The truth is the restraint was the actual work. Wiring in any of these models took the same afternoon; the function was free. The discipline was the work: sitting with each job long enough to know what it really needed, and then taking only what the task asks for, and no more.</p>
+<p>The flagship will always be there, humming, more than enough for anything. That’s exactly why reaching for it by default is so easy, and so rarely right. The job was never to wield the most power available. It was to know how much the work actually asked for — and to stop there.</p>
+<p><strong>Appetite consumes all within reach; discipline takes only what the task demands.</strong></p>
+<p style="color: var(--text-faint); font-family: var(--font-mono); font-size: 0.85rem; margin-top: 40px;">Next: I built a second machine to check the first; it kept catching me instead.</p>
+<div class="bio">
+<strong>Christian Smith</strong> (RNVizion) is a Python developer, AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He builds desktop tools, writes fiction, makes art, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>]]></content:encoded>
+    </item>
     <item>
       <title>The Job Was Never Coding</title>
       <link>https://rnvizion.dev/blog/the-job-was-never-coding/</link>
