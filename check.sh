@@ -1,4 +1,6 @@
-cd /tmp/idx-june && python -c "
+cd /workspaces/rnv-ask-the-corpus
+git worktree prune
+git worktree add /tmp/idx-june c037b4f
 import chromadb
 c=chromadb.PersistentClient(path='chroma').get_collection('corpus')
 d=c.get()
