@@ -1,8 +1,14 @@
 # Security contact for rnvizion.dev and the RNVizion open-source projects.
 # https://www.rfc-editor.org/rfc/rfc9116
+#
+# Per-project policies are listed below. RFC 9116 permits multiple Policy fields;
+# a reporter should follow the one for the project they are reporting on. When a
+# project gains its own SECURITY.md, add it here in the same change -- a policy
+# nobody can find from here is a policy that only the repository knows about.
 
 Contact: mailto:security@rnvizion.dev
 Expires: 2027-02-09T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://rnvizion.dev/.well-known/security.txt
 Policy: https://github.com/RNVizion/rnv-mcp-identity/blob/main/SECURITY.md
+Policy: https://github.com/RNVizion/rnv-color-mcp/blob/main/SECURITY.md
