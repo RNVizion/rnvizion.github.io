@@ -1,0 +1,47 @@
+name: security.txt expiry
+
+# RFC 9116 makes Expires mandatory, and an expired security.txt reads as an
+# abandoned project: worse than publishing none at all. This runs monthly and
+# fails once the date is inside 45 days, so the reminder is a red check rather
+# than a note someone has to remember.
+
+on:
+  schedule:
+    - cron: "0 9 1 * *"   # 09:00 UTC, first of each month
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: expiry window
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if Expires is within 45 days
+        run: |
+          python3 - <<'PY'
+          import datetime, pathlib, re, sys
+
+          p = pathlib.Path(".well-known/security.txt")
+          if not p.is_file():
+              sys.exit("security.txt is missing from .well-known/")
+
+          m = re.search(r"^Expires:\s*(\S+)", p.read_text(), re.M | re.I)
+          if not m:
+              sys.exit("no Expires field: RFC 9116 requires one")
+
+          expires = datetime.datetime.fromisoformat(m.group(1).replace("Z", "+00:00"))
+          days = (expires - datetime.datetime.now(datetime.timezone.utc)).days
+          print(f"Expires {expires:%Y-%m-%d}, {days} days out.")
+
+          if days < 0:
+              sys.exit("EXPIRED. Publishing an expired security.txt is worse than "
+                       "publishing none; update Expires and confirm the contact "
+                       "address still receives.")
+          if days < 45:
+              sys.exit("Expiry is inside 45 days. Roll it forward, and send a test "
+                       "message to the contact address before you do.")
+          print("Fine for now.")
+          PY
