@@ -31,6 +31,8 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -71,6 +73,15 @@ CARD_OVERRIDES = {
 
 CARD_URL = "https://rnvizion.dev/card/"
 
+# The manifest lives in another repo, so a relative path only resolves when both
+# repos are checked out side by side. That is true on a laptop and false in a
+# Codespace, which checks out one repo into /workspaces/<repo>. The local file
+# still wins when it exists; this is the fallback, and it announces itself every
+# time, because silently building from main while you are editing a local copy
+# would be a false all-clear.
+PROFILE_URL = ("https://raw.githubusercontent.com/RNVizion/rnv-brand/"
+               "main/profile.json")
+
 # Brand tokens. Mirrored from engine/brand.py; re-check on any color change.
 GOLD = "#d2bc93"
 BG_0 = "#0a0a0f"
@@ -92,16 +103,45 @@ def dig(data: dict, path: tuple):
     return cur
 
 
-def load_facts(profile_path: Path) -> tuple[dict, list[str]]:
-    """Read the manifest. Refuses rather than guesses when a fact is missing."""
-    try:
-        data = json.loads(profile_path.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        sys.exit(f"REFUSED: no manifest at {profile_path}. "
+def read_manifest(path: Path, url: str, offline: bool) -> tuple[dict, str]:
+    """Local file wins; network is the fallback. Returns (data, source)."""
+    if path.is_file():
+        raw, source = path.read_text(encoding="utf-8"), str(path)
+    elif offline:
+        sys.exit(f"REFUSED: no manifest at {path}, and --offline forbids fetching. "
                  "The card is generated from profile.json or not at all.")
+    else:
+        try:
+            with urllib.request.urlopen(url, timeout=20) as resp:
+                raw = resp.read().decode("utf-8")
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            sys.exit(f"REFUSED: no manifest at {path}, and fetching {url} failed "
+                     f"({exc}). The card is generated from profile.json or not "
+                     "at all.")
+        source = url
+
+    try:
+        return json.loads(raw), source
     except json.JSONDecodeError as exc:
-        sys.exit(f"REFUSED: {profile_path} is not valid JSON ({exc}). "
+        sys.exit(f"REFUSED: manifest at {source} is not valid JSON ({exc}). "
                  "Check for curly quotes; they have done this before.")
+
+
+def require_qrcode() -> None:
+    """Preflight. A missing QR library must fail before anything is written."""
+    try:
+        import qrcode  # noqa: F401
+    except ImportError:
+        sys.exit("REFUSED: qrcode is not installed.\n"
+                 "  pip install qrcode pillow\n"
+                 "Checked up front on purpose: failing partway would leave a card "
+                 "page committed alongside a QR image that does not exist.")
+
+
+def load_facts(profile_path: Path, profile_url: str = PROFILE_URL,
+               offline: bool = False) -> tuple[dict, list[str], str]:
+    """Read the manifest. Refuses rather than guesses when a fact is missing."""
+    data, source = read_manifest(profile_path, profile_url, offline)
 
     facts, missing = {}, []
     for name, path in PATHS.items():
@@ -125,8 +165,10 @@ def load_facts(profile_path: Path) -> tuple[dict, list[str]]:
         if dig(data, path) is not None:
             facts.setdefault("_forbidden_present", True)
 
+    facts["_manifest_version"] = str(data.get("version", "unknown"))
+    facts["_manifest_updated"] = str(data.get("updated", "unknown"))
     facts.update(CARD_OVERRIDES)
-    return facts, sorted(CARD_OVERRIDES)
+    return facts, sorted(CARD_OVERRIDES), source
 
 
 # ---------------------------------------------------------------------------
@@ -387,10 +429,16 @@ def main() -> None:
         description="Generate the RNVizion contact-card surface from profile.json.")
     ap.add_argument("--profile", default="../rnv-brand/profile.json",
                     help="path to profile.json")
+    ap.add_argument("--profile-url", default=PROFILE_URL,
+                    help="raw URL used when --profile is not on disk")
+    ap.add_argument("--offline", action="store_true",
+                    help="refuse rather than fetch; use when the local copy must win")
     ap.add_argument("--out", default=".", help="site root; writes into <out>/card/")
     args = ap.parse_args()
 
-    facts, overrides = load_facts(Path(args.profile))
+    require_qrcode()
+    facts, overrides, source = load_facts(Path(args.profile), args.profile_url,
+                                          args.offline)
 
     card = Path(args.out) / "card"
     (card / "print").mkdir(parents=True, exist_ok=True)
@@ -405,6 +453,10 @@ def main() -> None:
     # and cheap scanners fail it outright. The screen version keeps brand color.
     build_qr(card / "card-qr-print.png", dark="#000000", light="#ffffff", box=12)
 
+    print(f"manifest: {source}")
+    if source.startswith("http"):
+        print("  ^ fetched from main; no local copy at the --profile path.")
+    print(f"version:  {facts['_manifest_version']} ({facts['_manifest_updated']})")
     print(f"built -> {card}/")
     for name in ("index.html", "rnvizion.vcf", "card-qr.png",
                  "card-qr-print.png", "print/index.html"):
