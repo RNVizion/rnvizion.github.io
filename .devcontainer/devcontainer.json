@@ -4,9 +4,14 @@
   // "No module named 'PIL'" until it's installed by hand. CI already installs
   // it in build-og.yml; this does the same for the editor, and fetches the
   // brand fonts so a card rendered locally matches one rendered in CI.
+  //
+  // qrcode added 2026-08-11 for scripts/generate_contact_card.py. Named
+  // separately rather than as qrcode[pil], so the two reasons Pillow is here
+  // stay visible: the OG renderers need it on its own account, and dropping
+  // the contact card later should not silently take Pillow with it.
   "name": "rnvizion.github.io",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "postCreateCommand": "pip install --user Pillow && bash font.sh",
+  "postCreateCommand": "pip install --user Pillow qrcode && bash font.sh",
   "customizations": {
     "vscode": {
       "extensions": [
