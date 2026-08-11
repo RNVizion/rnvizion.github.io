@@ -128,12 +128,22 @@ def read_manifest(path: Path, url: str, offline: bool) -> tuple[dict, str]:
 
 
 def require_qrcode() -> None:
-    """Preflight. A missing QR library must fail before anything is written."""
-    try:
-        import qrcode  # noqa: F401
-    except ImportError:
-        sys.exit("REFUSED: qrcode is not installed.\n"
-                 "  pip install qrcode pillow\n"
+    """Preflight. A missing QR library must fail before anything is written.
+
+    Both imports, not just qrcode: `pip install qrcode` does NOT pull Pillow in
+    (it is the [pil] extra), and qrcode imports PIL lazily inside make_image.
+    Checking only qrcode would pass here and then die after three files were
+    already on disk, which is the exact failure this preflight exists to stop.
+    """
+    missing = []
+    for module, package in (("qrcode", "qrcode"), ("PIL", "Pillow")):
+        try:
+            __import__(module)
+        except ImportError:
+            missing.append(package)
+    if missing:
+        sys.exit(f"REFUSED: not installed -> {', '.join(missing)}\n"
+                 f"  pip install --user {' '.join(missing)}\n"
                  "Checked up front on purpose: failing partway would leave a card "
                  "page committed alongside a QR image that does not exist.")
 
