@@ -8,8 +8,9 @@ USAGE (run from the repo root)
   python scripts/generate_og.py blog/<slug>/index.html
   python scripts/generate_og.py blog/<slug>/index.html -o assets/og/<slug>.png
 
-Fonts live in assets/fonts/ (override with OG_FONT_DIR). Drop these two there:
-  BricolageGrotesque.ttf   (display)   JetBrainsMono.ttf  (wordmark)
+Fonts live in assets/fonts/ (override with OG_FONT_DIR). Drop these three there:
+  BricolageGrotesque.ttf   (display)   Montserrat.ttf     (the mark)
+  JetBrainsMono.ttf        (labels, captions, footer)
 If a font is missing the script still renders, just with a default face.
 """
 import argparse
@@ -81,12 +82,12 @@ def render(title, out):
     for y in range(0, H, 48):
         d.line([(0, y), (W, y)], fill=GRID, width=1)
 
-    # wordmark, top-left: gold dot + RNVizion (mono)
-    mono = load_font(FONT_DIR / "JetBrainsMono.ttf", 30, weights=("Medium", "Bold"))
+    # wordmark, top-left: gold dot + RNVizion (Montserrat Black, Brand Book #15)
+    mark = load_font(FONT_DIR / "Montserrat.ttf", 30, weights=("Black",))
     dot_r = 7
     cy = MARGIN + 15
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
-    d.text((MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", font=mono, fill=TEXT)
+    d.text((MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", font=mark, fill=TEXT)
 
     # title, auto-sized to fit, with a gold accent bar to its left
     title_x = MARGIN + 30
