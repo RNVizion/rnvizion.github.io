@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://rnvizion-ask-the-corpus.hf.space" />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:wght@900&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,8 +30,9 @@
       --bg: #0a0a0f; --bg-2: #11111a; --bg-3: #1a1a26; --border: #25253a; --border-soft: #1e1e2e;
       --text: #e8e8f0; --text-dim: #9a9ab0; --text-faint: #5a5a72; --accent: #d2bc93;
       --accent-2: #b794ff; --accent-warm: #ffd166; --max-width: 1200px;
-      --font-display: 'Bricolage Grotesque', sans-serif; --font-serif: 'Instrument Serif', serif;
-      --font-mono: 'JetBrains Mono', monospace; --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
+      --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif; --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
@@ -42,7 +43,7 @@
     .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
     nav { position: sticky; top: 0; backdrop-filter: blur(20px); background: rgba(10, 10, 15, 0.7); border-bottom: 1px solid var(--border-soft); padding: 16px 0; z-index: 100; }
     nav .container { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-family: var(--font-mono); font-weight: 600; font-size: 14px; letter-spacing: -0.5px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .logo .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 12px var(--accent); animation: pulse 2.4s ease-in-out infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .nav-links { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 13px; }
