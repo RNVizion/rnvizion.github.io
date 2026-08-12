@@ -13,9 +13,13 @@
 #
 # Target directory honours OG_FONT_DIR, the same override generate_og.py reads.
 #
-# All three are variable fonts. generate_og.py calls set_variation_by_name()
-# with SemiBold -> Bold -> Medium and takes the first that exists, so static
-# single-weight builds will render but at the wrong weight. Keep them variable.
+# Three of the four are variable fonts; Instrument Serif ships static, and its
+# italic is a separate file rather than an axis. The generators call
+# set_variation_by_name() and take the first instance that exists, so a static
+# build of a variable face renders at the wrong weight rather than failing.
+# The check at the end of this script asks each face for the instance its own
+# consumer requests, because a face that passes on somebody else's weight is a
+# false all-clear, and a false all-clear is worse than a false failure.
 #
 set -euo pipefail
 
@@ -26,6 +30,7 @@ FONTS=(
   "BricolageGrotesque.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/bricolagegrotesque/BricolageGrotesque%5Bopsz%2Cwdth%2Cwght%5D.ttf"
   "JetBrainsMono.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf"
   "Montserrat.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat%5Bwght%5D.ttf"
+  "InstrumentSerif-Italic.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/instrumentserif/InstrumentSerif-Italic.ttf"
 )
 
 MIN_BYTES=20000   # anything smaller is an error page, not a font
@@ -105,7 +110,7 @@ for entry in "${FONTS[@]}"; do
   fetched=$((fetched + 1))
 done
 
-# --- confirm the variable instances the OG script actually asks for ---------
+# --- confirm each face carries the instance its own consumer asks for -------
 if command -v python3 >/dev/null 2>&1 && [ "$failed" -eq 0 ]; then
   python3 - "$FONT_DIR" <<'PY' || echo "  (Pillow not installed; skipped variable-instance check)"
 import sys
@@ -115,23 +120,44 @@ try:
 except ImportError:
     raise SystemExit(1)
 
+# Each face is asked for the instance the code that draws it actually requests.
+# Checking every face against one shared weight list is how a face passes on a
+# weight nothing uses.
+EXPECT = [
+    ("BricolageGrotesque.ttf",   ("SemiBold", "Bold", "Medium"), "display"),
+    ("JetBrainsMono.ttf",        ("Medium", "Bold"),             "labels"),
+    ("Montserrat.ttf",           ("Black",),                     "the mark"),
+    ("InstrumentSerif-Italic.ttf", None,                         "emphasis (static)"),
+]
+
 font_dir = Path(sys.argv[1])
-print("\nvariable-instance check (what generate_og.py will pick):")
-for name in ("BricolageGrotesque.ttf", "JetBrainsMono.ttf", "Montserrat.ttf"):
+bad = 0
+print("\ninstance check (what each generator will actually get):")
+for name, wants, role in EXPECT:
     path = font_dir / name
     if not path.exists():
-        print(f"  {name:<26} missing")
+        print(f"  {name:<28} MISSING")
+        bad += 1
         continue
     font = ImageFont.truetype(str(path), 40)
+    if wants is None:
+        print(f"  {name:<28} static, no instance needed   [{role}]")
+        continue
     chosen = None
-    for want in ("SemiBold", "Bold", "Medium"):
+    for want in wants:
         try:
             font.set_variation_by_name(want)
             chosen = want
             break
         except Exception:
             continue
-    print(f"  {name:<26} {chosen or 'STATIC — will render at default weight'}")
+    if chosen is None:
+        print(f"  {name:<28} NO INSTANCE from {wants} — would render at default weight   [{role}]")
+        bad += 1
+    else:
+        print(f"  {name:<28} {chosen:<10} [{role}]")
+
+raise SystemExit(1 if bad else 0)
 PY
 fi
 
