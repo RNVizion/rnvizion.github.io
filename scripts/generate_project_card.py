@@ -180,11 +180,11 @@ def render(title, label, tags, out):
     for y in range(0, H, 48):
         d.line([(0, y), (W, y)], fill=GRID, width=1)
 
-    mono = load_font(FONT_DIR / "JetBrainsMono.ttf", 30, weights=("Medium", "Bold"))
+    mark = load_font(FONT_DIR / "Montserrat.ttf", 30, weights=("Black",))
     dot_r = 7
     cy = MARGIN + 15
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
-    d.text((MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", font=mono, fill=TEXT)
+    d.text((MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", font=mark, fill=TEXT)
 
     label_font = load_font(FONT_DIR / "JetBrainsMono.ttf", 26, weights=("Medium", "Bold"))
     tag_font = load_font(FONT_DIR / "JetBrainsMono.ttf", 22, weights=("Medium", "Bold"))
