@@ -13,13 +13,18 @@
 #
 # Target directory honours OG_FONT_DIR, the same override generate_og.py reads.
 #
-# Three of the four are variable fonts; Instrument Serif ships static, and its
-# italic is a separate file rather than an axis. The generators call
-# set_variation_by_name() and take the first instance that exists, so a static
-# build of a variable face renders at the wrong weight rather than failing.
-# The check at the end of this script asks each face for the instance its own
-# consumer requests, because a face that passes on somebody else's weight is a
-# false all-clear, and a false all-clear is worse than a false failure.
+# This fetches what the raster pipeline draws, which is three of the five brand
+# faces. Instrument Serif and Inter are brand faces with no consumer in scripts/,
+# so they are deliberately absent: the roster of five lives in rnv-brand, and a
+# repo carries the faces it renders rather than a copy of the roster. Add one
+# here in the same change that makes a generator draw it, never before.
+#
+# All three are variable fonts. The generators call set_variation_by_name() and
+# take the first instance that exists, so a static build renders at the wrong
+# weight rather than failing. The check at the end asks each face for the
+# instance its own consumer requests, because a face that passes on somebody
+# else's weight is a false all-clear, and a false all-clear is worse than a
+# false failure.
 #
 set -euo pipefail
 
@@ -30,7 +35,6 @@ FONTS=(
   "BricolageGrotesque.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/bricolagegrotesque/BricolageGrotesque%5Bopsz%2Cwdth%2Cwght%5D.ttf"
   "JetBrainsMono.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf"
   "Montserrat.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat%5Bwght%5D.ttf"
-  "InstrumentSerif-Italic.ttf|https://raw.githubusercontent.com/google/fonts/main/ofl/instrumentserif/InstrumentSerif-Italic.ttf"
 )
 
 MIN_BYTES=20000   # anything smaller is an error page, not a font
@@ -124,10 +128,9 @@ except ImportError:
 # Checking every face against one shared weight list is how a face passes on a
 # weight nothing uses.
 EXPECT = [
-    ("BricolageGrotesque.ttf",   ("SemiBold", "Bold", "Medium"), "display"),
-    ("JetBrainsMono.ttf",        ("Medium", "Bold"),             "labels"),
-    ("Montserrat.ttf",           ("Black",),                     "the mark"),
-    ("InstrumentSerif-Italic.ttf", None,                         "emphasis (static)"),
+    ("BricolageGrotesque.ttf", ("SemiBold", "Bold", "Medium"), "display"),
+    ("JetBrainsMono.ttf",      ("Medium", "Bold"),             "labels"),
+    ("Montserrat.ttf",         ("Black",),                     "the mark"),
 ]
 
 font_dir = Path(sys.argv[1])
@@ -140,9 +143,6 @@ for name, wants, role in EXPECT:
         bad += 1
         continue
     font = ImageFont.truetype(str(path), 40)
-    if wants is None:
-        print(f"  {name:<28} static, no instance needed   [{role}]")
-        continue
     chosen = None
     for want in wants:
         try:
