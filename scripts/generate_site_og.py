@@ -181,12 +181,14 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
     for y in range(0, H, 48):
         d.line([(0, y), (W, y)], fill=GRID, width=1)
 
-    # wordmark: gold dot + RNVIZION, letter-spaced mono
-    mono_sm = load_font(FONT_DIR / "JetBrainsMono.ttf", 20, weights=("Medium", "Bold"))
+    # wordmark: gold dot + RNVizion (Montserrat Black, Brand Book #15).
+    # Case and tracking match the nav and /card/; the old " ".join() ran ~0.6em
+    # against the ruled +0.033em, which at 20px is sub-pixel, so no tracking.
+    mark_f = load_font(FONT_DIR / "Montserrat.ttf", 20, weights=("Black",))
     dot_r = 6
     cy = MARGIN + 10
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
-    d.text((MARGIN + 2 * dot_r + 12, MARGIN), " ".join("RNVIZION"), font=mono_sm, fill=GOLD)
+    d.text((MARGIN + 2 * dot_r + 12, MARGIN), "RNVizion", font=mark_f, fill=GOLD)
 
     # optional kicker (e.g. "RÉSUMÉ") above the name
     name_y = MARGIN + 78
