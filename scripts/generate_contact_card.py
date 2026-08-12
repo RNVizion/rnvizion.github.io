@@ -301,7 +301,7 @@ def build_page(f: dict) -> str:
           padding:2rem 1.25rem; }}
   main {{ width:min(26rem,100%); }}
   .mark {{ font-family:"Montserrat",system-ui,sans-serif; font-weight:900;
-           font-size:2.15rem; letter-spacing:-.015em; margin:0; }}
+           font-size:2.15rem; letter-spacing:.06em; margin:0; }}
   hr {{ border:0; border-top:1px solid var(--rule); margin:.85rem 0; }}
   .long {{ font-size:.62rem; letter-spacing:.34em; text-transform:uppercase;
            opacity:.72; margin:0 0 2.4rem; }}
@@ -382,7 +382,7 @@ def build_print(f: dict) -> str:
 
   .front {{ align-items:center; justify-content:center; text-align:center; }}
   .front .mark {{ font-family:"Montserrat",system-ui,sans-serif; font-weight:900;
-                  font-size:25pt; letter-spacing:-.015em; margin:0; }}
+                  font-size:25pt; letter-spacing:.06em; margin:0; }}
   .front hr {{ border:0; border-top:.5pt solid var(--rule);
                width:1.5in; margin:7pt auto; }}
   .front .long {{ font-size:5.2pt; letter-spacing:.34em;
