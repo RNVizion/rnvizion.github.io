@@ -71,22 +71,35 @@
     }
     .hero { padding: 120px 0 100px; position: relative; }
     .hero-tag { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; margin-bottom: 32px; background: var(--bg-2); }
+    /* Two elements on purpose. The ring is the component's static chrome and the
+       fill is the state; separating them is what lets the fill breathe while the
+       boundary holds still. Do not put the fill back on .dot to "simplify" — that
+       re-couples the ring to the animation and re-imposes a floor on the keyframe. */
     .hero-tag .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--signal-live);
+      position: relative;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: transparent;
       /* box-shadow, not border: sits outside the box, costs no layout. This ring
-         carries WCAG 1.4.11 — gold on --bg-2 is 10.15:1 at full opacity, 3.35:1 at
-         breathe's dim end. The FILL is 2.37:1 and deliberately does not carry it.
-         Do not remove the ring to "simplify"; without it this colour fails. */
+         carries WCAG 1.4.11 — gold on --bg-2, 10.15:1, and it never dims, so the
+         boundary holds at every frame. The FILL is 2.37:1 and deliberately does
+         not carry it. Do not remove the ring to "simplify"; without it this
+         colour fails. 1px is the floor: sub-pixel rings vanish on a 1x display. */
       box-shadow: 0 0 0 1px var(--accent);
     }
-    @media (prefers-reduced-motion: no-preference) {
-      .hero-tag .dot { animation: breathe 3s ease-in-out infinite; }
+    .hero-tag .dot::after {
+      content: ""; position: absolute; inset: 0;
+      border-radius: 50%;
+      background: var(--signal-live);
     }
-    /* breathe is NOT redundant with pulse. pulse dips to 0.4 -> ring reads 2.57:1
-       and fails the 3:1 UI floor; breathe dips to 0.5 -> 3.35:1 and passes. It is
-       also the animation rnv-live uses: same dot, same motion, two mediums.
-       Do not merge these two keyframes. */
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-tag .dot::after { animation: breathe 3s ease-in-out infinite; }
+    }
+    /* breathe is NOT redundant with pulse, and the reason changed on 2026-08-14.
+       It used to be a floor: the ring animated too, and pulse's 0.4 dip put it at
+       2.57:1, under the 3:1 UI minimum. The ring no longer animates, so that
+       constraint is retired — breathe survives because rnv-live uses this exact
+       curve and the two dots are meant to read as one mark. Parity, not physics.
+       Still do not merge them: pulse is nav chrome, breathe is a signal. */
     @keyframes breathe { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     .hero h1 { font-family: var(--font-display); font-size: clamp(2.8rem, 8vw, 6.5rem); font-weight: 500; line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 28px; max-width: 900px; }
     .hero h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
