@@ -21,7 +21,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:wght@900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#0a0a0f;
@@ -33,6 +33,13 @@
     --ink:#e7e3d8;
     --ink-mute:#9b978c;
     --ink-faint:#6f6c64;
+    /* Defined but NOT loaded on this page: the font link deliberately omits
+       Montserrat, because this page carries no site nav and therefore no
+       RNVizion wordmark to set in it. The token stays so the five-token
+       vocabulary is identical everywhere. If this page ever draws the mark,
+       restore `&family=Montserrat:wght@900` to the link IN THE SAME CHANGE --
+       using it without loading it renders the wordmark in system-ui, which
+       looks wrong on a live page rather than merely wasting a request. */
     --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
     --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
     --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
