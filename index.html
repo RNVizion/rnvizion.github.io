@@ -30,6 +30,10 @@
       --bg: #0a0a0f; --bg-2: #11111a; --bg-3: #1a1a26; --border: #25253a; --border-soft: #1e1e2e;
       --text: #e8e8f0; --text-dim: #9a9ab0; --text-faint: #5a5a72; --accent: #d2bc93;
       --accent-2: #b794ff; --accent-warm: #ffd166; --max-width: 1200px;
+      /* Brand signals: state of a thing the brand runs. Not app STATUS.
+         signal-offline/-down equal --text-faint/--accent-warm by coincidence;
+         the seam is deliberate. Do not de-duplicate. Source: engine/brand.py. */
+      --signal-live: #8b2c3b; --signal-offline: #5a5a72; --signal-down: #ffd166;
       --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
       --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif; --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -67,7 +71,23 @@
     }
     .hero { padding: 120px 0 100px; position: relative; }
     .hero-tag { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; margin-bottom: 32px; background: var(--bg-2); }
-    .hero-tag .dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 8px #4ade80; }
+    .hero-tag .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--signal-live);
+      /* box-shadow, not border: sits outside the box, costs no layout. This ring
+         carries WCAG 1.4.11 — gold on --bg-2 is 10.15:1 at full opacity, 3.35:1 at
+         breathe's dim end. The FILL is 2.37:1 and deliberately does not carry it.
+         Do not remove the ring to "simplify"; without it this colour fails. */
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-tag .dot { animation: breathe 3s ease-in-out infinite; }
+    }
+    /* breathe is NOT redundant with pulse. pulse dips to 0.4 -> ring reads 2.57:1
+       and fails the 3:1 UI floor; breathe dips to 0.5 -> 3.35:1 and passes. It is
+       also the animation rnv-live uses: same dot, same motion, two mediums.
+       Do not merge these two keyframes. */
+    @keyframes breathe { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     .hero h1 { font-family: var(--font-display); font-size: clamp(2.8rem, 8vw, 6.5rem); font-weight: 500; line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 28px; max-width: 900px; }
     .hero h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
     .hero-subtitle { font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: var(--text-dim); max-width: 620px; margin-bottom: 48px; line-height: 1.5; }
