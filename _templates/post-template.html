@@ -124,6 +124,9 @@
     .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
     .logo .dot {
+      /* .logo is flex; without this the dot is squeezed to an ellipse when the
+         nav is tight. Geometry only -- gold, glow and pulse are unchanged. */
+      flex-shrink: 0;
       width: 8px; height: 8px;
       background: var(--accent); border-radius: 50%;
       box-shadow: 0 0 12px var(--accent);

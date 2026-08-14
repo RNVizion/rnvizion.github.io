@@ -48,7 +48,10 @@
     nav { position: sticky; top: 0; backdrop-filter: blur(20px); background: rgba(10, 10, 15, 0.7); border-bottom: 1px solid var(--border-soft); padding: 16px 0; z-index: 100; }
     nav .container { display: flex; justify-content: space-between; align-items: center; }
     .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
-    .logo .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 12px var(--accent); animation: pulse 2.4s ease-in-out infinite; }
+    .logo .dot {
+      /* .logo is flex; without this the dot is squeezed to an ellipse when the
+         nav is tight. Geometry only -- gold, glow and pulse are unchanged. */
+      flex-shrink: 0; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 12px var(--accent); animation: pulse 2.4s ease-in-out infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .nav-links { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 13px; }
     .nav-links a { color: var(--text-dim); position: relative; }
@@ -78,6 +81,12 @@
     .hero-tag .dot {
       position: relative;
       width: 10px; height: 10px; border-radius: 50%;
+      /* Load-bearing. .hero-tag is inline-flex and flex-shrink defaults to 1, so
+         when the pill's text wraps this item is squeezed on the main axis while
+         its height stays pinned -- a circle becomes an ellipse, and the 1px ring
+         traces the distortion. Not min-width: that pins one number and goes
+         quiet if the size changes. This states the actual rule. */
+      flex-shrink: 0;
       background: transparent;
       /* box-shadow, not border: sits outside the box, costs no layout. This ring
          carries WCAG 1.4.11 — gold on --bg-2, 10.15:1, and it never dims, so the
