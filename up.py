@@ -1,38 +1,72 @@
 #!/usr/bin/env python3
-"""rnvizion.dev :root -- land signal-live at #a5034e.
+"""aiii/index.html -- stop requesting a font face this page never draws.
 
-Built against rnvizion.github.io/index.html @ main, fetched 2026-08-14, with
-apply_signals.py and dot_pass2.py already landed. Fails loudly otherwise.
-Run from repo root.
+Built against rnvizion.github.io/aiii/index.html @ main, fetched 2026-08-14.
+Fails loudly if the base has moved. Run from repo root.
 
-The value moved at the source on 2026-08-14, checked against STATUS.error rather
-than on taste: CIEDE2000 18.22 against #dc3545, where the retired value was
-17.40. The error red was always this value's nearest neighbour, and the move
-toward magenta widened the gap rather than closing it. Re-measured here through
-rnv-color-mcp rather than taken from the handoff.
+WHY: this page requests Montserrat Black, defines --font-mark, and writes
+var(--font-mark) zero times. It has no site nav, so there is no RNVizion
+wordmark on it to set in the mark face; its own AIII wordmark is JetBrains Mono
+at 700. The font file is downloaded and does nothing.
 
-Contrast on bg-2 goes 2.37:1 -> 2.43:1. Immaterial: the ring carries WCAG
-1.4.11 at 10.15:1 and, since the split, does so at every frame. The fill has
-never been asked to carry it.
+WHAT IS NOT DONE, and this is the deliberate half:
 
-Lowercase, matching engine/brand.py, which was standardised the same day. A
-case-sensitive comparison reads the two forms as different colours, and the
-source is what surfaces get compared against.
+  --font-mark STAYS DEFINED. The five-token vocabulary is identical on every
+  page and that is worth more than removing one unused line. Deleting it here
+  would make aiii/ the one page where a developer's muscle memory silently
+  produces nothing.
+
+  Which means this page is now the site's only specimen of "defines the mark
+  face, does not load it." That is not a defect left in place -- it is the
+  configuration a guard should be pointed at, because the dangerous direction
+  is the inverse of the one being fixed here:
+
+    loads Montserrat, never draws it  -> wasted request, renders fine
+    draws Montserrat, never loads it  -> wordmark in a fallback face, visibly wrong
+
+  The realistic future mistake is someone building a second nav-less page,
+  pasting the nav in from index.html, and not restoring this line. The comment
+  added below is what they hit when they look.
 """
 import pathlib
 
-P = pathlib.Path("index.html")
+P = pathlib.Path("aiii/index.html")
 s = P.read_text(encoding="utf-8")
 
-assert ".hero-tag .dot::after" in s, "dot_pass2.py has not landed; run it first"
+# ------------------------------------------------------------- 1. the request
+OLD_LINK = "&family=Montserrat:wght@900&display=swap"
+NEW_LINK = "&display=swap"
 
-OLD = "      --signal-live: #8b2c3b; --signal-offline: #5a5a72; --signal-down: #ffd166;"
-NEW = "      --signal-live: #a5034e; --signal-offline: #5a5a72; --signal-down: #ffd166;"
+n = s.count(OLD_LINK)
+assert n == 1, f"font link: expected 1 match, found {n}. Base has moved."
+s = s.replace(OLD_LINK, NEW_LINK)
 
-n = s.count(OLD)
-assert n == 1, f"expected 1 match, found {n}. Either already applied or the base has moved."
-s = s.replace(OLD, NEW)
+# ------------------------------------------------------- 2. the standing note
+OLD_TOK = "    --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;"
+NEW_TOK = (
+    "    /* Defined but NOT loaded on this page: the font link deliberately omits\n"
+    "       Montserrat, because this page carries no site nav and therefore no\n"
+    "       RNVizion wordmark to set in it. The token stays so the five-token\n"
+    "       vocabulary is identical everywhere. If this page ever draws the mark,\n"
+    "       restore `&family=Montserrat:wght@900` to the link IN THE SAME CHANGE --\n"
+    "       using it without loading it renders the wordmark in system-ui, which\n"
+    "       looks wrong on a live page rather than merely wasting a request. */\n"
+    "    --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;"
+)
+n = s.count(OLD_TOK)
+assert n == 1, f"token: expected 1 match, found {n}. Base has moved."
+s = s.replace(OLD_TOK, NEW_TOK)
 
-assert "#8b2c3b" not in s, "retired value survives somewhere else in the file"
+# ---------------------------------------------------------- post-conditions
+# Scoped to the <link> element, not the file. The comment added above quotes the
+# request string as the thing to restore -- a whole-file assertion counts that
+# mention as if it were the request itself, which is the mention-vs-use trap
+# this very change is guarding against. It caught itself here.
+link_line = next(l for l in s.splitlines() if "fonts.googleapis.com/css2" in l)
+assert "Montserrat" not in link_line, "the request survives in the link element"
+assert "family=Inter" in link_line and "family=Bricolage" in link_line, "the link lost more than Montserrat"
+assert s.count("--font-mark:") == 1, "token definition disturbed"
+assert "var(--font-mark)" not in s, "this page now DRAWS the mark face it no longer loads"
+
 P.write_text(s, encoding="utf-8")
-print("index.html: signal-live -> #a5034e")
+print("aiii/index.html: Montserrat request removed, token kept and annotated")
