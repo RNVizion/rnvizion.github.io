@@ -92,8 +92,15 @@
          carries WCAG 1.4.11 — gold on --bg-2, 10.15:1, and it never dims, so the
          boundary holds at every frame. The FILL is 2.37:1 and deliberately does
          not carry it. Do not remove the ring to "simplify"; without it this
-         colour fails. 1px is the floor: sub-pixel rings vanish on a 1x display. */
-      box-shadow: 0 0 0 1px var(--accent);
+         colour fails.
+
+         0.75px, not 1px, and not 0.5px. Sub-pixel spread antialiases rather
+         than vanishing, and partial coverage costs contrast in proportion:
+         1px reads 10.15:1, 0.75px reads 6.09:1, 0.5px reads 3.35:1 -- a bare
+         pass with no margin. This is the only element carrying WCAG 1.4.11 on
+         this component, so it keeps 2x the floor rather than sitting on it.
+         Measured through rnv-color-mcp, not estimated. */
+      box-shadow: 0 0 0 0.75px var(--accent);
     }
     .hero-tag .dot::after {
       content: ""; position: absolute; inset: 0;
