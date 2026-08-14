@@ -2,7 +2,8 @@
 #
 # font.sh — fetch the RNVizion brand fonts into assets/fonts/.
 #
-# The OG image pipeline (scripts/generate_og.py) renders with these faces and
+# Three generators render with these faces — scripts/generate_og.py,
+# scripts/generate_site_og.py and scripts/generate_project_card.py — and each
 # silently falls back to a default face if they're missing, so a missing font
 # shows up as an ugly card rather than an error. This script makes the fetch
 # explicit and verifies what it downloaded.
@@ -11,13 +12,20 @@
 #   ./font.sh --force      # re-download everything
 #   ./font.sh --verify     # check what's on disk, download nothing
 #
-# Target directory honours OG_FONT_DIR, the same override generate_og.py reads.
+# Target directory honours OG_FONT_DIR; all three generators read the same
+# override, so setting it for one and not the others is not a failure mode.
 #
 # This fetches what the raster pipeline draws, which is three of the five brand
 # faces. Instrument Serif and Inter are brand faces with no consumer in scripts/,
 # so they are deliberately absent: the roster of five lives in rnv-brand, and a
 # repo carries the faces it renders rather than a copy of the roster. Add one
 # here in the same change that makes a generator draw it, never before.
+#
+# Grepping scripts/ for "Instrument" hits generate_contact_card.py. That is not
+# a missing font: the card generator emits HTML and links Google Fonts, so the
+# browser fetches the face and nothing needs a .ttf on disk. Web pages take five
+# faces over the network; the raster pipeline takes three off the disk. Two
+# delivery paths, and only this one needs files.
 #
 # All three are variable fonts. The generators call set_variation_by_name() and
 # take the first instance that exists, so a static build renders at the wrong
@@ -45,7 +53,11 @@ for arg in "$@"; do
   case "$arg" in
     --force)  FORCE=1 ;;
     --verify) VERIFY_ONLY=1 ;;
-    -h|--help) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    # Prints the leading comment block and stops at the first non-comment line.
+    # Do not put a line range here: the previous version was `sed -n '2,20p'`,
+    # which quietly truncated help the moment the header grew past line 20 and
+    # still exited 0. Help that is wrong and confident is worse than no help.
+    -h|--help) awk 'NR>1 && /^#/ {sub(/^# ?/,""); print; next} NR>1 {exit}' "$0"; exit 0 ;;
     *) echo "unknown option: $arg (try --help)" >&2; exit 2 ;;
   esac
 done
