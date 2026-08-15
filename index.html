@@ -83,14 +83,14 @@
       width: 10px; height: 10px; border-radius: 50%;
       /* Load-bearing. .hero-tag is inline-flex and flex-shrink defaults to 1, so
          when the pill's text wraps this item is squeezed on the main axis while
-         its height stays pinned -- a circle becomes an ellipse, and the 1px ring
+         its height stays pinned -- a circle becomes an ellipse, and the ring
          traces the distortion. Not min-width: that pins one number and goes
          quiet if the size changes. This states the actual rule. */
       flex-shrink: 0;
       background: transparent;
       /* box-shadow, not border: sits outside the box, costs no layout. This ring
-         carries WCAG 1.4.11 — gold on --bg-2, 10.15:1, and it never dims, so the
-         boundary holds at every frame. The FILL is 2.37:1 and deliberately does
+         carries WCAG 1.4.11 — gold on --bg-2 at 6.09:1, and it never dims, so the
+         boundary holds at every frame. The FILL is 2.43:1 and deliberately does
          not carry it. Do not remove the ring to "simplify"; without it this
          colour fails.
 
