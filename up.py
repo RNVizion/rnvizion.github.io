@@ -1,67 +1,150 @@
 #!/usr/bin/env python3
-"""Hero dot comment: correct two figures the value changes left behind.
+"""Track the wordmark in the three raster generators. BRAND_TYPE.md rev 3.
 
-Built against rnvizion.github.io/index.html @ main, fetched 2026-08-14 with
-every dot pass landed. Fails loudly if the base has moved. Run from repo root.
+Built against rnvizion.github.io @ main, all three generators fetched and read
+2026-08-16. Fails loudly if any base has moved. Run from repo root.
 
-Comment-only. No declaration changes, nothing renders differently.
+THE RULING (BRAND_TYPE.md rev 3, 2026-08-15): raster marks carry an absolute
+1.8px gap. The web keeps its em values. All three generators drew the mark with
+a single draw.text() call, which is zero tracking, while every web surface
+tracks it -- so the same wordmark had two letterforms depending on where someone
+met it, and the OG image is the highest-reach artifact in the ecosystem.
 
-TWO STALE FIGURES, both left by changes made earlier today:
+PIL has no letter-spacing, so tracking is drawn per glyph. That has one real
+consequence worth stating: per-glyph drawing loses kerning pairs. Measured
+against the shipped Montserrat variable font at weight 900, the mark's advance
+sum exceeds its kerned single-call width by 0.20px at 20px and 0.30px at 30px.
+Both are under a third of a pixel and neither is worth defeating; they are
+recorded so the next person measuring does not treat the gap as a bug.
 
-  "The FILL is 2.37:1"  -> 2.43:1. That was #8b2c3b's ratio on --bg-2; the
-  value moved to #a5034e and the number did not follow.
+WIDTHS, MEASURED RATHER THAN DERIVED (real font, weight 900, 7 gaps):
 
-  "gold on --bg-2, 10.15:1"  -> 6.09:1. That was the 1px ring. The paragraph
-  SIX LINES BELOW already says 0.75px reads 6.09:1, so this comment has been
-  carrying two figures for the same value, disagreeing with itself.
+    20px   98.55px -> 111.35px   (+13.0%)
+    30px  147.81px -> 160.71px   (+8.7%)
 
-That second one is the third instance of this pattern today -- brand.py line
-124 against 131, BRAND_COLORS.md line 139 against 256, and now this. Each time
-a value moved, the sentence that stated it got updated and a sentence that
-mentioned it in passing did not. **The mention is always the one that survives,
-because the person editing is looking at the declaration.**
+The handoff's width table gave the 30px row as 148 -> 167. That is 0.09em
+arithmetic (30 x 0.09 = 2.7px x 7 = 18.9), but the ruling puts both 30px
+generators at the 0.06em equivalent. Corrected here to the measured value.
+Reported back rather than silently fixed.
 
-Also drops "the 1px ring" from the flex-shrink comment above: true when the
-ellipse was found, misleading now that the ring is 0.75px, and the sentence
-does not need the number to make its point.
+NOTHING NEEDS RE-MEASURING BESIDE THE MARK. The handoff cautioned that a 12%
+width change moves anything laid out against it. Checked in all three: every
+right-aligned element anchors to the canvas edge (W - MARGIN - dw), and nothing
+measures the mark. The caution is sound in general and has no consumer here.
+
+WHY THE CONSTANT IS LOCAL: these generators mirror brand values rather than
+importing them -- BG, GOLD and TEXT are already local constants carrying their
+source token in a comment. The tracking constant follows the same pattern and
+names its source the same way.
 """
 import pathlib
+import re
 
-P = pathlib.Path("index.html")
-s = P.read_text(encoding="utf-8")
+ROOT = pathlib.Path("scripts")
 
-EDITS = [
+HELPER = '''
+
+# Mark tracking: 1.8px absolute, ruled for all raster surfaces in
+# BRAND_TYPE.md rev 3 (2026-08-15). Absolute rather than em because an em value
+# exists so tracking scales with type size, and a raster mark has no type size
+# to scale with -- the generator fixes it and the image renders at that size
+# forever. Expressed as 0.09em at 20px and 0.06em at 30px, which is how each
+# generator happens to reach the same optical gap, not the reason for it.
+MARK_TRACK = 1.8
+
+
+def draw_tracked(d, xy, text, font, fill, gap=MARK_TRACK):
+    """Draw text with an absolute per-gap tracking value; return drawn width.
+
+    PIL has no letter-spacing, so each glyph is placed and advanced by hand.
+    This loses kerning pairs: measured on Montserrat Black, the advance sum runs
+    0.20px wide of the kerned single-call width at 20px and 0.30px at 30px.
+    Under a third of a pixel, recorded so it is not mistaken for a defect.
+    """
+    x, y = xy
+    last = len(text) - 1
+    for i, ch in enumerate(text):
+        d.text((x, y), ch, font=font, fill=fill)
+        x += d.textlength(ch, font=font)
+        if i < last:
+            x += gap
+    return x - xy[0]
+'''
+
+TARGETS = [
     (
-        "         its height stays pinned -- a circle becomes an ellipse, and the 1px ring\n"
-        "         traces the distortion.",
-        "         its height stays pinned -- a circle becomes an ellipse, and the ring\n"
-        "         traces the distortion.",
+        "generate_site_og.py",
+        '    d.text((MARGIN + 2 * dot_r + 12, MARGIN), "RNVizion", font=mark_f, fill=GOLD)',
+        '    draw_tracked(d, (MARGIN + 2 * dot_r + 12, MARGIN), "RNVizion", mark_f, GOLD)',
     ),
     (
-        "      /* box-shadow, not border: sits outside the box, costs no layout. This ring\n"
-        "         carries WCAG 1.4.11 \u2014 gold on --bg-2, 10.15:1, and it never dims, so the\n"
-        "         boundary holds at every frame. The FILL is 2.37:1 and deliberately does\n"
-        "         not carry it.",
-        "      /* box-shadow, not border: sits outside the box, costs no layout. This ring\n"
-        "         carries WCAG 1.4.11 \u2014 gold on --bg-2 at 6.09:1, and it never dims, so the\n"
-        "         boundary holds at every frame. The FILL is 2.43:1 and deliberately does\n"
-        "         not carry it.",
+        "generate_og.py",
+        '    d.text((MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", font=mark, fill=TEXT)',
+        '    draw_tracked(d, (MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", mark, TEXT)',
+    ),
+    (
+        "generate_project_card.py",
+        '    d.text((MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", font=mark, fill=TEXT)',
+        '    draw_tracked(d, (MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", mark, TEXT)',
     ),
 ]
 
-for i, (old, new) in enumerate(EDITS, 1):
+# The wrong comment in generate_site_og.py. Replaced rather than amended: both
+# of its sentences are false, and the second is false in a way that would
+# survive a patch -- it dismisses a figure that was never the ruled one.
+OLD_COMMENT = '''    # wordmark: gold dot + RNVizion (Montserrat Black, Brand Book #15).
+    # Case and tracking match the nav and /card/; the old " ".join() ran ~0.6em
+    # against the ruled +0.033em, which at 20px is sub-pixel, so no tracking.'''
+
+NEW_COMMENT = '''    # wordmark: gold dot + RNVizion (Montserrat Black, Brand Book #15).
+    # Case AND tracking match the web surfaces as of BRAND_TYPE.md rev 3: 1.8px
+    # absolute, which at this 20px mark is the 0.09em the nav carries.
+    #
+    # The comment replaced here claimed the ruled value was +0.033em and that it
+    # was sub-pixel at 20px, so no tracking was applied. The ruled value was
+    # 0.09em; +0.033em had already been superseded. The conclusion outlived its
+    # reasoning because the reasoning read confident and cited a real number --
+    # what found it was checking the value the comment NAMED against the value
+    # actually ruled, not re-deriving the conclusion.'''
+
+
+def patch(name, old, new):
+    p = ROOT / name
+    s = p.read_text(encoding="utf-8")
+    assert "def draw_tracked" not in s, f"{name}: helper already present"
+
     n = s.count(old)
-    assert n == 1, f"edit {i}: expected 1 match, found {n}. Base has moved:\n{old[:80]}"
+    assert n == 1, f"{name}: expected 1 mark-drawing call, found {n}. Base has moved."
     s = s.replace(old, new)
 
-# The 1px and 10.15:1 figures survive exactly once each, in the paragraph that
-# compares the three ring weights. That is a mention of a retired value in a
-# sentence about retired values, which is correct and must not be swept.
-assert s.count("2.37:1") == 0, "stale fill ratio survives"
-assert s.count("10.15:1") == 1, f"expected 10.15:1 once (the comparison), found {s.count('10.15:1')}"
-assert "1px reads 10.15:1, 0.75px reads 6.09:1" in s, "the comparison paragraph was disturbed"
-assert s.count("0 0 0 0.75px var(--accent)") == 1, "the ring declaration changed"
-assert s.count("flex-shrink: 0;") == 2, "a flex-shrink declaration was lost"
+    # place the helper after the last module-level constant block, before the
+    # first def -- matched structurally so it survives reordering above it
+    m = re.search(r"^def ", s, re.M)
+    assert m, f"{name}: no module-level def to anchor the helper above"
+    s = s[: m.start()].rstrip("\n") + "\n" + HELPER + "\n\n" + s[m.start() :]
 
-P.write_text(s, encoding="utf-8")
-print("hero dot comment: fill 2.37 -> 2.43, ring 10.15 -> 6.09")
+    # Checked as two specific things rather than as a count: a count is
+    # perturbed by any prose that mentions the name, which is the trap that
+    # bit three separate guards on 2026-08-14.
+    assert "def draw_tracked(" in s, f"{name}: helper definition did not land"
+    assert new in s, f"{name}: tracked call did not land"
+    assert "MARK_TRACK = 1.8" in s, f"{name}: constant did not land"
+    p.write_text(s, encoding="utf-8")
+    return name
+
+
+done = [patch(*t) for t in TARGETS]
+
+# the comment, only in generate_site_og.py
+p = ROOT / "generate_site_og.py"
+s = p.read_text(encoding="utf-8")
+n = s.count(OLD_COMMENT)
+assert n == 1, f"comment: expected 1 match, found {n}. Base has moved."
+s = s.replace(OLD_COMMENT, NEW_COMMENT)
+assert "+0.033em, which at 20px is sub-pixel" not in s, "the wrong claim survives as an assertion"
+assert "claimed the ruled value was +0.033em" in s, "the correction did not land"
+p.write_text(s, encoding="utf-8")
+
+for name in done:
+    print(f"tracked: scripts/{name}")
+print("comment replaced in scripts/generate_site_og.py")
