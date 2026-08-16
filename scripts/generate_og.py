@@ -36,6 +36,33 @@ REPO = HERE.parent  # scripts/ -> repo root
 FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "fonts"))
 
 
+# Mark tracking: 1.8px absolute, ruled for all raster surfaces in
+# BRAND_TYPE.md rev 3 (2026-08-15). Absolute rather than em because an em value
+# exists so tracking scales with type size, and a raster mark has no type size
+# to scale with -- the generator fixes it and the image renders at that size
+# forever. Expressed as 0.09em at 20px and 0.06em at 30px, which is how each
+# generator happens to reach the same optical gap, not the reason for it.
+MARK_TRACK = 1.8
+
+
+def draw_tracked(d, xy, text, font, fill, gap=MARK_TRACK):
+    """Draw text with an absolute per-gap tracking value; return drawn width.
+
+    PIL has no letter-spacing, so each glyph is placed and advanced by hand.
+    This loses kerning pairs: measured on Montserrat Black, the advance sum runs
+    0.20px wide of the kerned single-call width at 20px and 0.30px at 30px.
+    Under a third of a pixel, recorded so it is not mistaken for a defect.
+    """
+    x, y = xy
+    last = len(text) - 1
+    for i, ch in enumerate(text):
+        d.text((x, y), ch, font=font, fill=fill)
+        x += d.textlength(ch, font=font)
+        if i < last:
+            x += gap
+    return x - xy[0]
+
+
 def load_font(path, size, weights=("SemiBold", "Bold", "Medium")):
     try:
         font = ImageFont.truetype(str(path), size)
@@ -87,7 +114,7 @@ def render(title, out):
     dot_r = 7
     cy = MARGIN + 15
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
-    d.text((MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", font=mark, fill=TEXT)
+    draw_tracked(d, (MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", mark, TEXT)
 
     # title, auto-sized to fit, with a gold accent bar to its left
     title_x = MARGIN + 30

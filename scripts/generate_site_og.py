@@ -81,6 +81,33 @@ PAGES = [
 LABEL_SHORT = {"CERTIFICATIONS": "CERTS", "CERTIFICATES": "CERTS"}
 
 
+# Mark tracking: 1.8px absolute, ruled for all raster surfaces in
+# BRAND_TYPE.md rev 3 (2026-08-15). Absolute rather than em because an em value
+# exists so tracking scales with type size, and a raster mark has no type size
+# to scale with -- the generator fixes it and the image renders at that size
+# forever. Expressed as 0.09em at 20px and 0.06em at 30px, which is how each
+# generator happens to reach the same optical gap, not the reason for it.
+MARK_TRACK = 1.8
+
+
+def draw_tracked(d, xy, text, font, fill, gap=MARK_TRACK):
+    """Draw text with an absolute per-gap tracking value; return drawn width.
+
+    PIL has no letter-spacing, so each glyph is placed and advanced by hand.
+    This loses kerning pairs: measured on Montserrat Black, the advance sum runs
+    0.20px wide of the kerned single-call width at 20px and 0.30px at 30px.
+    Under a third of a pixel, recorded so it is not mistaken for a defect.
+    """
+    x, y = xy
+    last = len(text) - 1
+    for i, ch in enumerate(text):
+        d.text((x, y), ch, font=font, fill=fill)
+        x += d.textlength(ch, font=font)
+        if i < last:
+            x += gap
+    return x - xy[0]
+
+
 def short_label(label):
     first = label.split()[0] if label.split() else label
     return LABEL_SHORT.get(first, first)
@@ -182,13 +209,20 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
         d.line([(0, y), (W, y)], fill=GRID, width=1)
 
     # wordmark: gold dot + RNVizion (Montserrat Black, Brand Book #15).
-    # Case and tracking match the nav and /card/; the old " ".join() ran ~0.6em
-    # against the ruled +0.033em, which at 20px is sub-pixel, so no tracking.
+    # Case AND tracking match the web surfaces as of BRAND_TYPE.md rev 3: 1.8px
+    # absolute, which at this 20px mark is the 0.09em the nav carries.
+    #
+    # The comment replaced here claimed the ruled value was +0.033em and that it
+    # was sub-pixel at 20px, so no tracking was applied. The ruled value was
+    # 0.09em; +0.033em had already been superseded. The conclusion outlived its
+    # reasoning because the reasoning read confident and cited a real number --
+    # what found it was checking the value the comment NAMED against the value
+    # actually ruled, not re-deriving the conclusion.
     mark_f = load_font(FONT_DIR / "Montserrat.ttf", 20, weights=("Black",))
     dot_r = 6
     cy = MARGIN + 10
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
-    d.text((MARGIN + 2 * dot_r + 12, MARGIN), "RNVizion", font=mark_f, fill=GOLD)
+    draw_tracked(d, (MARGIN + 2 * dot_r + 12, MARGIN), "RNVizion", mark_f, GOLD)
 
     # optional kicker (e.g. "RÉSUMÉ") above the name
     name_y = MARGIN + 78
