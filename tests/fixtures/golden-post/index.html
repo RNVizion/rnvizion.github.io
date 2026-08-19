@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  ============================================================================
+  FROZEN TEST FIXTURE. Do not edit.
+
+  This file exists to pin generate_card.py's rendering behaviour. Its expected
+  output is tests/fixtures/golden-card.html. Editing this post changes the
+  expected card and defeats the point of the test; if you genuinely need to
+  change the contract, change it deliberately and re-bless the golden with:
+
+      python tests/test_card_contract.py --bless
+
+  Every value the renderer reads is exercised here on purpose:
+    og:title              -> the card title (and it differs from <title>)
+    og:url                -> the slug
+    article:published_time-> the card date (single-digit day: no leading zero)
+    card:summary          -> the teaser, which must WIN over og:description
+    og:description        -> the SEO line, which must LOSE to card:summary
+    <article> word count  -> the read-time estimate (600 words = 3 min at 200 wpm;
+                             sized so a wpm change moves the rounded result)
+    <div class="bio">     -> excluded from the word count
+    HTML comment          -> stripped before counting
+  ============================================================================
+-->
+<head>
+  <meta charset="UTF-8" />
+  <title>The Golden Fixture Post — Christian Smith</title>
+  <meta name="description" content="Fixture description." />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://rnvizion.dev/blog/golden-fixture/" />
+  <meta property="og:title" content="The Golden Fixture Post" />
+  <meta property="og:description" content="SEO line that must NOT win over card:summary." />
+  <meta name="card:summary" content="Teaser line that must win, with curly quotes and an apostrophe." />
+  <meta property="article:author" content="Christian Smith" />
+  <meta property="article:published_time" content="2026-03-05" />
+</head>
+<body>
+  <main>
+    <article>
+      <div class="read-container">
+        <!-- This comment must be stripped before the word count runs. -->
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty</p>
+        <div class="bio">
+          <strong>Christian Smith</strong> bio text here which must be excluded from the word count entirely so that the read time stays pinned no matter how long this bio grows over time.
+        </div>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
