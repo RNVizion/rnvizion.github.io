@@ -1,20 +1,29 @@
 name: Build RSS feed
 
-# Regenerate feed.xml and blog/index.html whenever a post (or the generator
-# itself) changes. The bot commits both back. blog/index.html sits under the
-# blog/** trigger path, so the loop is broken by the [skip ci] tag in the commit
-# message; a GITHUB_TOKEN push also won't start a new run. No infinite loop.
+# Regenerate feed.xml, blog/index.html, sitemap.xml and robots.txt whenever a
+# post, a generator, the card template, or a non-blog page changes.
+#
+# LOOP SAFETY — read before editing the commit step:
+#   The bot commits blog/index.html, which sits inside the blog/** trigger path.
+#   Two things stop that from starting a new run: the [skip ci] tag in the commit
+#   message, and GitHub not starting runs for pushes made with the default
+#   GITHUB_TOKEN. Do not remove either one without replacing the other.
 on:
   push:
     branches: [main]
     paths:
-      - "blog/**"
-      - "scripts/build_feed.py"
+      - "blog/**"                                # posts and the listing page
+      - "index.html"                             # homepage (sitemap entry)
+      - "*/index.html"                           # aiii/, bio/, resume/, ... (sitemap entries)
+      - "scripts/build_feed.py"                  # the generator
+      - "scripts/generate_card.py"               # the shared card renderer
+      - "_templates/post-card-template.html"     # the card definition
+      - "tests/**"                               # the contract test and its fixtures
       - ".github/workflows/build-feed.yml"
   workflow_dispatch: {}   # lets you run it by hand from the Actions tab
 
 permissions:
-  contents: write          # needed so the bot can commit feed.xml + the index back
+  contents: write          # needed so the bot can commit the generated files back
 
 concurrency:
   group: build-feed
@@ -33,18 +42,25 @@ jobs:
       - name: Install dependencies
         run: pip install beautifulsoup4 lxml
 
-      - name: Generate feed.xml and blog index
+      # Gate: generate_card.py is a shared library with three consumers. If its
+      # interface or the card template changed, fail here rather than quietly
+      # committing a malformed blog index.
+      - name: Card renderer contract test
+        run: python tests/test_card_contract.py
+
+      - name: Generate feed, blog index, sitemap and robots
         run: python scripts/build_feed.py
 
-      - name: Commit feed and index if they changed
+      - name: Commit generated files if they changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git status --porcelain feed.xml blog/index.html)" ]; then
-            git add feed.xml blog/index.html
-            git commit -m "chore: rebuild RSS feed and blog index [skip ci]"
+          FILES="feed.xml blog/index.html sitemap.xml robots.txt"
+          if [ -n "$(git status --porcelain $FILES)" ]; then
+            git add $FILES
+            git commit -m "chore: rebuild feed, index, sitemap and robots [skip ci]"
             git push
-            echo "feed.xml and blog/index.html updated."
+            echo "Generated files updated."
           else
-            echo "feed and index unchanged — nothing to commit."
+            echo "Nothing changed — no commit."
           fi
