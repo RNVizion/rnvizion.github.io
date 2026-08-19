@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Margin, Not the Price — Christian Smith</title>
+  <meta name="description" content="Agentic engineering doesn’t change what a client pays; it changes how much of it you keep." />
+
+  <meta name="card:summary" content="Everyone keeps quoting the line about charging more. The price isn’t what moves; the margin is." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://rnvizion.dev/blog/the-margin-not-the-price/" />
+  <meta property="og:title" content="The Margin, Not the Price" />
+  <meta property="og:description" content="Agentic engineering doesn’t change what a client pays; it changes how much of it you keep." />
+  <meta property="og:image" content="https://rnvizion.dev/assets/og/the-margin-not-the-price.png" />
+  <meta property="article:author" content="Christian Smith" />
+  <meta property="article:published_time" content="2026-08-19" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:wght@900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11111a;
+      --bg-3: #1a1a26;
+      --border: #25253a;
+      --border-soft: #1e1e2e;
+      --text: #e8e8f0;
+      --text-dim: #9a9ab0;
+      --text-faint: #5a5a72;
+      --accent: #d2bc93;
+      --max-width: 1200px;
+      --read-width: 720px;
+      --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
+      --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(210, 188, 147, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 188, 147, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%);
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    main, nav, footer, article { position: relative; z-index: 2; }
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+    .read-container { max-width: var(--read-width); margin: 0 auto; padding: 0 32px; }
+
+    nav {
+      position: sticky; top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0; z-index: 100;
+    }
+
+    nav .container {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+    .logo .dot {
+      /* .logo is flex; without this the dot is squeezed to an ellipse when the
+         nav is tight. Geometry only -- gold, glow and pulse are unchanged. */
+      flex-shrink: 0;
+      width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex; gap: 32px;
+      font-family: var(--font-mono); font-size: 13px;
+    }
+
+    .nav-links a { color: var(--text-dim); position: relative; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a:hover { text-decoration: none; }
+
+    .nav-links a::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 1px; background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 40px; height: 40px;
+      cursor: pointer; padding: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.2s ease;
+    }
+
+    .nav-toggle:hover { border-color: var(--accent); }
+
+    .nav-toggle span {
+      display: block; width: 18px; height: 1.5px;
+      background: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+      background: var(--accent);
+    }
+
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+      background: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed; top: 73px; left: 0; right: 0;
+        background: rgba(10, 10, 15, 0.96);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-soft);
+        flex-direction: column; gap: 0;
+        padding: 16px 32px 24px;
+        transform: translateY(-12px);
+        opacity: 0; pointer-events: none;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0); opacity: 1; pointer-events: auto;
+      }
+
+      .nav-links a {
+        padding: 14px 0; font-size: 15px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .nav-links a:last-child { border-bottom: none; }
+      .nav-links a::after { display: none; }
+    }
+
+    .article-header { padding: 100px 0 60px; text-align: center; }
+
+    .article-meta {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 24px;
+    }
+
+    .article-meta .accent { color: var(--accent); }
+
+    .article-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 500; letter-spacing: -0.03em;
+      line-height: 1.1; margin-bottom: 32px;
+    }
+
+    .article-header h1 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    .article-subtitle {
+      font-size: 1.15rem; color: var(--text-dim);
+      max-width: 600px; margin: 0 auto;
+    }
+
+    .byline {
+      font-family: var(--font-mono); font-size: 13px;
+      color: var(--text-dim); margin-top: 28px;
+      display: flex; justify-content: center;
+      align-items: center; gap: 16px;
+    }
+
+    .byline-divider {
+      width: 4px; height: 4px;
+      background: var(--accent); border-radius: 50%;
+    }
+
+    article { padding: 40px 0 80px; }
+
+    article p {
+      margin-bottom: 24px; color: var(--text);
+    }
+
+    article p:first-of-type::first-letter {
+      font-family: var(--font-serif);
+      font-size: 4.2rem; float: left;
+      line-height: 0.9;
+      padding: 8px 14px 0 0;
+      color: var(--accent);
+    }
+
+    article h2 {
+      font-family: var(--font-display);
+      font-size: 1.85rem; font-weight: 500;
+      letter-spacing: -0.02em; line-height: 1.2;
+      margin: 30px 0 24px; color: var(--text);
+    }
+
+    article h2 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    article strong { color: var(--accent); font-weight: 600; }
+    article em { font-style: italic; }
+
+    article hr {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 24px auto; width: 80px;
+    }
+
+    article ul { margin: 0 0 24px 0; padding-left: 24px; }
+    article ul li { margin-bottom: 12px; color: var(--text); }
+
+    .bio {
+      margin-top: 64px; padding: 32px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-2); border-radius: 6px;
+      font-size: 0.95rem; color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .bio strong { color: var(--text); font-weight: 600; }
+
+    .post-footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 48px 0; text-align: center;
+    }
+
+    .post-footer-label {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .post-footer-links {
+      display: flex; gap: 24px;
+      justify-content: center; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: 14px;
+    }
+
+    .post-footer-links a { color: var(--text-dim); }
+    .post-footer-links a:hover { color: var(--accent); text-decoration: none; }
+
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 32px 0;
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    footer .container {
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#stack">Stack</a>
+        <a href="/#work">Work</a>
+        <a href="/blog/" class="active">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+
+    <header class="article-header">
+      <div class="read-container">
+        <div class="article-meta">
+          <span class="accent">●</span> August 19, 2026 · ~4 min read
+        </div>
+        <h1>The Margin, <em>Not the Price</em></h1>
+        <p class="article-subtitle">Why agentic engineering doesn’t change what one person can charge; it changes what one person gets to keep.</p>
+        <div class="byline">
+          <span>by Christian Smith</span>
+          <span class="byline-divider"></span>
+          <span>RNVizion</span>
+        </div>
+      </div>
+    </header>
+
+    <article>
+      <div class="read-container">
+
+        <p>I built an entire app because I got tired of retyping the same words over and over.</p>
+
+        <p>I was editing a video, and I kept needing to change the case of my text: block after block, the same small fix. The editor I use is good, but it had no native way to do it. No shortcut, no transform tool, nothing. If I wanted a line a certain way, I went in and typed it out character by character, exactly the way I wanted it.</p>
+
+        <p>That’s not hard. It’s repetitive, and repetitive is its own kind of exhausting. The drain doesn’t come from difficulty; it comes from doing the same trivial thing a hundred times when you know, in your bones, that a machine should be handling it.</p>
+
+        <p>I liked the editor. I didn’t want to leave it. So I built a companion instead: a small app to take over the repetitive, heavy text editing the editor wouldn’t touch. I called it the <a href="https://github.com/RNVizion/rnv-text-transformer" target="_blank" rel="noopener">RNV Text Transformer</a>, and I built it in a single afternoon. A problem that used to cost me hours every time it came up, solved once and for good.</p>
+
+        <p>And here’s where it got interesting.</p>
+
+        <p>I realized I could stand up a working app in record time, but working in record time was never the finish line. The speed handed me something back: hours. So I didn’t stop at “it functions.” I spent the time I’d saved making it mine: branding it, shaping it, adding the little squishy details that turn a tool into something you actually like reaching for.</p>
+
+        <p>I walked away with two things: an app that solved my problem, and a new way of thinking about how we build from here.</p>
+
+        <hr />
+
+        <h2>The claim everyone’s <em>repeating</em></h2>
+
+        <p>There’s a <a href="https://www.forbes.com/sites/jodiecook/2026/06/12/is-vibe-coding-already-dead-even-karpathy-is-moving-on/" target="_blank" rel="noopener">Forbes piece by Jodie Cook</a> from June 2026 going around about exactly this shift. It frames vibe coding as already dated, names the new phase agentic engineering, and makes the case that one person can now ship deployed, tested, customer-ready software on their own. A real change in what you can promise. Then it lands on the line everyone keeps quoting: it changes what one person can charge for.</p>
+
+        <p>I don’t think that’s quite right. The price isn’t the thing that changes.</p>
+
+        <hr />
+
+        <h2>What <em>actually</em> changes</h2>
+
+        <p>A client still pays what the work is worth. The deliverable costs what it costs; the market sets that, not your tooling. What agentic engineering changes is everything behind the price: the time, the team, the tool stack, the number of hands the money has to pass through before the thing is built. Same revenue, smaller cost structure. The check doesn’t shrink; the slice you keep grows.</p>
+
+        <p>And let me be clear about what this is not. It isn’t “a team gets paid less to make the software.” It isn’t the cynical version where AI is just a lever to cut people and pocket the difference. The opposite, actually: while the thing is being made, the people making it finally have the time and the room to build it without the deadline standing over them.</p>
+
+        <hr />
+
+        <h2>The wall we used to <em>throw ourselves at</em></h2>
+
+        <p>That deadline used to be brutal. Back in university, my game programming professor, Dave, talked about game developers sleeping under their desks: staying at work for days, pushing to hit the date a client had set, because the only way to buy more time was to spend more of your own. The deadline was a wall, and you threw your body at it.</p>
+
+        <p>Agentic tooling moves the wall. Projects can land before the deadline instead of clawing their way up to it. The features you always wanted to add but couldn’t, the ones that got cut the second time got tight, come back into reach. For some people that means pushing their creativity further. For others it becomes a multi-tool for solo development, the thing that lets one person hold what used to take a room.</p>
+
+        <hr />
+
+        <h2>What you actually <em>keep</em></h2>
+
+        <p>Put it in real numbers. If I finish in two months what should’ve taken six, I haven’t lowered my price — I’ve bought four months. Four months to deepen what I built, to add the squish, or to start something new entirely. That time didn’t come off the invoice. It moved to my side of the ledger.</p>
+
+        <p>That’s the real shape of the change: better work, because there’s finally time to make it better; better quality of life, because nobody’s sleeping under a desk; a wider margin, because the hours got saved instead of burned.</p>
+
+        <p>Speed was never about charging more. It was about the time it bought back.</p>
+
+        <p><strong>The most valuable currency is non-refundable; time saved is profit made.</strong></p>
+
+        <p><em>Third in a series on building with a soul in a fast age. Next: why the limits you resent are the ones quietly doing your best thinking for you.</em></p>
+
+        <!-- Standing author bio. Ships on every post; keep in sync with /bio/. -->
+        <div class="bio">
+          <strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>
+
+      </div>
+    </article>
+
+    <div class="post-footer">
+      <div class="read-container">
+        <div class="post-footer-label">Keep reading</div>
+        <div class="post-footer-links">
+          <a href="/blog/">← All posts</a>
+          <a href="/">Home</a>
+          <a href="/#work">My work</a>
+          <a href="https://github.com/RNVizion" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Christian Smith · RNVizion</div>
+      <div><a href="/aiii/">AIII</a> · <a href="/bio/">Bio</a> · <a href="/resume/">Résumé</a> · Washington, DC</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+</body>
+</html>
