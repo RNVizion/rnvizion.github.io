@@ -8,8 +8,46 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 19 Aug 2026 16:05:45 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 19 Aug 2026 20:04:28 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Margin, Not the Price</title>
+      <link>https://rnvizion.dev/blog/the-margin-not-the-price/</link>
+      <guid isPermaLink="true">https://rnvizion.dev/blog/the-margin-not-the-price/</guid>
+      <pubDate>Wed, 19 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Christian Smith</dc:creator>
+      <description>Agentic engineering doesn’t change what a client pays; it changes how much of it you keep.</description>
+      <content:encoded><![CDATA[<p>I built an entire app because I got tired of retyping the same words over and over.</p>
+<p>I was editing a video, and I kept needing to change the case of my text: block after block, the same small fix. The editor I use is good, but it had no native way to do it. No shortcut, no transform tool, nothing. If I wanted a line a certain way, I went in and typed it out character by character, exactly the way I wanted it.</p>
+<p>That’s not hard. It’s repetitive, and repetitive is its own kind of exhausting. The drain doesn’t come from difficulty; it comes from doing the same trivial thing a hundred times when you know, in your bones, that a machine should be handling it.</p>
+<p>I liked the editor. I didn’t want to leave it. So I built a companion instead: a small app to take over the repetitive, heavy text editing the editor wouldn’t touch. I called it the <a href="https://github.com/RNVizion/rnv-text-transformer" rel="noopener" target="_blank">RNV Text Transformer</a>, and I built it in a single afternoon. A problem that used to cost me hours every time it came up, solved once and for good.</p>
+<p>And here’s where it got interesting.</p>
+<p>I realized I could stand up a working app in record time, but working in record time was never the finish line. The speed handed me something back: hours. So I didn’t stop at “it functions.” I spent the time I’d saved making it mine: branding it, shaping it, adding the little squishy details that turn a tool into something you actually like reaching for.</p>
+<p>I walked away with two things: an app that solved my problem, and a new way of thinking about how we build from here.</p>
+<hr/>
+<h2>The claim everyone’s <em>repeating</em></h2>
+<p>There’s a <a href="https://www.forbes.com/sites/jodiecook/2026/06/12/is-vibe-coding-already-dead-even-karpathy-is-moving-on/" rel="noopener" target="_blank">Forbes piece by Jodie Cook</a> from June 2026 going around about exactly this shift. It frames vibe coding as already dated, names the new phase agentic engineering, and makes the case that one person can now ship deployed, tested, customer-ready software on their own. A real change in what you can promise. Then it lands on the line everyone keeps quoting: it changes what one person can charge for.</p>
+<p>I don’t think that’s quite right. The price isn’t the thing that changes.</p>
+<hr/>
+<h2>What <em>actually</em> changes</h2>
+<p>A client still pays what the work is worth. The deliverable costs what it costs; the market sets that, not your tooling. What agentic engineering changes is everything behind the price: the time, the team, the tool stack, the number of hands the money has to pass through before the thing is built. Same revenue, smaller cost structure. The check doesn’t shrink; the slice you keep grows.</p>
+<p>And let me be clear about what this is not. It isn’t “a team gets paid less to make the software.” It isn’t the cynical version where AI is just a lever to cut people and pocket the difference. The opposite, actually: while the thing is being made, the people making it finally have the time and the room to build it without the deadline standing over them.</p>
+<hr/>
+<h2>The wall we used to <em>throw ourselves at</em></h2>
+<p>That deadline used to be brutal. Back in university, my game programming professor, Dave, talked about game developers sleeping under their desks: staying at work for days, pushing to hit the date a client had set, because the only way to buy more time was to spend more of your own. The deadline was a wall, and you threw your body at it.</p>
+<p>Agentic tooling moves the wall. Projects can land before the deadline instead of clawing their way up to it. The features you always wanted to add but couldn’t, the ones that got cut the second time got tight, come back into reach. For some people that means pushing their creativity further. For others it becomes a multi-tool for solo development, the thing that lets one person hold what used to take a room.</p>
+<hr/>
+<h2>What you actually <em>keep</em></h2>
+<p>Put it in real numbers. If I finish in two months what should’ve taken six, I haven’t lowered my price — I’ve bought four months. Four months to deepen what I built, to add the squish, or to start something new entirely. That time didn’t come off the invoice. It moved to my side of the ledger.</p>
+<p>That’s the real shape of the change: better work, because there’s finally time to make it better; better quality of life, because nobody’s sleeping under a desk; a wider margin, because the hours got saved instead of burned.</p>
+<p>Speed was never about charging more. It was about the time it bought back.</p>
+<p><strong>The most valuable currency is non-refundable; time saved is profit made.</strong></p>
+<p><em>Third in a series on building with a soul in a fast age. Next: why the limits you resent are the ones quietly doing your best thinking for you.</em></p>
+<!-- Standing author bio. Ships on every post; keep in sync with /bio/. -->
+<div class="bio">
+<strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>]]></content:encoded>
+    </item>
     <item>
       <title>Fit Over Default</title>
       <link>https://rnvizion.dev/blog/fit-over-default/</link>
