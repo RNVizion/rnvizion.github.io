@@ -102,6 +102,10 @@ jobs:
               echo "Generated images updated."
               exit 0
             fi
+            # A conflicted pull leaves a rebase in progress, so every later
+            # attempt fails on "rebase already in progress" rather than on the
+            # race. Clear it, or the retry is not a retry.
+            git rebase --abort 2>/dev/null || true
             echo "push race — retrying ($attempt)…"
             sleep 3
           done
