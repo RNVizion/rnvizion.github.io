@@ -100,7 +100,17 @@
          pass with no margin. This is the only element carrying WCAG 1.4.11 on
          this component, so it keeps 2x the floor rather than sitting on it.
          Measured through rnv-color-mcp, not estimated. */
-      box-shadow: 0 0 0 0.75px var(--accent);
+      /* TRIAL, added 2026-08-16, not ruled: a fill-coloured glow at the nav
+         dot's 12px radius, to be judged on the live site. The 2026-08-13
+         removal of the previous glow (`0 0 8px #4ade80`) reasoned that a ring
+         plus a glow is two treatments doing one job; this reopens that.
+         Revert by deleting the second layer.
+
+         ORDER IS LOAD-BEARING: shadow layers paint first-on-top, so the ring
+         stays above the glow and stays crisp. Do not reorder -- the ring is
+         the only element carrying WCAG 1.4.11 on this component, and a
+         blurred wine bleeding across it would tint the value that carries it. */
+      box-shadow: 0 0 0 0.75px var(--accent), 0 0 12px var(--signal-live);
     }
     .hero-tag .dot::after {
       content: ""; position: absolute; inset: 0;
