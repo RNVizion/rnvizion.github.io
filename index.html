@@ -100,22 +100,29 @@
          pass with no margin. This is the only element carrying WCAG 1.4.11 on
          this component, so it keeps 2x the floor rather than sitting on it.
          Measured through rnv-color-mcp, not estimated. */
-      /* TRIAL, added 2026-08-16, not ruled: a fill-coloured glow at the nav
-         dot's 12px radius, to be judged on the live site. The 2026-08-13
-         removal of the previous glow (`0 0 8px #4ade80`) reasoned that a ring
-         plus a glow is two treatments doing one job; this reopens that.
-         Revert by deleting the second layer.
+      /* The glow lives on ::after, not here. It has to paint in FRONT of this
+         ring, and a positioned descendant paints above its parent's shadow --
+         so moving it there does the layering without reordering anything, and
+         it inherits the breathe animation as a side effect.
 
-         ORDER IS LOAD-BEARING: shadow layers paint first-on-top, so the ring
-         stays above the glow and stays crisp. Do not reorder -- the ring is
-         the only element carrying WCAG 1.4.11 on this component, and a
-         blurred wine bleeding across it would tint the value that carries it. */
-      box-shadow: 0 0 0 0.75px var(--accent), 0 0 12px var(--signal-live);
+         The ring does tint under it: 4.82:1 at the glow's full opacity, 7.03:1
+         at breathe's dim end, measured. Both clear the 3:1 UI floor, worst case
+         by 1.6x, so this ring's effective value is coupled to the animation and
+         that is FINE. The 2026-08-14 split decoupled them because the ring was
+         dipping to 2.57:1, under the floor. Coupling above the floor and
+         coupling through it are different facts. */
+      box-shadow: 0 0 0 0.75px var(--accent);
     }
     .hero-tag .dot::after {
       content: ""; position: absolute; inset: 0;
       border-radius: 50%;
       background: var(--signal-live);
+      /* Glow, same 12px radius the nav mark dot uses. It sits here rather than
+         on .dot for two reasons at once: this element paints above the parent's
+         ring, and it is the element that breathes -- so the halo dims with its
+         own source instead of holding while the fill fades. Reverses the
+         2026-08-13 removal of this dot's glow; see the Brand Book row. */
+      box-shadow: 0 0 12px var(--signal-live);
     }
     @media (prefers-reduced-motion: no-preference) {
       .hero-tag .dot::after { animation: breathe 3s ease-in-out infinite; }
