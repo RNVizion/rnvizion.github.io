@@ -11,7 +11,7 @@
   // the contact card later should not silently take Pillow with it.
   "name": "rnvizion.github.io",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "postCreateCommand": "pip install --user Pillow qrcode && bash font.sh",
+  "postCreateCommand": "pip install --user Pillow qrcode && bash scripts/font.sh",
   "customizations": {
     "vscode": {
       "extensions": [

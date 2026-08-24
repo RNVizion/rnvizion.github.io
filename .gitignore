@@ -5,5 +5,5 @@ node_modules/
 .idea/
 .vs/
 *.log
-# fetched by font.sh; never commit
+# fetched by scripts/font.sh; never commit
 assets/fonts/

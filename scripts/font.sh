@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# font.sh — fetch the RNVizion brand fonts into assets/fonts/.
+# scripts/font.sh — fetch the RNVizion brand fonts into assets/fonts/.
 #
 # Three generators render with these faces — scripts/generate_og.py,
 # scripts/generate_site_og.py and scripts/generate_project_card.py — and each
@@ -8,9 +8,9 @@
 # shows up as an ugly card rather than an error. This script makes the fetch
 # explicit and verifies what it downloaded.
 #
-#   ./font.sh              # fetch anything missing
-#   ./font.sh --force      # re-download everything
-#   ./font.sh --verify     # check what's on disk, download nothing
+#   ./scripts/font.sh              # fetch anything missing
+#   ./scripts/font.sh --force      # re-download everything
+#   ./scripts/font.sh --verify     # check what's on disk, download nothing
 #
 # Target directory honours OG_FONT_DIR; all three generators read the same
 # override, so setting it for one and not the others is not a failure mode.

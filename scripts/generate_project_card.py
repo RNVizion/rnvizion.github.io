@@ -43,7 +43,7 @@ USAGE (run from the repo root)
 
 Existing files are left alone unless --force, so a real screenshot is never
 overwritten. Fonts come from assets/fonts/ (override with OG_FONT_DIR); run
-./font.sh first.
+./scripts/font.sh first.
 """
 import argparse
 import os

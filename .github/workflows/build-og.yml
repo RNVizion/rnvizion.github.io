@@ -38,7 +38,7 @@ on:
       - "scripts/generate_og.py"
       - "scripts/generate_project_card.py"
       - "scripts/generate_site_og.py"
-      - "font.sh"
+      - "scripts/font.sh"
       - ".github/workflows/build-og.yml"
   workflow_dispatch: {}   # run by hand from the Actions tab (use this to backfill)
 
@@ -65,7 +65,7 @@ jobs:
         run: pip install Pillow
 
       - name: Fetch brand fonts
-        run: bash font.sh
+        run: bash scripts/font.sh
 
       - name: Render an OG image for every post
         run: |
@@ -88,7 +88,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # assets/fonts/ is gitignored, so font.sh's downloads are never staged
+          # assets/fonts/ is gitignored, so scripts/font.sh's downloads are never staged
           if [ -z "$(git status --porcelain assets)" ]; then
             echo "Generated images unchanged — nothing to commit."
             exit 0

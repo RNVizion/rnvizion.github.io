@@ -38,7 +38,7 @@ USAGE (run from the repo root)
 --check exits non-zero if the card is missing or older than index.html, which
 makes it usable as a CI guard.
 
-Fonts come from assets/fonts/ (override with OG_FONT_DIR); run ./font.sh first.
+Fonts come from assets/fonts/ (override with OG_FONT_DIR); run ./scripts/font.sh first.
 """
 import argparse
 import os
