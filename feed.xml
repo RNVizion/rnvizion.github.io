@@ -8,8 +8,83 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 23 Aug 2026 00:04:54 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2026 17:56:52 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Honest and Wrong</title>
+      <link>https://rnvizion.dev/blog/honest-and-wrong/</link>
+      <guid isPermaLink="true">https://rnvizion.dev/blog/honest-and-wrong/</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Christian Smith</dc:creator>
+      <description>A machine built to refuse guessing handed me a confident wrong number about my own work; the machine was fine, the page wasn’t.</description>
+      <content:encoded><![CDATA[<p>I asked my own assistant how many projects I’d shipped; it said eight.</p>
+<p>The answer is nine. I know, because I built all of them. There was no hedge in it, no “according to the available context,” none of the throat-clearing you’d hope for from a machine that’s about to be wrong. It read my résumé, did the arithmetic, and handed me a number about my own life with total composure.</p>
+<p>This is Ask the Corpus, the little machine I wrote a whole essay about because it says no. When a question lands outside my published work, it doesn’t reach for a plausible guess the way other assistants do; it stops, and it tells you it can’t. I made that claim in public. I was proud of it.</p>
+<p>Yet, here it was, doing the one thing I’d built it not to do, on the one subject I could check without looking anything up.</p>
+<hr/>
+<h2>A second machine, built to <em>judge</em> the first</h2>
+<p>Let me back up, because I didn’t find this by accident.</p>
+<p>A claim you’ve watched work a few times isn’t a claim you’ve proven. I’d asked the thing a handful of questions on a good afternoon and watched it behave, and that’s a demo. So I built a second machine to judge the first: forty questions, each with the answer it deserved. Twenty-two real, drawn from things I’d actually published. Eighteen traps, drawn from things I hadn’t. The capital of China. My salary. An essay I hadn’t put on the site.</p>
+<p>Three scores, every time I change anything: did it find the right source, did it turn away the traps, and how often does it refuse something it should have answered. That last one I named the false-refusal rate, months before I had any reason to care about it.</p>
+<p>That’s the whole instrument. Not “is it smart.” Just “is it honest, still, today.”</p>
+<hr/>
+<h2>The <em>rigged</em> scorecard</h2>
+<p>The first run came back red, and the failure was mine.</p>
+<p>Several of my “real” questions pointed at the essay about building circles without a compass, which I’d written and hadn’t published. The corpus had never seen a word of it. So the machine refused, correctly, and my own scorecard called that a failure, because I’d told the scorecard those answers existed.</p>
+<p>I’d built a judge and handed it a rigged test. I fixed the questions, pointed them only at work that’s actually live, and ran it again.</p>
+<hr/>
+<h2>Green, and <em>wrong</em></h2>
+<p>This time it came back green: retrieval perfect, all eighteen traps turned away clean, one failure in forty.</p>
+<p>The failure was not the count.</p>
+<p>The count passed. It sits in the saved report with a green check, and the answer it gave that day was <em>seven</em>, five desktop applications plus two more, counted off my résumé with the same composure it later gave me eight. Different day, different number, same certainty. It passed because the thing my judge measures is whether the machine refuses when it shouldn’t, and the machine hadn’t refused. It had answered. Confidently. Incorrectly.</p>
+<p>My test was built to catch the machine being too careful. It had no column for the machine being too sure.</p>
+<hr/>
+<h2>Why the number <em>kept moving</em></h2>
+<p>So why does the number keep moving?</p>
+<p>Because it wasn’t hallucinating. That’s the part that took me a while to sit with. It wasn’t reaching for a plausible-sounding figure; it was counting, carefully, from the page in front of it.</p>
+<p>And here’s what makes it worse, or better, depending on how you feel about being read closely. The page it counted from said nine. Right there in the stats line at the top: nine projects shipped, in plain text, written by me, correct. Underneath it sat a grid of project cards, and that grid had eight. My publishing agent didn’t have a card yet; I’d shipped the thing and never made it a tile.</p>
+<p>So the document contradicted itself. It asserted nine and it enumerated eight, and the machine resolved that the way I’d taught it to: it went with what it could actually count. The claim was right there in the text and it didn’t take my word for it, because taking someone’s word for it is the entire behavior I built the thing to refuse.</p>
+<p>The seven, months earlier, was the same read against my résumé, back when that page held fewer cards. By the time I checked again in August, the grid and the number agreed, and it answered nine.</p>
+<p>Every one of those answers was faithful. Only the last one was right.</p>
+<hr/>
+<h2>The one <em>red</em> mark</h2>
+<p>Now the one red mark, because it’s the opposite failure and I got it wrong twice.</p>
+<p>I’d asked the machine what rnv-color-mcp is. Retrieval worked; it went to my résumé, the right page, and then it refused. <em>The corpus has knowledge, but the information you seek will not be found here.</em></p>
+<p>Marked fail. A false refusal, by my own definition, and I logged it as the suite’s one blemish.</p>
+<p>Then I explained it away in about ten seconds, without opening anything: the résumé mentions that server briefly, too terse to answer from, so the machine declined rather than guess. The verdict was right; every part of the explanation was wrong, and it took me five weeks to find that out.</p>
+<p>I pulled the actual index, the copy of my writing the machine had been reading that day. My résumé sat in it as four chunks, about a thousand words. The string <em>rnv-color-mcp</em> appears in none of them.</p>
+<p>The page told a different story. I’d put that server on my résumé on June 25, with a full entry from the first draft of it: the registry it’s published to, nine tools by name, the design principle underneath. Sixty words, more than enough to answer from.</p>
+<p>The index was built on June 22.</p>
+<p>Three days. The machine was reading a copy of my résumé taken before the thing existed on it, and refusing, correctly, because it genuinely didn’t have what I was “certain” it had.</p>
+<hr/>
+<h2>The same machine, <em>both</em> ways</h2>
+<p>Put the two side by side, because they were the same machine at the same settings.</p>
+<p>It answered a question it should not have been sure of, because the copy it held was complete enough to count and not complete enough to be right. It refused a question it could not be sure of, because the copy it held predated the answer by three days. Nothing about the model changed between those two cases. The only variable was what it had.</p>
+<p>That’s the thing I didn’t understand when I wrote about the honest machine. I thought I’d built something that tells the truth. What I’d actually built is something faithful to my sources, which is a different property wearing similar clothes. It can’t be more accurate than what I hand it, and I don’t hand it my work; I hand it a copy of my work, taken at a moment, and the copy starts aging the second it’s made.</p>
+<p>Grounded is not the same as correct. A machine like this is honest about a snapshot; being honest about the world is still my job.</p>
+<hr/>
+<h2>Three failures, one <em>shape</em></h2>
+<p>Which makes three failures in one essay, and I don’t come out of any of them looking the way I expected.</p>
+<p>The first red run was my rigged scorecard: the test was wrong, the machine was fine. The count was a grid I’d never finished filling in: the page was wrong, the machine was fine. The red mark was a corpus three days older than the answer: the copy was wrong, the machine was fine.</p>
+<p>That third one came back a month later wearing different clothes, and I didn’t recognize it. The numbers went catastrophic, retrieval collapsed and false refusals through the roof, and I went hunting through the model for what had broken. Nothing had. The committed index was several sources behind the list it was built from, so the machine was correctly refusing material it genuinely didn’t have. One re-ingest took the identical questions back to healthy.</p>
+<p>The same stale index, twice, a month apart; I chased the second one through the wrong file too.</p>
+<p>Three gauges went red in this essay. Not one of them was reading the engine.</p>
+<hr/>
+<h2>The habit <em>underneath</em></h2>
+<p>I want to name the uncomfortable half of that, because there’s a habit underneath it worth catching.</p>
+<p>Not once, in any of these, did I open with <em>maybe it’s right.</em> I built the thing, so I trusted it completely, right up until the moment it declined to flatter me. Then I went looking for its bug instead of mine. It took less convincing than I did.</p>
+<hr/>
+<h2>What I <em>actually</em> built</h2>
+<p>Anyone can build a machine that answers. I built one that refuses, and I thought the refusal was the achievement.</p>
+<p>The refusal was just the visible half. What I actually built is a reader that won’t nod along, won’t fill my gaps, won’t quietly infer what I obviously meant. It can’t be impressed. It doesn’t know I made it. It reads what’s in front of it and reports that, and when the copy is old it says so, and when the page disagrees with itself it believes the part it can count.</p>
+<p>I kept calling that a bug in the machine: it was a report on my paperwork.</p>
+<p><strong>I built a machine that won’t take a claim on faith — it wouldn’t take mine either.</strong></p>
+<p><em>Next: the failure I decided not to fix, and what I got wrong about how it ended.</em></p>
+<!-- Standing author bio. Ships on every post; keep in sync with /bio/. -->
+<div class="bio">
+<strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>]]></content:encoded>
+    </item>
     <item>
       <title>The Margin, Not the Price</title>
       <link>https://rnvizion.dev/blog/the-margin-not-the-price/</link>
