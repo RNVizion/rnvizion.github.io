@@ -9,9 +9,23 @@
   // separately rather than as qrcode[pil], so the two reasons Pillow is here
   // stay visible: the OG renderers need it on its own account, and dropping
   // the contact card later should not silently take Pillow with it.
+  //
+  // beautifulsoup4 and lxml added 2026-08-31, and the reason is worth writing
+  // down. scripts/build_feed.py imports bs4 and parses with the lxml backend
+  // explicitly, so it cannot start without both; it is the sole generator of
+  // feed.xml, blog/index.html, sitemap.xml, and robots.txt. build-feed.yml
+  // installs them, this file never did, and a hand-run in a Codespace worked
+  // anyway — because the publishing agent's own requirements.txt happened to
+  // carry bs4 and lxml, and installing it in the same Codespace covered the
+  // gap. Nothing in that repo imports either package; they were leftovers, and
+  // removing them there is what exposed this. Same shape as the BLOG_REPO bug
+  // in that repo's agent.py: a dependency that looked configured because an
+  // unrelated default happened to satisfy it. Declared here on its own account
+  // now, so the editor environment stands up without borrowing from a
+  // neighbouring repo.
   "name": "rnvizion.github.io",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "postCreateCommand": "pip install --user Pillow qrcode && bash scripts/font.sh",
+  "postCreateCommand": "pip install --user Pillow qrcode beautifulsoup4 lxml && bash scripts/font.sh",
   "customizations": {
     "vscode": {
       "extensions": [
