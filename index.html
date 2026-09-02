@@ -232,7 +232,7 @@
       <div class="container">
         <div class="hero-tag">
           <span class="dot"></span>
-          Open to remote AI Engineer, Solutions Engineer &amp; Developer Advocate roles
+          Open to Solutions Engineer &amp; AI Engineer roles · remote or DMV hybrid
         </div>
         <h1>Christian Smith : I build <em>production</em> AI systems, and the tools they run on.</h1>
         <p class="hero-subtitle">Python developer building production AI on the Claude API: retrieval systems held to a CI-gated eval suite, LLM agents, and an MCP server any model can call. I ship polished developer tools, and I write about the craft. AR/VR specialist at Meta by day.</p>
@@ -340,7 +340,7 @@
             <div>
               <div class="project-number">04 / AGENTS</div>
               <h3>RNV Publishing Agent</h3>
-              <p class="project-desc">The pipeline that ships this site's writing, run by an agent rather than by hand. A FastMCP server exposes four tools; a Claude loop drives them end to end, validating a post's metadata, generating its index card and Open Graph image, committing and pushing, then waiting for the page to go live before updating the corpus behind Ask the Corpus. The irreversible publish step sits behind its own gate, and anything that fails validation doesn't ship.</p>
+              <p class="project-desc">The pipeline that ships this site's writing, run by an agent rather than by hand. A FastMCP server exposes six tools; a Claude loop makes one decision — publish or don’t — and deterministic code runs the chain: validate the post, commit and push, poll until the page is live, then update the corpus behind Ask the Corpus. The index, feed, and Open Graph image are built by CI on the push, not by the agent. The dry run is the default, anything that fails validation doesn’t ship, and the refusal behavior is pinned by a test suite that runs on every commit.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">FastMCP</span><span class="tag">Agent Loop</span><span class="tag">Claude API</span><span class="tag">GitHub Actions</span><span class="tag">Codespaces</span></div>
               <a class="project-link" href="https://github.com/RNVizion/rnv-publishing-agent" target="_blank" rel="noopener">View on GitHub →</a>
             </div>
@@ -351,7 +351,7 @@
             <div>
               <div class="project-number">05 / TEXT</div>
               <h3>RNV Text Transformer</h3>
-              <p class="project-desc">11 transformation modes across 9+ file formats with regex builder, folder watching, compare view, and a full CLI. Backed by 786 tests at ~76% coverage running on Linux and Windows CI.</p>
+              <p class="project-desc">11 transformation modes across 9+ file formats with regex builder, folder watching, compare view, and a full CLI. Runs on Linux and Windows CI.</p>
               <div class="project-tags"><span class="tag">Python</span><span class="tag">PyQt6</span><span class="tag">CLI</span><span class="tag">pytest</span><span class="tag">GitHub Actions</span></div>
               <a class="project-link" href="https://github.com/RNVizion/rnv-text-transformer" target="_blank" rel="noopener">View on GitHub →</a>
             </div>
@@ -447,7 +447,7 @@
     <section id="contact" class="contact-section">
       <div class="container">
         <h2>Let's <em>build</em> something.</h2>
-        <p>Open to remote AI Engineer, Solutions Engineer, and Developer Advocate roles. Always happy to talk production AI, developer tooling, or the craft of building things that feel right.</p>
+        <p>Open to Solutions Engineer, AI Engineer, implementation, and technical account roles; remote, or hybrid in the DMV. Always happy to talk production AI, developer tooling, or the craft of building things that feel right.</p>
         <div class="contact-links">
           <a class="btn primary" href="mailto:inquiries@rnvizion.dev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> inquiries@rnvizion.dev</a>
           <a class="btn" href="https://github.com/RNVizion" target="_blank" rel="noopener">GitHub</a>
