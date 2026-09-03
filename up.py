@@ -142,6 +142,19 @@ edit(R,
      '<meta property="og:description" content="Christian Smith — ' + NEW_RES + '" />',
      "résumé og:description: same text")
 
+# ---- OpenSSF wording: conform to the recorded ruling ----
+# profile.json manual_surfaces["OpenSSF Best Practices Baseline"] rules the phrase:
+# "a submission at a count, never a passing badge. Keep that wording." The summary
+# rewritten in pass 1 said "self-assessment", which left resume/index.html carrying
+# BOTH wordings — the summary and the AIII entry four hundred lines apart — and put
+# one of them outside a ruling this project does not own. Conform rather than argue;
+# whether "self-assessment" is the more precise word is a question for the manifest's
+# owner, and it travels as a note.
+edit(R,
+     'an OpenSSF Best Practices Baseline self-assessment at 20 of 21 controls with the exception documented rather than hidden',
+     'an OpenSSF Best Practices Baseline submission at 20 of 21 controls with the exception documented rather than hidden',
+     "OpenSSF: \"self-assessment\" -> \"submission\" per the manifest ruling; page now self-consistent")
+
 print()
 if CHECK:
     print(f"check only — {sum(len(v) for v in changed.values())} edits would apply; nothing written")
