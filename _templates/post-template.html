@@ -288,6 +288,18 @@
     article strong { color: var(--accent); font-weight: 600; }
     article em { font-style: italic; }
 
+    /* Inline code token, for markup names, file paths and identifiers in prose:
+       <code>&lt;article&gt;</code>. Existing tokens only; no new colours or faces. */
+    article code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      color: var(--accent);
+      background: var(--bg-3);
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+
     article hr {
       border: none;
       border-top: 1px solid var(--border-soft);
@@ -398,6 +410,7 @@
         <h2>[Section heading, optionally with an <em>italic</em> word]</h2>
 
         <p>[Body paragraph. Use <strong>strong</strong> for a load-bearing line,
+        <code>&lt;code&gt;</code> for a markup name, file path or identifier,
         and link out like <a href="https://github.com/RNVizion/your-repo" target="_blank" rel="noopener">this</a> where it earns it.]</p>
 
         <!-- Repeat <hr /> + <h2> + <p> blocks for each section. -->
