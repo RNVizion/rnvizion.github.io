@@ -58,6 +58,12 @@
       --text-dim: #9a9ab0;
       --text-faint: #5a5a72;
       --accent: #d2bc93;
+      /* Inline code. Registered as BRAND_WEB_CODE 2026-09-12 and emitted
+         upstream as --rnv-code; mirrored here under the site's unprefixed
+         names. Reads 6.3277:1 on --bg-3, which is the only ground it ever
+         sits on because code is always chipped. Clears AA at 14.96px; it
+         would clear AAA unchipped at 7.2588, and the chip is worth the 0.93. */
+      --code: #00b0a0;
       --max-width: 1200px;
       --read-width: 720px;
       --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
@@ -105,6 +111,20 @@
     main, nav, footer, article { position: relative; z-index: 2; }
     a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
     a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Links in RUNNING TEXT are underlined at rest. Gold against body text is
+       1.517:1 where WCAG 1.4.1 wants 3:1 when colour is the only cue, and a
+       hover underline is not a cue: it does not exist on touch and is absent
+       while the page is being read.
+
+       Scoped to prose on purpose. nav, footer and post-footer are link REGIONS
+       -- position tells you they are links, so colour is not doing it alone.
+       Do not promote this to a bare `a`. */
+    article p a, article li a, .bio a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
 
     .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
     .read-container { max-width: var(--read-width); margin: 0 auto; padding: 0 32px; }
@@ -292,10 +312,17 @@
        <code>&lt;article&gt;</code>. Existing tokens only; no new colours or faces. */
     article code {
       font-family: var(--font-mono);
+      /* 0.88em is an optical correction, not a shrink: mono carries a larger
+         x-height than Inter, so parity makes code look bigger than its text.
+         At 17px body this is 14.96px -- NORMAL text, so the floor is 4.5. */
       font-size: 0.88em;
-      color: var(--accent);
+      color: var(--code);
+      /* The chip does the separating; a border used to sit here and did not.
+         1.049:1 against this background, indistinguishable at 4x against the
+         real faces. The chip is 1.147:1 and reads plainly -- same arithmetic,
+         opposite outcome, because area and stroke width change what a ratio
+         buys. Do not add it back to "define" the chip; it never defined it. */
       background: var(--bg-3);
-      border: 1px solid var(--border-soft);
       border-radius: 4px;
       padding: 1px 6px;
     }

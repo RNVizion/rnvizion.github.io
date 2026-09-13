@@ -92,6 +92,20 @@
     a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
     a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
+    /* Links in RUNNING TEXT are underlined at rest. Gold against body text is
+       1.517:1 where WCAG 1.4.1 wants 3:1 when colour is the only cue, and a
+       hover underline is not a cue: it does not exist on touch and is absent
+       while the page is being read.
+
+       Scoped to prose on purpose. nav, footer and post-footer are link REGIONS
+       -- position tells you they are links, so colour is not doing it alone.
+       Do not promote this to a bare `a`. */
+    article p a, article li a, .bio a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
+
     .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
     .read-container { max-width: var(--read-width); margin: 0 auto; padding: 0 32px; }
 
