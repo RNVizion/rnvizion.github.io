@@ -309,7 +309,12 @@
     article em { font-style: italic; }
 
     /* Inline code token, for markup names, file paths and identifiers in prose:
-       <code>&lt;article&gt;</code>. Existing tokens only; no new colours or faces. */
+       <code>&lt;article&gt;</code>. Carries its own colour -- --code, registered
+       upstream as BRAND_WEB_CODE and emitted there as --rnv-code. It used to say
+       "existing tokens only; no new colours or faces", which was true while this
+       rule used var(--accent) and false from the moment --code arrived. The
+       sentence outlived its change by one pass, sitting inside the rule that
+       contradicted it. */
     article code {
       font-family: var(--font-mono);
       /* 0.88em is an optical correction, not a shrink: mono carries a larger
