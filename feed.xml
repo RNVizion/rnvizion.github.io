@@ -8,57 +8,8 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Sep 2026 07:49:46 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Sep 2026 07:53:11 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>The Warning, Not the Gate</title>
-      <link>https://rnvizion.dev/blog/the-warning-not-the-gate/</link>
-      <guid isPermaLink="true">https://rnvizion.dev/blog/the-warning-not-the-gate/</guid>
-      <pubDate>Mon, 14 Sep 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Christian Smith</dc:creator>
-      <description>Why the check that catches a missing share image warns instead of blocking: gate what you’re judging, warn about what you’re waiting on.</description>
-      <content:encoded><![CDATA[<p>Three posts went out without my custom share image.</p>
-<p>Not broken posts: the writing was there, the page loaded, the feed picked them up; the face, the preview, the part that makes a page feel alive looked abandoned, a gray rectangle with a URL sitting in it.</p>
-<p>I found out the way you always find out. I went to share one.</p>
-<p>So I added a check. My publishing agent already waits for a post to go live before it does anything else; now it also asks whether the share image that post claims to have is actually there. Small. Obvious in hindsight, the way most of these are.</p>
-<p>Then the real question showed up, and it wasn’t a technical one.</p>
-<p>Should that check stop the publish?</p>
-<hr/>
-<h2>What I <em>almost</em> built</h2>
-<p>My initial instinct said yes. I’d just been burned by this exact gap, three times, in public. A check that notices a problem and then shrugs isn’t a check; it’s a comment with extra steps. If it matters enough to look, it matters enough to stop.</p>
-<p>Wrong.</p>
-<p>I almost built it that way. What stopped me was noticing what the check is actually looking at.</p>
-<p>The image isn’t rendered by the publishing agent. It’s rendered by a separate CI job that starts when the push lands, which means it finishes <em>after</em> the publish, by design, every time. So the agent isn’t asking whether the image exists. It’s asking whether a different process has caught up yet.</p>
-<p>Those are not the same question. Only one of them is the agent’s to answer.</p>
-<hr/>
-<h2><em>Whose</em> failure is it</h2>
-<p>That turned into the rule I’ve been using since: <strong>gate a defect, warn about a queue.</strong></p>
-<p>A missing <code>&lt;article&gt;</code> block is the post’s defect. A missing publish date is the post’s defect. Those stop the chain cold, and they should; the post is genuinely not ready, and that would mean shipping something incomplete. A share image that hasn’t rendered yet is nobody’s defect. It’s a queue.</p>
-<p>The distinction isn’t about how much you care. I care about the share card; that’s why I wrote the check after getting burned. It’s about who’s at fault when the check fires, because that determines what happens next and who has to answer.</p>
-<hr/>
-<h2>What a gate <em>costs</em> when it’s wrong</h2>
-<p>Picture the gate.</p>
-<p>It’s eleven at night. The post is finished, the writing is good, the build queue is slow because someone else’s workflow is hogging a runner. The gate fires. The publish fails. Nothing is wrong with the post; a machine somewhere is just busy.</p>
-<p>What do you actually do in that moment?</p>
-<p>You don’t fix the build queue at eleven at night. You loosen the gate. Just a little; just this once, and that’s the last night anyone trusts it.</p>
-<p>The false alarm isn’t the price of a gate that punishes the innocent. It’s the erosion. A gate that fails good work teaches you to route around it, and once you’ve learned to route around it, it has stopped protecting anything at all. It’s just a thing you turn off, sitting in the codebase looking like safety.</p>
-<p>A check that misses a problem costs you a post; a check that teaches you to skip it costs you the check.</p>
-<hr/>
-<h2><em>Loud</em>, and out of the way</h2>
-<p>So the image check warns. It polls on its own clock after the page is live, and if the image still isn’t there it puts the failure in the result where I can’t miss it: the URL it tried, the status it got, and the plain sentence that the render job may still be running or may have failed outright.</p>
-<p>The post publishes. The retrieval corpus ingests it. Both of those are correct without the image, so blocking them would punish the post for something the post didn’t do.</p>
-<p>I’d rather this be a decision than a habit, so there’s a test that pins it. One test asserts the chain still succeeds when the image is missing and still carries the warning; another asserts that when the render job finishes in time, the poll catches it and there’s no warning at all. That second one matters more than it looks. A warning that never goes quiet stops being a warning.</p>
-<hr/>
-<h2>The part that <em>transfers</em></h2>
-<p>Every system that automates something consequential ends up with a pile of checks, and the pile always grows faster than the thinking behind it. The temptation is to make each new one a gate, since a gate feels like rigor and a warning feels like a shrug.</p>
-<p>But rigor isn’t how many things you can stop. It’s whether you can say, out loud, why this one stops and that one doesn’t.</p>
-<p>If you can’t answer that for a check you wrote, you haven’t built a safeguard. You’ve built something that’s going to get disabled at eleven at night by someone with a deadline, and neither of you will remember why it was there.</p>
-<p><strong>Gate what you’re judging — warn about what you’re waiting on.</strong></p>
-<!-- Standing author bio. Ships on every post; keep in sync with /bio/. -->
-<div class="bio">
-<strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
-        </div>]]></content:encoded>
-    </item>
     <item>
       <title>Honest and Wrong</title>
       <link>https://rnvizion.dev/blog/honest-and-wrong/</link>
