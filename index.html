@@ -31,9 +31,17 @@
       --text: #e8e8f0; --text-dim: #9a9ab0; --text-faint: #5a5a72; --accent: #d2bc93;
       --accent-2: #b794ff; --accent-warm: #ffd166; --max-width: 1200px;
       /* Brand signals: state of a thing the brand runs. Not app STATUS.
-         signal-offline/-down equal --text-faint/--accent-warm by coincidence;
-         the seam is deliberate. Do not de-duplicate. Source: engine/brand.py. */
-      --signal-live: #a5034e; --signal-offline: #5a5a72; --signal-down: #ffd166;
+         signal-offline/-standby equal --text-faint/--accent-warm by coincidence;
+         the seam is deliberate. Do not de-duplicate. Source: engine/brand.py.
+
+         Only --signal-live is consumed on this page: the hero dot has one
+         state and is always live. The other two are declared so a future use
+         does not hardcode -- kept on purpose, not left behind. Renamed from
+         --signal-down 2026-09-15, following the register's 2026-08-23 rename;
+         the value is unchanged because signal-standby IS #ffd166. Deleting
+         --signal-standby would leave #ffd166 on this page only as
+         --accent-warm, which is the de-duplication the line above forbids. */
+      --signal-live: #a5034e; --signal-offline: #5a5a72; --signal-standby: #ffd166;
       --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
       --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif; --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
