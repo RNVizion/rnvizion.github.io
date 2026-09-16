@@ -1,75 +1,56 @@
 #!/usr/bin/env python3
-"""index.html: rename --signal-down to --signal-standby, and say why it exists.
+"""post-template.html: BRAND_WEB_CODE -> BRAND_TEAL. Two comments, nothing else.
 
-Built against rnvizion.github.io/index.html @ main, read 2026-09-15.
-Run from repo root. Two edits, both in the :root token block.
+Built against rnvizion.github.io/_templates/post-template.html @ main, read
+2026-09-15. Run from repo root.
 
-    python3 sig.py            # DRY RUN
-    python3 sig.py --apply
+    python3 rename.py            # DRY RUN
+    python3 rename.py --apply
 
-RENAME, NOT DELETE. A note proposed deleting the token on the grounds that the
-page has no standby state and nothing consumes it. Both facts are true and the
-conclusion does not follow, for three reasons:
+Scope is exactly what Brand Infrastructure specified: two edits, the constant
+name, and nothing else. A wider version was built and rejected -- it removed the
+constant reference entirely and dropped the register-owned ratios. That is a
+house-style call about this template and the narrow fix is the one chosen.
 
-  THE TOKEN WAS DELIBERATE. The 2026-08-13 handoff that added all three wrote:
-  "Only --signal-live is used today. The other two are there so the next use does
-  not hardcode." Deleting it reverses a recorded decision rather than tidying an
-  oversight.
+WHAT IS NOT BEING CHANGED, so it is not re-raised as an oversight:
 
-  THE REVALUATION ARGUMENT COMPARED THE WRONG TOKENS. That note held that a
-  rename would leave a correctly-named token with the wrong value, citing
-  BRAND_STANDBY_GOLD #ae986f. That is `signal-ring-standby`, the RING. The FILL
-  is `signal-standby` = #ffd166 -- exactly what this page already carries. The
-  rename is correct on name and value, and needs no revaluation.
+  The ratios at line 61 stay. They re-measure correct -- 6.3277 on --bg-3,
+  14.96px -- and they are owned by BRAND_COLORS.md. Pointing at the register
+  instead of restating them is the durable form and is worth doing on the next
+  substantive edit to this block, not as a pass of its own.
 
-  DELETING CREATES THE COLLAPSE THE REGISTER FORBIDS. --accent-warm is #ffd166
-  four lines above. Remove the signal token and that value survives on the page
-  only as a decorative one; the next person adding a standby state finds it
-  declared and reaches for it. engine/brand.py: "THE MATCH IS INCIDENTAL AND THE
-  SEAM IS DELIBERATE ... Do not 'de-duplicate' these."
+  The constant is still named here at all. That is the coupling no check can
+  see: verify_tokens compares var(--rnv-*) against the emitted set, so it reads
+  token names and not constant names, and no check reads prose in another
+  repository. **Renaming keeps that trap armed for the next rename.** Recorded
+  rather than fixed, because scope was the call and this is what the call costs.
 
-THE COMMENT NOW SAYS WHY THE TOKEN IS UNUSED, which is the part that was
-missing. The declaration was correct and silent, so a later reader observed
-accurately that nothing consumed it and proposed removing it. That round trip
-was avoidable:
+ONE NUANCE THE SWAP INTRODUCES, worth knowing rather than fixing silently. Line
+61 will read "Registered as BRAND_TEAL 2026-09-12". The VALUE was registered that
+day; the NAME arrived on 2026-09-13. The sentence does not claim otherwise and
+most readers take it as the value's registration date -- but if you want it
+exact, "registered 2026-09-12, renamed BRAND_TEAL 2026-09-13" is five more words
+and makes the history legible. Left plain, per the narrow scope.
 
-  **A declaration kept for a future consumer has to say so. Otherwise someone
-  will correctly observe it has no consumer, and correctly conclude the wrong
-  thing.** An unexplained placeholder is indistinguishable from a leftover.
-
-NOT TOUCHED, deliberately: --signal-offline and --accent-warm are also declared
-and unconsumed here. Same class, same reasoning, out of scope for a rename.
+STILL OUT OF REACH: `the-warning-not-the-gate` is not on main. Its working copy
+carries the same stale name at line 40 and needs the same edit before
+republication.
 """
 import pathlib
 import sys
 
 APPLY = "--apply" in sys.argv
-P = pathlib.Path("index.html")
+P = pathlib.Path("_templates/post-template.html")
 
 assert P.exists(), "run from the repo root"
 s = P.read_text(encoding="utf-8")
-assert "--signal-standby" not in s, "already renamed"
+assert "BRAND_WEB_CODE" in s, "already renamed, or the base has moved"
 
 EDITS = [
-    (
-        "         signal-offline/-down equal --text-faint/--accent-warm by coincidence;\n"
-        "         the seam is deliberate. Do not de-duplicate. Source: engine/brand.py. */",
-
-        "         signal-offline/-standby equal --text-faint/--accent-warm by coincidence;\n"
-        "         the seam is deliberate. Do not de-duplicate. Source: engine/brand.py.\n"
-        "\n"
-        "         Only --signal-live is consumed on this page: the hero dot has one\n"
-        "         state and is always live. The other two are declared so a future use\n"
-        "         does not hardcode -- kept on purpose, not left behind. Renamed from\n"
-        "         --signal-down 2026-09-15, following the register's 2026-08-23 rename;\n"
-        "         the value is unchanged because signal-standby IS #ffd166. Deleting\n"
-        "         --signal-standby would leave #ffd166 on this page only as\n"
-        "         --accent-warm, which is the de-duplication the line above forbids. */",
-    ),
-    (
-        "      --signal-live: #a5034e; --signal-offline: #5a5a72; --signal-down: #ffd166;",
-        "      --signal-live: #a5034e; --signal-offline: #5a5a72; --signal-standby: #ffd166;",
-    ),
+    ("      /* Inline code. Registered as BRAND_WEB_CODE 2026-09-12 and emitted",
+     "      /* Inline code. Registered as BRAND_TEAL 2026-09-12 and emitted"),
+    ("       upstream as BRAND_WEB_CODE and emitted there as --rnv-code. It used to say",
+     "       upstream as BRAND_TEAL and emitted there as --rnv-code. It used to say"),
 ]
 
 for i, (old, new) in enumerate(EDITS, 1):
@@ -83,17 +64,16 @@ if not APPLY:
 
 for old, new in EDITS:
     s = s.replace(old, new)
-
 P.write_text(s, encoding="utf-8")
+
 after = P.read_text(encoding="utf-8")
-assert "--signal-standby: #ffd166;" in after, "rename did not land"
-assert "--signal-down" not in after.split("Renamed from")[0], "old token survives outside the history note"
-# The two DECLARATIONS, not the file. The comment above quotes the value twice
-# while explaining the seam, so a whole-file count measures the prose. Ninth
-# time this has fired here: any .count() against a whole file is wrong by
-# default -- check a full declaration line, or count inside an extracted slice.
-assert after.count("--accent-warm: #ffd166;") == 1, "accent-warm disturbed"
-assert after.count("--signal-standby: #ffd166;") == 1, "signal token disturbed"
-assert "var(--signal-live)" in after, "the consumed token was disturbed"
-print("index.html: --signal-down -> --signal-standby, value unchanged.")
-print("            comment now states why the token is declared and unconsumed.")
+assert "BRAND_WEB_CODE" not in after, "the retired constant survives"
+assert after.count("BRAND_TEAL") == 2, "expected exactly the two renamed mentions"
+# Everything else in the block is untouched: the token, the rule, the figures.
+assert after.count("--code: #00b0a0;") == 1, "the token declaration was disturbed"
+assert after.count("color: var(--code);") == 1, "the code rule was disturbed"
+for figure in ("6.3277", "7.2588", "14.96px", "0.93"):
+    assert figure in after, f"{figure} was removed; this pass changes names only"
+
+print("post-template.html: BRAND_WEB_CODE -> BRAND_TEAL, two comments.")
+print("  nothing else touched -- token, rule and figures all unchanged.")
