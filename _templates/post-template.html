@@ -1,32 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--
-  ============================================================================
-  RNVizion blog post template.
-  To publish a new post: COPY this file to  blog/<your-slug>/index.html
-  then replace every [SQUARE-BRACKET] placeholder below.
-
-  The feed generator reads these, so don't skip them:
-    1. blog/<slug>/index.html        (folder name = the slug in og:url)
-    2. <article> ... </article>      (no <article> = the post is skipped)
-    3. article:published_time        (no date = it stamps as "today" + sorts to top)
-    4. og:url                        (the canonical link dev.to credits back to you)
-  Recommended (have fallbacks, but set them): og:title, og:description, article:author.
-
-  The .bio block near the bottom is the standing author bio. It ships on every
-  post, so treat it as brand copy and keep it in sync with rnvizion.dev/bio.
-  ============================================================================
--->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>[POST TITLE] — Christian Smith</title>
   <meta name="description" content="[ONE-LINE SUMMARY OF THE POST.]" />
 
-  <!-- Blog-index card teaser. The card generator reads this; keep it distinct
-       from the description above (that one is the SEO line, this one earns the
-       click). Use curly quotes (" ') inside so the attribute can't break early.
-       If omitted, the card falls back to og:description. -->
+  <!-- Blog-index card teaser. -->
   <meta name="card:summary" content="[ONE-LINE CARD TEASER FOR THE BLOG INDEX.]" />
 
   <!-- Open Graph -->
@@ -58,11 +38,6 @@
       --text-dim: #9a9ab0;
       --text-faint: #5a5a72;
       --accent: #d2bc93;
-      /* Inline code. Registered as BRAND_TEAL 2026-09-12 and emitted
-         upstream as --rnv-code; mirrored here under the site's unprefixed
-         names. Reads 6.3277:1 on --bg-3, which is the only ground it ever
-         sits on because code is always chipped. Clears AA at 14.96px; it
-         would clear AAA unchipped at 7.2588, and the chip is worth the 0.93. */
       --code: #00b0a0;
       --max-width: 1200px;
       --read-width: 720px;
@@ -112,14 +87,6 @@
     a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
     a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-    /* Links in RUNNING TEXT are underlined at rest. Gold against body text is
-       1.517:1 where WCAG 1.4.1 wants 3:1 when colour is the only cue, and a
-       hover underline is not a cue: it does not exist on touch and is absent
-       while the page is being read.
-
-       Scoped to prose on purpose. nav, footer and post-footer are link REGIONS
-       -- position tells you they are links, so colour is not doing it alone.
-       Do not promote this to a bare `a`. */
     article p a, article li a, .bio a {
       text-decoration: underline;
       text-underline-offset: 3px;
@@ -144,8 +111,6 @@
     .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
     .logo .dot {
-      /* .logo is flex; without this the dot is squeezed to an ellipse when the
-         nav is tight. Geometry only -- gold, glow and pulse are unchanged. */
       flex-shrink: 0;
       width: 8px; height: 8px;
       background: var(--accent); border-radius: 50%;
@@ -308,25 +273,10 @@
     article strong { color: var(--accent); font-weight: 600; }
     article em { font-style: italic; }
 
-    /* Inline code token, for markup names, file paths and identifiers in prose:
-       <code>&lt;article&gt;</code>. Carries its own colour -- --code, registered
-       upstream as BRAND_TEAL and emitted there as --rnv-code. It used to say
-       "existing tokens only; no new colours or faces", which was true while this
-       rule used var(--accent) and false from the moment --code arrived. The
-       sentence outlived its change by one pass, sitting inside the rule that
-       contradicted it. */
     article code {
       font-family: var(--font-mono);
-      /* 0.88em is an optical correction, not a shrink: mono carries a larger
-         x-height than Inter, so parity makes code look bigger than its text.
-         At 17px body this is 14.96px -- NORMAL text, so the floor is 4.5. */
       font-size: 0.88em;
       color: var(--code);
-      /* The chip does the separating; a border used to sit here and did not.
-         1.049:1 against this background, indistinguishable at 4x against the
-         real faces. The chip is 1.147:1 and reads plainly -- same arithmetic,
-         opposite outcome, because area and stroke width change what a ratio
-         buys. Do not add it back to "define" the chip; it never defined it. */
       background: var(--bg-3);
       border-radius: 4px;
       padding: 1px 6px;
@@ -423,16 +373,9 @@
       </div>
     </header>
 
-    <!-- ============================================================
-         THE POST BODY. Everything the feed pulls comes from inside
-         <article>. Keep it wrapped exactly like this.
-         Your spine: open on a concrete moment, widen to the framing,
-         turn, sit in the tension, land on the aphorism.
-         ============================================================ -->
     <article>
       <div class="read-container">
 
-        <!-- First paragraph gets the drop-cap automatically. Open concrete. -->
         <p>[Opening paragraph. A specific, real moment, not an abstract thesis.]</p>
 
         <p>[Second paragraph. Begin widening from the moment toward the idea.]</p>
@@ -445,7 +388,6 @@
         <code>&lt;code&gt;</code> for a markup name, file path or identifier,
         and link out like <a href="https://github.com/RNVizion/your-repo" target="_blank" rel="noopener">this</a> where it earns it.]</p>
 
-        <!-- Repeat <hr /> + <h2> + <p> blocks for each section. -->
         <ul>
           <li>[List item, if a section calls for one.]</li>
           <li>[Another item.]</li>
@@ -457,7 +399,7 @@
 
         <p>[Bring it home, then land on the one screenshot-able line.]</p>
 
-        <!-- Standing author bio. Ships on every post; keep in sync with /bio/. -->
+        <!-- Standing author bio. -->
         <div class="bio">
           <strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
         </div>

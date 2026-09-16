@@ -1,11 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--
-  ============================================================================
-  RNVizion blog post — Lazy in the Right Way Is Leverage
-  Place at: blog/sloth/index.html
-  ============================================================================
--->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -92,14 +86,6 @@
     a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
     a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-    /* Links in RUNNING TEXT are underlined at rest. Gold against body text is
-       1.517:1 where WCAG 1.4.1 wants 3:1 when colour is the only cue, and a
-       hover underline is not a cue: it does not exist on touch and is absent
-       while the page is being read.
-
-       Scoped to prose on purpose. nav, footer and post-footer are link REGIONS
-       -- position tells you they are links, so colour is not doing it alone.
-       Do not promote this to a bare `a`. */
     article p a, article li a, .bio a {
       text-decoration: underline;
       text-underline-offset: 3px;
@@ -124,8 +110,6 @@
     .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
     .logo .dot {
-      /* .logo is flex; without this the dot is squeezed to an ellipse when the
-         nav is tight. Geometry only -- gold, glow and pulse are unchanged. */
       flex-shrink: 0;
       width: 8px; height: 8px;
       background: var(--accent); border-radius: 50%;
