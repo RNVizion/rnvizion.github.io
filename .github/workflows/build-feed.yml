@@ -17,7 +17,7 @@ on:
       - "*/index.html"                           # aiii/, bio/, resume/, ... (sitemap entries)
       - "scripts/build_feed.py"                  # the generator
       - "scripts/generate_card.py"               # the shared card renderer
-      - "_templates/post-card-template.html"     # the card definition
+      - "_templates/**"                          # every template and its paired RULES
       - "tests/**"                               # the contract test and its fixtures
       - ".github/workflows/build-feed.yml"
   workflow_dispatch: {}   # lets you run it by hand from the Actions tab
@@ -49,6 +49,9 @@ jobs:
       # committing a malformed blog index.
       - name: Card renderer contract test
         run: python tests/test_card_contract.py
+
+      - name: Template pairing
+        run: python tests/test_template_pairing.py
 
       - name: Generate feed, blog index, sitemap and robots
         run: python scripts/build_feed.py
