@@ -8,7 +8,7 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Sep 2026 20:59:20 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 16 Sep 2026 02:23:01 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Honest and Wrong</title>
@@ -80,7 +80,7 @@
 <p>I kept calling that a bug in the machine: it was a report on my paperwork.</p>
 <p><strong>I built a machine that won’t take a claim on faith — it wouldn’t take mine either.</strong></p>
 <p><em>Next: the failure I decided not to fix, and what I got wrong about how it ended.</em></p>
-<!-- Standing author bio. Ships on every post; keep in sync with /bio/. -->
+<!-- Standing author bio. -->
 <div class="bio">
 <strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
         </div>]]></content:encoded>
@@ -118,7 +118,7 @@
 <p>Speed was never about charging more. It was about the time it bought back.</p>
 <p><strong>The most valuable currency is non-refundable; time saved is profit made.</strong></p>
 <p><em>Third in a series on building with a soul in a fast age. Next: why the limits you resent are the ones quietly doing your best thinking for you.</em></p>
-<!-- Standing author bio. Ships on every post; keep in sync with /bio/. -->
+<!-- Standing author bio. -->
 <div class="bio">
 <strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
         </div>]]></content:encoded>
