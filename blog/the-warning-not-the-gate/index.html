@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Warning, Not the Gate — Christian Smith</title>
+  <meta name="description" content="Why the check that catches a missing share image warns instead of blocking: gate what you&#8217;re judging, warn about what you&#8217;re waiting on." />
+
+  <!-- Blog-index card teaser. -->
+  <meta name="card:summary" content="The check I wrote to catch a naked post doesn&#8217;t stop the publish. Here&#8217;s the rule that decides which checks get to." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://rnvizion.dev/blog/the-warning-not-the-gate/" />
+  <meta property="og:title" content="The Warning, Not the Gate" />
+  <meta property="og:description" content="Why the check that catches a missing share image warns instead of blocking: gate what you&#8217;re judging, warn about what you&#8217;re waiting on." />
+  <meta property="og:image" content="https://rnvizion.dev/assets/og/the-warning-not-the-gate.png" />
+  <meta property="article:author" content="Christian Smith" />
+  <meta property="article:published_time" content="2026-09-16" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:wght@900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11111a;
+      --bg-3: #1a1a26;
+      --border: #25253a;
+      --border-soft: #1e1e2e;
+      --text: #e8e8f0;
+      --text-dim: #9a9ab0;
+      --text-faint: #5a5a72;
+      --accent: #d2bc93;
+      --code: #00b0a0;
+      --max-width: 1200px;
+      --read-width: 720px;
+      --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
+      --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(210, 188, 147, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 188, 147, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%);
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    main, nav, footer, article { position: relative; z-index: 2; }
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    article p a, article li a, .bio a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+    .read-container { max-width: var(--read-width); margin: 0 auto; padding: 0 32px; }
+
+    nav {
+      position: sticky; top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0; z-index: 100;
+    }
+
+    nav .container {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+    .logo .dot {
+      flex-shrink: 0;
+      width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex; gap: 32px;
+      font-family: var(--font-mono); font-size: 13px;
+    }
+
+    .nav-links a { color: var(--text-dim); position: relative; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a:hover { text-decoration: none; }
+
+    .nav-links a::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 1px; background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 40px; height: 40px;
+      cursor: pointer; padding: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.2s ease;
+    }
+
+    .nav-toggle:hover { border-color: var(--accent); }
+
+    .nav-toggle span {
+      display: block; width: 18px; height: 1.5px;
+      background: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+      background: var(--accent);
+    }
+
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+      background: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed; top: 73px; left: 0; right: 0;
+        background: rgba(10, 10, 15, 0.96);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-soft);
+        flex-direction: column; gap: 0;
+        padding: 16px 32px 24px;
+        transform: translateY(-12px);
+        opacity: 0; pointer-events: none;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0); opacity: 1; pointer-events: auto;
+      }
+
+      .nav-links a {
+        padding: 14px 0; font-size: 15px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .nav-links a:last-child { border-bottom: none; }
+      .nav-links a::after { display: none; }
+    }
+
+    .article-header { padding: 100px 0 60px; text-align: center; }
+
+    .article-meta {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 24px;
+    }
+
+    .article-meta .accent { color: var(--accent); }
+
+    .article-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 500; letter-spacing: -0.03em;
+      line-height: 1.1; margin-bottom: 32px;
+    }
+
+    .article-header h1 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    .article-subtitle {
+      font-size: 1.15rem; color: var(--text-dim);
+      max-width: 600px; margin: 0 auto;
+    }
+
+    .byline {
+      font-family: var(--font-mono); font-size: 13px;
+      color: var(--text-dim); margin-top: 28px;
+      display: flex; justify-content: center;
+      align-items: center; gap: 16px;
+    }
+
+    .byline-divider {
+      width: 4px; height: 4px;
+      background: var(--accent); border-radius: 50%;
+    }
+
+    article { padding: 40px 0 80px; }
+
+    article p {
+      margin-bottom: 24px; color: var(--text);
+    }
+
+    article p:first-of-type::first-letter {
+      font-family: var(--font-serif);
+      font-size: 4.2rem; float: left;
+      line-height: 0.9;
+      padding: 8px 14px 0 0;
+      color: var(--accent);
+    }
+
+    article h2 {
+      font-family: var(--font-display);
+      font-size: 1.85rem; font-weight: 500;
+      letter-spacing: -0.02em; line-height: 1.2;
+      margin: 30px 0 24px; color: var(--text);
+    }
+
+    article h2 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    article strong { color: var(--accent); font-weight: 600; }
+    article em { font-style: italic; }
+
+    article code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      color: var(--code);
+      background: var(--bg-3);
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+
+    article hr {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 24px auto; width: 80px;
+    }
+
+    article ul { margin: 0 0 24px 0; padding-left: 24px; }
+    article ul li { margin-bottom: 12px; color: var(--text); }
+
+    .bio {
+      margin-top: 64px; padding: 32px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-2); border-radius: 6px;
+      font-size: 0.95rem; color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .bio strong { color: var(--text); font-weight: 600; }
+
+    .post-footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 48px 0; text-align: center;
+    }
+
+    .post-footer-label {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .post-footer-links {
+      display: flex; gap: 24px;
+      justify-content: center; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: 14px;
+    }
+
+    .post-footer-links a { color: var(--text-dim); }
+    .post-footer-links a:hover { color: var(--accent); text-decoration: none; }
+
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 32px 0;
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    footer .container {
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#stack">Stack</a>
+        <a href="/#work">Work</a>
+        <a href="/blog/" class="active">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+
+    <header class="article-header">
+      <div class="read-container">
+        <div class="article-meta">
+          <span class="accent">●</span> September 16, 2026 · ~4 min read
+        </div>
+        <h1>The <em>Warning</em>, Not the Gate</h1>
+        <p class="article-subtitle">Worth knowing, not worth stopping for: a check I built to tell the difference.</p>
+        <div class="byline">
+          <span>by Christian Smith</span>
+          <span class="byline-divider"></span>
+          <span>RNVizion</span>
+        </div>
+      </div>
+    </header>
+
+    <article>
+      <div class="read-container">
+
+        <p>Three posts went out without my custom share image.</p>
+
+        <p>Not broken posts: the writing was there, the page loaded, the feed picked them up; the face, the preview, the part that makes a page feel alive looked abandoned, a gray rectangle with a URL sitting in it.</p>
+
+        <p>I found out the way you always find out. I went to share one.</p>
+
+        <p>So I added a check. My publishing agent already waits for a post to go live before it does anything else; now it also asks whether the share image that post claims to have is actually there. Small. Obvious in hindsight, the way most of these are.</p>
+
+        <p>Then the real question showed up, and it wasn&#8217;t a technical one.</p>
+
+        <p>Should that check stop the publish?</p>
+
+        <hr />
+
+        <h2>What I <em>almost</em> built</h2>
+
+        <p>My initial instinct said yes. I&#8217;d just been burned by this exact gap, three times, in public. A check that notices a problem and then shrugs isn&#8217;t a check; it&#8217;s a comment with extra steps. If it matters enough to look, it matters enough to stop.</p>
+
+        <p>Wrong.</p>
+
+        <p>I almost built it that way. What stopped me was noticing what the check is actually looking at.</p>
+
+        <p>The image isn&#8217;t rendered by the publishing agent. It&#8217;s rendered by a separate CI job that starts when the push lands, which means it finishes <em>after</em> the publish, by design, every time. So the agent isn&#8217;t asking whether the image exists. It&#8217;s asking whether a different process has caught up yet.</p>
+
+        <p>Those are not the same question. Only one of them is the agent&#8217;s to answer.</p>
+
+        <hr />
+
+        <h2><em>Whose</em> failure is it</h2>
+
+        <p>That turned into the rule I&#8217;ve been using since: <strong>gate a defect, warn about a queue.</strong></p>
+
+        <p>A missing <code>&lt;article&gt;</code> block is the post&#8217;s defect. A missing publish date is the post&#8217;s defect. Those stop the chain cold, and they should; the post is genuinely not ready, and that would mean shipping something incomplete. A share image that hasn&#8217;t rendered yet is nobody&#8217;s defect. It&#8217;s a queue.</p>
+
+        <p>The distinction isn&#8217;t about how much you care. I care about the share card; that&#8217;s why I wrote the check after getting burned. It&#8217;s about who&#8217;s at fault when the check fires, because that determines what happens next and who has to answer.</p>
+
+        <hr />
+
+        <h2>What a gate <em>costs</em> when it&#8217;s wrong</h2>
+
+        <p>Picture the gate.</p>
+
+        <p>It&#8217;s eleven at night. The post is finished, the writing is good, the build queue is slow because someone else&#8217;s workflow is hogging a runner. The gate fires. The publish fails. Nothing is wrong with the post; a machine somewhere is just busy.</p>
+
+        <p>What do you actually do in that moment?</p>
+
+        <p>You don&#8217;t fix the build queue at eleven at night. You loosen the gate. Just a little; just this once, and that&#8217;s the last night anyone trusts it.</p>
+
+        <p>The false alarm isn&#8217;t the price of a gate that punishes the innocent. It&#8217;s the erosion. A gate that fails good work teaches you to route around it, and once you&#8217;ve learned to route around it, it has stopped protecting anything at all. It&#8217;s just a thing you turn off, sitting in the codebase looking like safety.</p>
+
+        <p>A check that misses a problem costs you a post; a check that teaches you to skip it costs you the check.</p>
+
+        <hr />
+
+        <h2><em>Loud</em>, and out of the way</h2>
+
+        <p>So the image check warns. It polls on its own clock after the page is live, and if the image still isn&#8217;t there it puts the failure in the result where I can&#8217;t miss it: the URL it tried, the status it got, and the plain sentence that the render job may still be running or may have failed outright.</p>
+
+        <p>The post publishes. The retrieval corpus ingests it. Both of those are correct without the image, so blocking them would punish the post for something the post didn&#8217;t do.</p>
+
+        <p>I&#8217;d rather this be a decision than a habit, so there&#8217;s a test that pins it. One test asserts the chain still succeeds when the image is missing and still carries the warning; another asserts that when the render job finishes in time, the poll catches it and there&#8217;s no warning at all. That second one matters more than it looks. A warning that never goes quiet stops being a warning.</p>
+
+        <hr />
+
+        <h2>The part that <em>transfers</em></h2>
+
+        <p>Every system that automates something consequential ends up with a pile of checks, and the pile always grows faster than the thinking behind it. The temptation is to make each new one a gate, since a gate feels like rigor and a warning feels like a shrug.</p>
+
+        <p>But rigor isn&#8217;t how many things you can stop. It&#8217;s whether you can say, out loud, why this one stops and that one doesn&#8217;t.</p>
+
+        <p>If you can&#8217;t answer that for a check you wrote, you haven&#8217;t built a safeguard. You&#8217;ve built something that&#8217;s going to get disabled at eleven at night by someone with a deadline, and neither of you will remember why it was there.</p>
+
+        <p><strong>Gate what you&#8217;re judging &#8212; warn about what you&#8217;re waiting on.</strong></p>
+
+        <!-- Standing author bio. -->
+        <div class="bio">
+          <strong>Christian Smith</strong> (RNVizion) is a Python developer building production AI systems on the Claude API, an AR/VR Sales &amp; Support Specialist at Meta, and a self-described modern-day Renaissance man. He ships retrieval systems, LLM agents, and the developer tools they run on; he also writes fiction, makes art, builds things by hand, and is figuring out the rest as he goes. Find his work at <a href="https://rnvizion.dev">rnvizion.dev</a>.
+        </div>
+
+      </div>
+    </article>
+
+    <div class="post-footer">
+      <div class="read-container">
+        <div class="post-footer-label">Keep reading</div>
+        <div class="post-footer-links">
+          <a href="/blog/">← All posts</a>
+          <a href="/">Home</a>
+          <a href="/#work">My work</a>
+          <a href="https://github.com/RNVizion" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Christian Smith · RNVizion</div>
+      <div><a href="/aiii/">AIII</a> · <a href="/bio/">Bio</a> · <a href="/resume/">Résumé</a> · Washington, DC</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+</body>
+</html>
