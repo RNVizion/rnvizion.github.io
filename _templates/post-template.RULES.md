@@ -64,6 +64,52 @@ and published on Thursday carries Tuesday's date unless someone moves it, and bo
 
 ---
 
+## What a post consists of
+
+**A post is `blog/<slug>/index.html` and nothing else.** One file, one folder, no siblings.
+
+**Why it is a rule and not a habit.** The publishing agent builds one commit carrying that single
+path. If a post ever gains a file beside it — an image, a per-post stylesheet, a script — the
+publish pushes the HTML and drops the rest without saying so, and the post goes live referencing
+files that are not there.
+
+**The OG card is not an exception, and the reason matters.** Every post references one, at
+`https://rnvizion.dev/assets/og/<slug>.png`. So a post already consists of two files. What makes one
+path enough is not that a post is simple; it is that the second file has a second writer — `build-og`
+commits it, on a different path, after the publish. So the condition to watch is narrower than "a
+post gained a file":
+
+> **a post gains a file that no other writer commits.**
+
+**The reference rule.** Nothing in a post may reference a path that resolves inside the post's own
+folder. Absolute URLs, root-relative paths, protocol-relative URLs, in-page anchors and `data:` URIs
+are all fine — each resolves somewhere another writer is responsible for. A bare `hero.png` does not.
+
+**Markup shown to a reader goes inside `<code>` or `<pre>`.** Escaping hides the angle brackets, not
+the attributes: a paragraph explaining `&lt;img src="hero.png"&gt;` carries that exact string in the
+page bytes without ever fetching anything. Use and mention are identical to a checker, so the
+elements that mean *this is being shown* are what tell the two apart. Put shown markup anywhere else
+and a correct post gets refused — and a guard that refuses correct work is the one that gets
+switched off.
+
+**Who asserts this.** `tests/test_post_shape.py` checks the whole tree in `build-feed`. The
+publishing agent checks the reference rule alone, against the one document it is about to push.
+Both run `tests/fixtures/post-shape-vectors.json`, which is this repo's file; if the two
+implementations ever disagree on a vector, one of them is wrong and the disagreement is legible.
+**Agreeing on the vectors is a floor, not a proof** — two parsers can still diverge anywhere no
+vector reaches, which is how the vector for two code spans with a live reference between them came
+to exist.
+
+**Which check actually prevents anything.** Pages serves the publish commit directly, so by the time
+`build-feed` runs, the post is already live: the site's own check is a backstop that reports, not a
+gate that stops. The agent holds the irreversible step, so its copy is the one that can turn *post
+live, feed stale, workflow red* into *nothing published*. Both are kept. The later one still fires
+if the earlier one goes stale.
+
+**If a post ever needs to be more than one file, that is a decision, not a fix.** Tell the
+publishing agent in the same change so its staged set moves with it, then widen the test. Do not
+loosen either check to make a red build go green.
+
 ## The body
 
 **Everything the feed pulls comes from inside `<article>`.** Keep it wrapped exactly as the template

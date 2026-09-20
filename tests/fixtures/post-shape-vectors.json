@@ -1,0 +1,164 @@
+{
+  "_": [
+    "Shared reference vectors for the post shape rule. This file is the site",
+    "repo's, and the publishing agent runs the same file against its own",
+    "implementation. If the two disagree on a vector, one of them is wrong and",
+    "the disagreement is visible. Agreement on these vectors is a floor, not a",
+    "proof: two parsers can still diverge anywhere no vector reaches.",
+    "",
+    "'catches' lists the references that must be reported. [] means the vector",
+    "must be reported clean. Each entry says why it exists, because a vector",
+    "whose reason is forgotten is the first one somebody deletes."
+  ],
+  "vectors": [
+    {
+      "id": "rel-img",
+      "why": "the base case: a sibling image a publish would drop",
+      "html": "<img src=\"hero.png\">",
+      "catches": [
+        "hero.png"
+      ]
+    },
+    {
+      "id": "rel-stylesheet",
+      "why": "a per-post stylesheet, same failure as an image",
+      "html": "<link rel=\"stylesheet\" href=\"post.css\">",
+      "catches": [
+        "post.css"
+      ]
+    },
+    {
+      "id": "rel-css-url",
+      "why": "the inline style block is real CSS and is scanned",
+      "html": "<style>body{background:url(bg.png)}</style>",
+      "catches": [
+        "bg.png"
+      ]
+    },
+    {
+      "id": "rel-og-image",
+      "why": "og:image rewritten relative; the meta branch",
+      "html": "<meta property=\"og:image\" content=\"og.png\">",
+      "catches": [
+        "og.png"
+      ]
+    },
+    {
+      "id": "abs-og-image",
+      "why": "the real og:image is absolute and is build-og's to deliver; it must never gate a publish",
+      "html": "<meta property=\"og:image\" content=\"https://rnvizion.dev/assets/og/x.png\">",
+      "catches": []
+    },
+    {
+      "id": "meta-prose",
+      "why": "a title is not a path; a check that fires on a headline gets turned off",
+      "html": "<meta property=\"og:title\" content=\"Nine and counting\"><meta name=\"author\" content=\"Christian Smith\">",
+      "catches": []
+    },
+    {
+      "id": "root-relative",
+      "why": "served from repo root by another writer, not a sibling",
+      "html": "<img src=\"/assets/og/x.png\"><a href=\"/resume/\">r</a>",
+      "catches": []
+    },
+    {
+      "id": "absolute-and-anchor",
+      "why": "off-site and in-page; neither is a file beside the post",
+      "html": "<a href=\"https://x.test/y\">y</a><a href=\"#top\">t</a><a href=\"mailto:a@b.test\">m</a>",
+      "catches": []
+    },
+    {
+      "id": "protocol-relative",
+      "why": "scheme-relative is still off-site",
+      "html": "<script src=\"//cdn.test/a.js\"></script>",
+      "catches": []
+    },
+    {
+      "id": "data-uri-with-nested-url",
+      "why": "a self-contained payload carries its own url(); scanning inside it invents references",
+      "html": "<style>body{background:url(\"data:image/svg+xml,%3Csvg viewBox='0 0 2 2'%3E%3Crect filter='url(%23n)'/%3E%3C/svg%3E\")}</style>",
+      "catches": []
+    },
+    {
+      "id": "commented-out",
+      "why": "an HTML comment is not fetched",
+      "html": "<!-- <img src=\"ghost.png\"> -->",
+      "catches": []
+    },
+    {
+      "id": "srcset-sibling-first",
+      "why": "list form, sibling in the first entry",
+      "html": "<img srcset=\"diagram.png 1x, other.png 2x\">",
+      "catches": [
+        "diagram.png",
+        "other.png"
+      ]
+    },
+    {
+      "id": "srcset-sibling-after-absolute",
+      "why": "FAILS OPEN if the list is tested whole: one absolute entry hides every sibling behind it",
+      "html": "<img srcset=\"https://rnvizion.dev/assets/og/a.png 1x, diagram.png 2x\">",
+      "catches": [
+        "diagram.png"
+      ]
+    },
+    {
+      "id": "srcset-sibling-after-rootrel",
+      "why": "same root cause as above; the front entry need not be a scheme",
+      "html": "<img srcset=\"/assets/a.png 1x, diagram.png 2x\">",
+      "catches": [
+        "diagram.png"
+      ]
+    },
+    {
+      "id": "srcset-all-absolute",
+      "why": "control: a legitimate list must not fire",
+      "html": "<img srcset=\"https://rnvizion.dev/a.png 1x, https://rnvizion.dev/b.png 2x\">",
+      "catches": []
+    },
+    {
+      "id": "imagesrcset",
+      "why": "same list grammar on link rel=preload; named in the pattern, so it must actually be covered",
+      "html": "<link rel=\"preload\" as=\"image\" imagesrcset=\"diagram.png 1x\">",
+      "catches": [
+        "diagram.png"
+      ]
+    },
+    {
+      "id": "shown-markup-block",
+      "why": "FALSE FAIL: escaped example markup keeps its attributes verbatim, so use and mention look identical to a regex",
+      "html": "<pre><code>&lt;img src=\"hero.png\" alt=\"x\"&gt;</code></pre>",
+      "catches": []
+    },
+    {
+      "id": "shown-markup-inline",
+      "why": "same in prose; this blog explains checks for a living",
+      "html": "<p>Add <code>&lt;link rel=\"stylesheet\" href=\"post.css\"&gt;</code> to the head.</p>",
+      "catches": []
+    },
+    {
+      "id": "shown-markup-does-not-hide-real",
+      "why": "cutting shown markup must not cut the document around it",
+      "html": "<p>Like <code>&lt;img src=\"a.png\"&gt;</code></p><img src=\"real.png\">",
+      "catches": [
+        "real.png"
+      ]
+    },
+    {
+      "id": "shown-markup-spans-do-not-merge",
+      "why": "a greedy strip eats from the first <code> to the LAST </code>, swallowing real references in between; no other vector reaches that",
+      "html": "<p><code>&lt;a&gt;</code></p><img src=\"real.png\"><p><code>&lt;b&gt;</code></p>",
+      "catches": [
+        "real.png"
+      ]
+    },
+    {
+      "id": "script-is-behaviour",
+      "why": "every post carries the nav toggle; a script fetching a sibling is a real defect, not a sample",
+      "html": "<script>new Image().src='tracker.png'</script>",
+      "catches": [
+        "tracker.png"
+      ]
+    }
+  ]
+}

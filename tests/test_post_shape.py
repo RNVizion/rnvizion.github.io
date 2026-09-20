@@ -21,6 +21,13 @@ A FAILURE HERE IS NOT A BUG TO SILENCE. It means a post's shape changed, which
 is exactly the moment the agent chat needs a note; its staged set has to move in
 the same change. Fix the post, or send the note and widen this test with it.
 
+THE RULE ITSELF LIVES IN _templates/post-template.RULES.md, under "What a post
+consists of". This file asserts it; it does not define it. The publishing agent
+asserts the same rule one step earlier, against the document it is about to
+push, and both sides run the vectors in tests/fixtures/post-shape-vectors.json.
+Shared vectors prove the two agree where they were asked; they do not prove the
+two parsers agree everywhere.
+
 Run: python tests/test_post_shape.py
 """
 import pathlib
@@ -38,10 +45,22 @@ ELSEWHERE = re.compile(r"^(?:[a-z][a-z0-9+.-]*:|//|/|#)", re.I)
 # content= sweep: most meta content is prose, and a check that fires on a page
 # title is one somebody turns off.
 REFS = re.compile(
-    r"""(?:\bsrc|\bhref|\bposter|\bdata-src|\bsrcset)\s*=\s*["']([^"']+)["']"""
+    r"""(?:\bsrc|\bhref|\bposter|\bdata-src)\s*=\s*["']([^"']+)["']"""
     r"""|\burl\(\s*["']?([^"')]+)["']?\s*\)""",
     re.I,
 )
+
+# srcset is a comma-separated list with size descriptors, so the value as a
+# whole is never a path. Testing it whole fails OPEN: one absolute entry at the
+# front makes the rest of the list invisible.
+LIST_REFS = re.compile(
+    r"""(?:\bsrcset|\bimagesrcset)\s*=\s*["']([^"']+)["']""", re.I)
+
+# Markup shown to a reader is escaped, so its attributes survive verbatim in the
+# bytes: a post explaining <img src="hero.png"> carries that string without ever
+# fetching it. Use and mention look identical to a regex, so the elements that
+# mean "this is being shown" are cut before scanning.
+SHOWN = re.compile(r"<(pre|code)\b[^>]*>.*?</\1\s*>", re.I | re.S)
 
 # A self-contained payload carries its own url() and quotes; scanning inside it
 # reports references to things that are not files.
@@ -67,12 +86,18 @@ def tracked(pattern):
 def sibling_refs(html):
     """Every reference in the document that resolves inside the post's folder."""
     html = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
+    html = SHOWN.sub(" ", html)
     html = DATA_URI.sub(" ", html)
     found = []
     for match in REFS.finditer(html):
         ref = (match.group(1) or match.group(2) or "").strip()
         if ref and not ELSEWHERE.match(ref):
             found.append(ref)
+    for match in LIST_REFS.finditer(html):
+        for candidate in match.group(1).split(","):
+            ref = candidate.strip().split()[0] if candidate.strip() else ""
+            if ref and not ELSEWHERE.match(ref):
+                found.append(ref)
     for tag in META.findall(html):
         key = META_KEY.search(tag)
         val = META_VAL.search(tag)
@@ -83,7 +108,29 @@ def sibling_refs(html):
     return found
 
 
+VECTORS = ROOT / "tests/fixtures/post-shape-vectors.json"
+vector_count = 0
+
 failures = []
+
+# 0. The vectors first. They are written by hand as an independent statement of
+#    what the rule means -- never derived from this file -- because a test that
+#    reads its expectations out of the thing it tests cannot detect a change to
+#    that thing. The publishing agent runs this same file.
+if not VECTORS.exists():
+    failures.append("%s is missing; the shared vectors are how two "
+                    "implementations of this rule stay honest" % VECTORS.name)
+else:
+    import json
+    loaded = json.loads(VECTORS.read_text(encoding="utf-8"))["vectors"]
+    vector_count = len(loaded)
+    for vector in loaded:
+        want = sorted(vector["catches"])
+        got = sorted(sibling_refs(vector["html"]))
+        if got != want:
+            failures.append(
+                "vector %s: expected %s, got %s -- %s"
+                % (vector["id"], want, got, vector["why"]))
 
 posts = tracked("blog/*/index.html")
 if not posts:
@@ -128,4 +175,5 @@ if failures:
     print("in the same change -- send the note, then widen this test.")
     sys.exit(1)
 
-print("post shape OK: %d post(s), one tracked file each, no sibling refs" % len(posts))
+print("post shape OK: %d post(s), one tracked file each, no sibling refs; "
+      "%d shared vector(s) green" % (len(posts), vector_count))
