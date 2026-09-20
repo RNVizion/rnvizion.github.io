@@ -53,6 +53,11 @@ jobs:
       - name: Template pairing
         run: python tests/test_template_pairing.py
 
+      # Gate: the publishing agent commits exactly blog/<slug>/index.html.
+      # If a post gains a sibling file, that commit would drop it silently.
+      - name: Post shape
+        run: python tests/test_post_shape.py
+
       - name: Generate feed, blog index, sitemap and robots
         run: python scripts/build_feed.py
 
