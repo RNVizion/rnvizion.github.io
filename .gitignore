@@ -9,7 +9,11 @@ node_modules/
 assets/fonts/
 
 # Bytecode. tests/test_post_shape.py imports scripts/post_shape.py, so running
-# the guard writes __pycache__ into both folders; the publishing agent importing
-# the same file does it again in whatever checkout it holds.
+# the guard writes __pycache__ into both folders. This covers THIS repo's own
+# runs. The publishing agent imports that same file from its own checkout and
+# does not write one -- it wraps the import in sys.dont_write_bytecode, on the
+# grounds that a publish is not entitled to create files in somebody else's
+# repository. Verified 2026-09-20 at agent c9579a8: with their guard no
+# directory appears, without it one does.
 __pycache__/
 *.py[cod]
