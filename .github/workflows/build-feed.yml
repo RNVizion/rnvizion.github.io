@@ -17,6 +17,10 @@ on:
       - "*/index.html"                           # aiii/, bio/, resume/, ... (sitemap entries)
       - "scripts/build_feed.py"                  # the generator
       - "scripts/generate_card.py"               # the shared card renderer
+      - "scripts/post_shape.py"                   # the shared post-shape library;
+                                                  # its test lives in tests/, so without
+                                                  # this line a change to the rule would
+                                                  # not run the check that pins it
       - "_templates/**"                          # every template and its paired RULES
       - "tests/**"                               # the contract test and its fixtures
       - ".github/workflows/build-feed.yml"

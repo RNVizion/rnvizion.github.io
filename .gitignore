@@ -7,3 +7,9 @@ node_modules/
 *.log
 # fetched by scripts/font.sh; never commit
 assets/fonts/
+
+# Bytecode. tests/test_post_shape.py imports scripts/post_shape.py, so running
+# the guard writes __pycache__ into both folders; the publishing agent importing
+# the same file does it again in whatever checkout it holds.
+__pycache__/
+*.py[cod]

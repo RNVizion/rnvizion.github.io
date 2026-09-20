@@ -99,13 +99,25 @@ the escaped attribute as a real reference and refused the post by naming a file 
 file that was never meant to exist, and the guard gets read as broken rather than the post.
 A comparison in prose (`x &lt; y`) is not markup and is deliberately not matched.
 
-**Who asserts this.** `tests/test_post_shape.py` checks the whole tree in `build-feed`. The
-publishing agent checks the reference rule alone, against the one document it is about to push.
-Both run `tests/fixtures/post-shape-vectors.json`, which is this repo's file; if the two
-implementations ever disagree on a vector, one of them is wrong and the disagreement is legible.
-**Agreeing on the vectors is a floor, not a proof** — two parsers can still diverge anywhere no
-vector reaches, which is how the vector for two code spans with a live reference between them came
-to exist.
+**Who asserts this, and there is only one implementation.** The two functions live in
+`scripts/post_shape.py`. `tests/test_post_shape.py` imports them and walks the whole tree in
+`build-feed`; the publishing agent imports the same file from its `BLOG_REPO` checkout and checks
+the reference rule alone, against the one document it is about to push.
+
+**The agent was going to keep its own copy, kept honest by shared vectors. That was dropped on
+evidence.** The semantics moved twice in three days — `srcset` became a list, escaped markup stopped
+being a reference — and the second move is the kind a copy survives quietly: it reports `ghost.png`,
+a file nobody ever wrote, while being wrong about the post's actual defect. **A second checker is a
+second card renderer one layer down**, and that debt was retired for `generate_card.py` rather than
+re-taken here. `tests/fixtures/post-shape-vectors.json` remains — as this library's contract test,
+not as a treaty between two parsers.
+
+**The cost of importing, stated so nobody pays it by surprise.** Renaming either function, or
+changing what it takes or returns, breaks the agent's publish. That is the trade taken deliberately:
+a loud break beats a silent divergence. Send a note in the same change. And the module must import
+silently and do nothing — check 0 of the test pins that in a subprocess, because an import-time side
+effect here is a dead publish over there, and it ran *before* the split: importing the guard walked
+the tree and exited the caller, over a defect in a different post than the one being published.
 
 **Which check actually prevents anything.** Pages serves the publish commit directly, so by the time
 `build-feed` runs, the post is already live: the site's own check is a backstop that reports, not a
