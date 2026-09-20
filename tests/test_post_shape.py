@@ -62,6 +62,14 @@ LIST_REFS = re.compile(
 # mean "this is being shown" are cut before scanning.
 SHOWN = re.compile(r"<(pre|code)\b[^>]*>.*?</\1\s*>", re.I | re.S)
 
+# Escaped markup, tag-shaped, anywhere it survives the cut above. It is never
+# a real reference, so it is neutralised before scanning; and outside <code>
+# or <pre> it is the house rule being broken, which is reported on its own.
+# [^<>] keeps a match from crossing a real tag, so cutting one can never
+# swallow the document between two of them -- the greedy-span failure again.
+# "x &lt; y" is prose, not markup, and is deliberately not matched.
+ESCAPED_TAG = re.compile(r"&lt;/?[a-zA-Z][^<>]*?&gt;")
+
 # A self-contained payload carries its own url() and quotes; scanning inside it
 # reports references to things that are not files.
 DATA_URI = re.compile(
@@ -83,10 +91,26 @@ def tracked(pattern):
     return [p for p in out.splitlines() if p.strip()]
 
 
+def shown_outside_code(html):
+    """Markup shown to a reader that is not marked as shown.
+
+    Escaping hides the angle brackets, not the attributes, so this is what
+    makes the reference check possible at all. Reported separately because
+    the honest message is "this belongs in <code>", not "this file is
+    missing" -- a refusal that names a file nobody wrote is how a correct
+    guard gets read as a broken one.
+    """
+    html = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
+    html = SHOWN.sub(" ", html)
+    html = DATA_URI.sub(" ", html)
+    return ESCAPED_TAG.findall(html)
+
+
 def sibling_refs(html):
     """Every reference in the document that resolves inside the post's folder."""
     html = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
     html = SHOWN.sub(" ", html)
+    html = ESCAPED_TAG.sub(" ", html)
     html = DATA_URI.sub(" ", html)
     found = []
     for match in REFS.finditer(html):
@@ -125,12 +149,14 @@ else:
     loaded = json.loads(VECTORS.read_text(encoding="utf-8"))["vectors"]
     vector_count = len(loaded)
     for vector in loaded:
-        want = sorted(vector["catches"])
-        got = sorted(sibling_refs(vector["html"]))
-        if got != want:
-            failures.append(
-                "vector %s: expected %s, got %s -- %s"
-                % (vector["id"], want, got, vector["why"]))
+        for label, fn, key in (("refs", sibling_refs, "catches"),
+                               ("shown", shown_outside_code, "shows")):
+            want = sorted(vector.get(key, []))
+            got = sorted(fn(vector["html"]))
+            if got != want:
+                failures.append(
+                    "vector %s [%s]: expected %s, got %s -- %s"
+                    % (vector["id"], label, want, got, vector["why"]))
 
 posts = tracked("blog/*/index.html")
 if not posts:
@@ -155,11 +181,21 @@ for post in posts:
 # 3. No post references a path that resolves inside its own folder. This one
 #    fires before the sibling is committed, which is the case checks 1 and 2
 #    cannot see -- and it is the case that actually reaches a reader.
+# 4. Markup shown to a reader sits in <code> or <pre>. Checked in the same pass
+#    so the two are never confused: escaped markup in a bare <p> is a wrapper
+#    mistake, and reporting it as a missing file sends the author looking for
+#    something that was never meant to exist.
 for post in posts:
-    for ref in sibling_refs((ROOT / post).read_text(encoding="utf-8")):
+    html = (ROOT / post).read_text(encoding="utf-8")
+    for ref in sibling_refs(html):
         failures.append(
             "%s references %r, which resolves beside the post; a publish "
             "carries the html only" % (post, ref[:80]))
+    for shown in shown_outside_code(html):
+        failures.append(
+            "%s shows %r outside <code>/<pre>; wrap it, per \"What a post "
+            "consists of\" in _templates/post-template.RULES.md"
+            % (post, shown[:60]))
 
 if failures:
     unique = sorted(set(failures))
@@ -175,5 +211,6 @@ if failures:
     print("in the same change -- send the note, then widen this test.")
     sys.exit(1)
 
-print("post shape OK: %d post(s), one tracked file each, no sibling refs; "
-      "%d shared vector(s) green" % (len(posts), vector_count))
+print("post shape OK: %d post(s); one tracked file each, no sibling refs, "
+      "no unwrapped markup; %d shared vector(s) green"
+      % (len(posts), vector_count))

@@ -88,9 +88,16 @@ are all fine — each resolves somewhere another writer is responsible for. A ba
 **Markup shown to a reader goes inside `<code>` or `<pre>`.** Escaping hides the angle brackets, not
 the attributes: a paragraph explaining `&lt;img src="hero.png"&gt;` carries that exact string in the
 page bytes without ever fetching anything. Use and mention are identical to a checker, so the
-elements that mean *this is being shown* are what tell the two apart. Put shown markup anywhere else
-and a correct post gets refused — and a guard that refuses correct work is the one that gets
-switched off.
+elements that mean *this is being shown* are what tell the two apart, and that is why this is a rule
+rather than a style note — it is what makes the reference check possible at all.
+
+**It is enforced, and it reports as itself.** Escaped markup outside `<code>` or `<pre>` fails with
+*shows … outside `<code>`/`<pre>`*, pointing back at this section. It does **not** report as a
+missing file, which is what it did for the four hours this rule existed unenforced: the check read
+the escaped attribute as a real reference and refused the post by naming a file nobody had written.
+**A refusal that names the wrong thing is worse than no refusal** — it sends the author looking for a
+file that was never meant to exist, and the guard gets read as broken rather than the post.
+A comparison in prose (`x &lt; y`) is not markup and is deliberately not matched.
 
 **Who asserts this.** `tests/test_post_shape.py` checks the whole tree in `build-feed`. The
 publishing agent checks the reference rule alone, against the one document it is about to push.

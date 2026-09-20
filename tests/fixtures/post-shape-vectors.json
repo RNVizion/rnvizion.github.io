@@ -6,9 +6,11 @@
     "the disagreement is visible. Agreement on these vectors is a floor, not a",
     "proof: two parsers can still diverge anywhere no vector reaches.",
     "",
-    "'catches' lists the references that must be reported. [] means the vector",
-    "must be reported clean. Each entry says why it exists, because a vector",
-    "whose reason is forgotten is the first one somebody deletes."
+    "'catches' lists the references that must be reported: paths resolving inside",
+    "the post's own folder. 'shows' lists escaped markup found outside <code> or",
+    "<pre>. Either may be omitted and defaults to []. Each entry says why it",
+    "exists, because a vector whose reason is forgotten is the first one somebody",
+    "deletes."
   ],
   "vectors": [
     {
@@ -158,6 +160,51 @@
       "html": "<script>new Image().src='tracker.png'</script>",
       "catches": [
         "tracker.png"
+      ]
+    },
+    {
+      "id": "shown-markup-bare-paragraph",
+      "why": "the wrapper rule itself: escaped markup in prose is a wrapper mistake, and must report AS one rather than as a missing file",
+      "html": "<p>Add &lt;link rel=\"stylesheet\" href=\"post.css\"&gt; to the head.</p>",
+      "catches": [],
+      "shows": [
+        "&lt;link rel=\"stylesheet\" href=\"post.css\"&gt;"
+      ]
+    },
+    {
+      "id": "shown-markup-bare-element-name",
+      "why": "a tag named in prose is still shown markup; the current post does this correctly inside <code>",
+      "html": "<p>the &lt;article&gt; element</p>",
+      "catches": [],
+      "shows": [
+        "&lt;article&gt;"
+      ]
+    },
+    {
+      "id": "escaped-less-than-is-prose",
+      "why": "CONTROL: a comparison is not markup; flagging it would make the rule unusable in a post about thresholds",
+      "html": "<p>fails when x &lt; y and again when a &gt; b</p>",
+      "catches": [],
+      "shows": []
+    },
+    {
+      "id": "escaped-cut-does-not-span-real-tags",
+      "why": "neutralising escaped markup must not swallow the document between two of them -- the greedy-span failure in a second costume",
+      "html": "<p>x &lt; y</p><img src=\"real.png\"><p>a &gt; b</p>",
+      "catches": [
+        "real.png"
+      ],
+      "shows": []
+    },
+    {
+      "id": "escaped-then-real-ref",
+      "why": "a post can break the wrapper rule AND carry a real sibling; both must report, neither may mask the other",
+      "html": "<p>&lt;img src=\"ghost.png\"&gt;</p><img src=\"real.png\">",
+      "catches": [
+        "real.png"
+      ],
+      "shows": [
+        "&lt;img src=\"ghost.png\"&gt;"
       ]
     }
   ]
