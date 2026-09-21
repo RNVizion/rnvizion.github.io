@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo — Christian Smith (RNVizion)</title>
+  <meta name="description" content="A publishing agent that refuses. One model decision, a deterministic chain, and exactly one place where it is lenient." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rnvizion.dev/demos/rnv-publishing-agent/" />
+  <meta property="og:title" content="Demo — Christian Smith (RNVizion)" />
+  <meta property="og:description" content="A publishing agent that refuses. One model decision, a deterministic chain, and exactly one place where it is lenient." />
+  <meta property="og:image" content="https://rnvizion.dev/demos/rnv-publishing-agent/poster.jpg" />
+  <meta property="og:video" content="https://rnvizion.dev/demos/rnv-publishing-agent/rnv-publishing-agent-demo.mp4" />
+  <meta property="og:video:type" content="video/mp4" />
+  <meta property="og:video:width" content="1920" />
+  <meta property="og:video:height" content="920" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:wght@900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11111a;
+      --bg-3: #1a1a26;
+      --border: #25253a;
+      --border-soft: #1e1e2e;
+      --text: #e8e8f0;
+      --text-dim: #9a9ab0;
+      --text-faint: #5a5a72;
+      --accent: #d2bc93;
+      --code: #00b0a0;
+      --max-width: 1200px;
+      --read-width: 720px;
+      --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
+      --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(210, 188, 147, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 188, 147, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%);
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 00 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    main, nav, footer, article { position: relative; z-index: 2; }
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    article p a, article li a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+    .read-container { max-width: var(--read-width); margin: 0 auto; padding: 0 32px; }
+
+    nav {
+      position: sticky; top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0; z-index: 100;
+    }
+
+    nav .container {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+    .logo .dot {
+      flex-shrink: 0;
+      width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex; gap: 32px;
+      font-family: var(--font-mono); font-size: 13px;
+    }
+
+    .nav-links a { color: var(--text-dim); position: relative; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a:hover { text-decoration: none; }
+
+    .nav-links a::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 1px; background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 40px; height: 40px;
+      cursor: pointer; padding: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.2s ease;
+    }
+
+    .nav-toggle:hover { border-color: var(--accent); }
+
+    .nav-toggle span {
+      display: block; width: 18px; height: 1.5px;
+      background: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+      background: var(--accent);
+    }
+
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+      background: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed; top: 73px; left: 0; right: 0;
+        background: rgba(10, 10, 15, 0.96);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-soft);
+        flex-direction: column; gap: 0;
+        padding: 16px 32px 24px;
+        transform: translateY(-12px);
+        opacity: 0; pointer-events: none;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0); opacity: 1; pointer-events: auto;
+      }
+
+      .nav-links a {
+        padding: 14px 0; font-size: 15px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .nav-links a:last-child { border-bottom: none; }
+      .nav-links a::after { display: none; }
+    }
+
+    /* HERO */
+    .demo-hero { padding: 100px 0 40px; text-align: center; }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .section-label::before, .section-label::after {
+      content: ''; width: 24px; height: 1px; background: var(--accent);
+    }
+
+    .demo-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 500; letter-spacing: -0.03em;
+      line-height: 1.1; margin-bottom: 24px;
+    }
+
+    .demo-hero h1 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    .demo-hero .subtitle {
+      font-size: 1.15rem; color: var(--text-dim);
+      max-width: 620px; margin: 0 auto;
+    }
+
+    .byline {
+      font-family: var(--font-mono); font-size: 13px;
+      color: var(--text-dim); margin-top: 28px;
+      display: flex; justify-content: center;
+      align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+
+    .byline-divider {
+      width: 4px; height: 4px;
+      background: var(--accent); border-radius: 50%;
+    }
+
+    /* PLAYER */
+    .player-wrap { padding: 24px 0 8px; }
+
+    .player-frame {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    }
+
+    .player-frame video {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .player-note {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .player-note a { color: var(--text-dim); }
+    .player-note a:hover { color: var(--accent); text-decoration: none; }
+
+    /* ARTICLE BODY */
+    article { padding: 56px 0 40px; }
+
+    article p { margin-bottom: 24px; color: var(--text); }
+
+    article h2 {
+      font-family: var(--font-display);
+      font-size: 1.85rem; font-weight: 500;
+      letter-spacing: -0.02em; line-height: 1.2;
+      margin: 48px 0 24px; color: var(--text);
+    }
+
+    article h2:first-child { margin-top: 0; }
+
+    article h2 em {
+      font-family: var(--font-serif);
+      font-style: italic; color: var(--accent);
+    }
+
+    article strong { color: var(--accent); font-weight: 600; }
+    article em { font-style: italic; }
+
+    article code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      color: var(--code);
+      background: var(--bg-3);
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+
+    article hr {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 24px auto; width: 80px;
+    }
+
+    article ul { margin: 0 0 24px 0; padding-left: 24px; }
+    article ul li { margin-bottom: 12px; color: var(--text); }
+
+    /* ACT LIST */
+    .acts {
+      display: grid;
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .act {
+      background: var(--bg-2);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .act .stamp {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      padding-top: 4px;
+    }
+
+    .act h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .act p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+    }
+
+    @media (max-width: 560px) {
+      .act { grid-template-columns: 1fr; gap: 6px; }
+      .act .stamp { padding-top: 0; }
+    }
+
+    /* DIAGRAM */
+    .diagram-wrap {
+      margin: 8px 0 32px;
+      padding: 32px 24px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-2);
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+
+    .diagram-wrap svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+
+    .diagram-caption {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      text-align: center;
+      margin-top: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    /* EVIDENCE */
+    .evidence {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .evidence div {
+      background: var(--bg-2);
+      padding: 24px;
+    }
+
+    .evidence h3 {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+    }
+
+    .evidence p {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--text-dim);
+    }
+
+    /* TRANSCRIPT */
+    details.transcript {
+      border: 1px solid var(--border-soft);
+      background: var(--bg-2);
+      border-radius: 6px;
+      padding: 0;
+      margin-bottom: 32px;
+    }
+
+    details.transcript summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 20px 24px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: color 0.2s ease;
+    }
+
+    details.transcript summary::-webkit-details-marker { display: none; }
+    details.transcript summary:hover { color: var(--accent); }
+
+    details.transcript summary::before {
+      content: '+';
+      color: var(--accent);
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    details.transcript[open] summary::before { content: '–'; }
+
+    .transcript-body {
+      padding: 0 24px 24px;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border-soft);
+      padding-top: 20px;
+    }
+
+    .transcript-body p { margin-bottom: 16px; color: var(--text-dim); }
+
+    .transcript-body .cue {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* FOOTER BLOCKS */
+    .post-footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 48px 0; text-align: center;
+    }
+
+    .post-footer-label {
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .post-footer-links {
+      display: flex; gap: 24px;
+      justify-content: center; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: 14px;
+    }
+
+    .post-footer-links a { color: var(--text-dim); }
+    .post-footer-links a:hover { color: var(--accent); text-decoration: none; }
+
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 32px 0;
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    footer .container {
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#stack">Stack</a>
+        <a href="/#work">Work</a>
+        <a href="/demos/" class="active">Demos</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+
+    <header class="demo-hero">
+      <div class="read-container">
+        <div class="section-label">Demo</div>
+        <h1>An agent that <em>refuses</em>.</h1>
+        <p class="subtitle">A publishing agent for this site. One decision from the model; everything after it is deterministic, ordered, and stops at the first failure.</p>
+        <div class="byline">
+          <span>Christian Smith</span>
+          <span class="byline-divider"></span>
+          <span>RNVizion</span>
+          <span class="byline-divider"></span>
+          <span>7:48</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="player-wrap">
+      <div class="container">
+        <div class="player-frame">
+          <video
+            controls
+            preload="metadata"
+            playsinline
+            poster="/demos/rnv-publishing-agent/poster.jpg"
+            width="1920"
+            height="920">
+            <source src="/demos/rnv-publishing-agent/rnv-publishing-agent-demo.mp4" type="video/mp4" />
+            <track kind="captions" src="/demos/rnv-publishing-agent/captions.vtt" srclang="en" label="English" default />
+            Your browser doesn’t support embedded video;
+            <a href="/demos/rnv-publishing-agent/rnv-publishing-agent-demo.mp4">download the file</a> instead.
+          </video>
+        </div>
+        <div class="player-note">
+          <span>Unedited run against the live site · no cuts inside a command</span>
+          <span><a href="https://github.com/RNVizion/rnv-publishing-agent" target="_blank" rel="noopener">Source on GitHub →</a></span>
+        </div>
+      </div>
+    </section>
+
+    <article>
+      <div class="read-container">
+
+        <h2>What you’re watching</h2>
+
+        <p>Four acts, in order, run live. Nothing is staged and nothing is sped up; the only edit is trimming dead time between commands.</p>
+
+        <div class="acts">
+          <div class="act">
+            <div class="stamp">0:00</div>
+            <div>
+              <h3>It refuses</h3>
+              <p>An unfinished draft goes in. Validation finds two missing required fields, four recommended ones, and the draft TODO comments I’d left for myself; the chain stops there, with nothing committed and nothing pushed.</p>
+            </div>
+          </div>
+          <div class="act">
+            <div class="stamp">0:57</div>
+            <div>
+              <h3>The safe default</h3>
+              <p>A finished post, and a sentence missing two words. It runs a dry run because that’s the default, not because I asked; the write steps never appear in the trace at all.</p>
+            </div>
+          </div>
+          <div class="act">
+            <div class="stamp">2:23</div>
+            <div>
+              <h3>The real thing</h3>
+              <p>Validate, commit, push, then poll the live URL until it answers 200 before anything downstream runs. The post is live on the site by the end of the act.</p>
+            </div>
+          </div>
+          <div class="act">
+            <div class="stamp">3:18</div>
+            <div>
+              <h3>Why believe any of it</h3>
+              <p>The same chain against disposable git repositories and a local server, with no key and no network; then the CI run that does it on a machine that isn’t mine, on every push.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2>How it <em>fits together</em></h2>
+
+        <p>The model makes one decision: publish, or don’t, and for real or as a dry run. Everything past that diamond is ordinary code in a fixed order, and every step can stop the chain.</p>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 700 640" role="img" aria-labelledby="diagram-title diagram-desc" xmlns="http://www.w3.org/2000/svg">
+            <title id="diagram-title">The publish chain</title>
+            <desc id="diagram-desc">A plain-language request reaches the model, which makes one decision and calls publish_post. The chain then runs validate_post, commit_and_push, wait_for_live and update_corpus in order. A dry run stops after validation. A failed validation or a page that never returns 200 stops the chain with nothing written. A lagging sitemap or share image raises a warning that does not stop the chain.</desc>
+
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#5a5a72" />
+              </marker>
+              <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#d2bc93" />
+              </marker>
+            </defs>
+
+            <g font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12">
+
+              <!-- spine -->
+              <g stroke="#5a5a72" stroke-width="1" marker-end="url(#arrow)" fill="none">
+                <path d="M 300 52 L 300 78" />
+                <path d="M 300 128 L 300 154" />
+                <path d="M 300 194 L 300 220" />
+                <path d="M 300 260 L 300 330" />
+                <path d="M 300 370 L 300 440" />
+                <path d="M 300 480 L 300 550" />
+              </g>
+
+              <!-- request -->
+              <rect x="180" y="20" width="240" height="32" rx="16" fill="#1a1a26" stroke="#25253a" />
+              <text x="300" y="40" text-anchor="middle" fill="#9a9ab0">plain-language request</text>
+
+              <!-- decision -->
+              <rect x="168" y="78" width="264" height="50" rx="6" fill="#11111a" stroke="#d2bc93" />
+              <text x="300" y="98" text-anchor="middle" fill="#d2bc93">model: publish or not,</text>
+              <text x="300" y="116" text-anchor="middle" fill="#d2bc93">for real or dry run</text>
+              <text x="316" y="147" fill="#5a5a72" font-size="10">one decision</text>
+
+              <!-- publish_post -->
+              <rect x="210" y="154" width="180" height="40" rx="4" fill="#1a1a26" stroke="#25253a" />
+              <text x="300" y="179" text-anchor="middle" fill="#e8e8f0">publish_post</text>
+
+              <!-- validate -->
+              <rect x="210" y="220" width="180" height="40" rx="4" fill="#1a1a26" stroke="#25253a" />
+              <text x="300" y="245" text-anchor="middle" fill="#e8e8f0">validate_post</text>
+
+              <!-- dry run branch -->
+              <path d="M 210 240 L 120 240 L 120 286" stroke="#5a5a72" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+              <text x="132" y="234" fill="#5a5a72" font-size="10">dry run</text>
+              <rect x="20" y="286" width="200" height="40" rx="4" fill="#11111a" stroke="#25253a" />
+              <text x="120" y="304" text-anchor="middle" fill="#9a9ab0" font-size="11">validated only —</text>
+              <text x="120" y="318" text-anchor="middle" fill="#9a9ab0" font-size="11">nothing written</text>
+
+              <!-- commit_and_push -->
+              <rect x="210" y="330" width="180" height="40" rx="4" fill="#1a1a26" stroke="#25253a" />
+              <text x="300" y="355" text-anchor="middle" fill="#e8e8f0">commit_and_push</text>
+              <text x="312" y="278" fill="#5a5a72" font-size="10">ok</text>
+
+              <!-- site actions -->
+              <path d="M 390 350 L 470 350" stroke="#5a5a72" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+              <text x="412" y="344" fill="#5a5a72" font-size="10">push</text>
+              <rect x="470" y="330" width="210" height="40" rx="4" fill="#11111a" stroke="#25253a" />
+              <text x="575" y="348" text-anchor="middle" fill="#9a9ab0" font-size="11">site Actions:</text>
+              <text x="575" y="362" text-anchor="middle" fill="#9a9ab0" font-size="11">build-feed · build-og</text>
+
+              <!-- wait_for_live -->
+              <rect x="210" y="440" width="180" height="40" rx="4" fill="#1a1a26" stroke="#25253a" />
+              <text x="300" y="465" text-anchor="middle" fill="#e8e8f0">wait_for_live</text>
+              <text x="312" y="388" fill="#5a5a72" font-size="10">ok</text>
+
+              <!-- warning branch -->
+              <path d="M 390 460 L 470 460" stroke="#d2bc93" stroke-width="1" stroke-dasharray="4 3" fill="none" marker-end="url(#arrow-accent)" />
+              <rect x="470" y="428" width="210" height="64" rx="4" fill="#11111a" stroke="#d2bc93" />
+              <text x="575" y="450" text-anchor="middle" fill="#d2bc93" font-size="11">sitemap or og:image lagging</text>
+              <text x="575" y="470" text-anchor="middle" fill="#9a9ab0" font-size="11">warning — does not</text>
+              <text x="575" y="484" text-anchor="middle" fill="#9a9ab0" font-size="11">stop the chain</text>
+
+              <!-- update_corpus -->
+              <rect x="210" y="550" width="180" height="40" rx="4" fill="#1a1a26" stroke="#25253a" />
+              <text x="300" y="575" text-anchor="middle" fill="#e8e8f0">update_corpus</text>
+              <text x="312" y="498" fill="#5a5a72" font-size="10">page live</text>
+
+              <!-- stop branch -->
+              <path d="M 210 240 L 120 240" stroke="none" fill="none" />
+              <path d="M 210 460 L 60 460 L 60 610" stroke="#5a5a72" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+              <text x="72" y="454" fill="#5a5a72" font-size="10">page not 200</text>
+              <path d="M 210 350 L 60 350" stroke="#5a5a72" stroke-width="1" fill="none" />
+              <text x="72" y="344" fill="#5a5a72" font-size="10">ok false</text>
+              <rect x="20" y="610" width="200" height="30" rx="4" fill="#11111a" stroke="#25253a" />
+              <text x="120" y="630" text-anchor="middle" fill="#9a9ab0" font-size="11">stop — nothing written</text>
+
+              <!-- published -->
+              <path d="M 390 570 L 470 570" stroke="#5a5a72" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+              <rect x="470" y="552" width="210" height="36" rx="4" fill="#11111a" stroke="#d2bc93" />
+              <text x="575" y="575" text-anchor="middle" fill="#d2bc93" font-size="11">published</text>
+
+            </g>
+          </svg>
+          <div class="diagram-caption">One diamond. Everything below it is deterministic.</div>
+        </div>
+
+        <h2>Why it’s built <em>this way</em></h2>
+
+        <p>The chain is strict in three places and lenient in exactly one, and the difference is the whole idea. <strong>A missing configuration path is a defect, so it’s a gate.</strong> Waiting will never make it correct, and a run that is already doomed must not take the irreversible step first; so configuration gets checked before the commit, not when stage five finally reaches it.</p>
+
+        <p><strong>A lagging build is a queue, so it’s a warning.</strong> When the post is live but the sitemap hasn’t caught up and the share image hasn’t rendered, nothing downstream depends on either; the corpus fetches the post URL directly. Waiting fixes that one on its own. Making it a gate would fail a perfectly good post because a background job was slow, and a gate that fires on the normal case is a gate people learn to skip.</p>
+
+        <p>I wrote that rule down before I could state it plainly, which is usually the sign it isn’t finished. The essay is <a href="/blog/the-warning-not-the-gate/">The Warning, Not the Gate</a>; the demo is the same argument with the output on screen.</p>
+
+        <h2>Why you can <em>believe</em> it</h2>
+
+        <div class="evidence">
+          <div>
+            <h3>It runs on a machine that isn’t mine</h3>
+            <p>CI runs the test suite on two Python versions and then runs the end-to-end demo as its own job, on every push. “Try it yourself” is a claim about someone else’s computer.</p>
+          </div>
+          <div>
+            <h3>You can run it with no key</h3>
+            <p><code>demo/run_demo.py</code> builds two git repositories and their bare remotes in a temp directory, serves them over a local HTTP server, and runs the same chain. Real commits, real pushes, real polling; only the destination is disposable.</p>
+          </div>
+          <div>
+            <h3>The refusals are pinned</h3>
+            <p>The behaviour the project claims — dry run by default, stop at validation, write nothing — is held by tests whose own docstring calls them the thesis tests. If they go red, the project has stopped doing what it says.</p>
+          </div>
+        </div>
+
+        <p>Built on the Model Context Protocol and the Anthropic API. The source, the tests and the demo script are public under the MIT licence: <a href="https://github.com/RNVizion/rnv-publishing-agent" target="_blank" rel="noopener">github.com/RNVizion/rnv-publishing-agent</a>.</p>
+
+        <h2>Transcript</h2>
+
+        <details class="transcript">
+          <summary>Read the narration</summary>
+          <div class="transcript-body">
+            <!-- TRANSCRIPT:START — whisper output, corrected against the screen. -->
+            <p><span class="cue">0:00</span>This is an agent that publishes to my site. I'm going to start by asking it to publish something that isn't finished. One tool call. Validation. You can see here, there are three kinds of problem. Two required fields missing, four recommended, and a third category: my own draft TODOs. Those ride into the RSS feed's content, so a note to myself would have shipped to everyone subscribed. And we can see here, nothing happened. HEAD, my local main, origin, all sitting on one commit; a feed rebuild from before I started. No commit, no push, nothing written to the corpus; the chain stops at the first failure.</p>
+            <p><span class="cue">0:56</span>Now I'm going to show this to you. Same agent, a post that's finished, and I've left two words out of the sentence. It ran a dry run. I didn't ask for one; that's the default. I asked for the raw result, so the JSON is what the tool returned, not the model's description of what it returned. One entry. Validate. And we can see the write steps aren't in there at all. That absence is the gate, not the flag. A flag is a claim; a missing step is evidence. You can see here, the post is still sitting there uncommitted. To make this real, I have to say so. There it is. That's not a prompt instruction the model might drift off; it's a function signature. The dangerous path costs an extra argument.</p>
+            <p><span class="cue">2:23</span>Now for real. This pushes to a live site. One decision from the model: publish, or don't. Everything after this is code. Validate, commit and push. Then it polls the live URL until it returns 200, because the page takes a moment to deploy and I don't want the next step running against a 404. We can see — no warnings. The second-wave jobs had already caught up. But I'll show you what happens when they haven't.</p>
+            <p><span class="cue">2:59</span>At the top of my blog, we can see the new post was absent. But I've just run the new job and I've refreshed the page, so now the post is live.</p>
+            <p><span class="cue">3:17</span>Everything you just watched runs against my site, which you can't inspect. So the repo ships this. No API key, no credentials, no network. It builds two git repositories and their bare remotes in a temp directory, serves them over a local HTTP server, and runs the same chain. Real commits, real pushes, real polling; only the destination is disposable. Same four acts. It refuses; it defaults to dry run. There. The sitemap hasn't listed the post yet and the share image isn't rendered yet, so it says both out loud; and it publishes anyway. Then the same run with the second-wave jobs finishing in time, and it goes quiet. Gate it, and a slow build refuses a perfectly good post.</p>
+            <p><span class="cue">4:20</span>CI runs the suite on two Python versions, then runs that demo as its own job. Three jobs. Different machine, every push. “Try it yourself” is a claim about someone else's computer, and the only way to make that claim honest was to run it on someone else's machine.</p>
+            <p><span class="cue">5:17</span>The refusal behaviour is pinned. The file's own docstring calls them the thesis tests. If this one goes red, the project has stopped doing the thing it says it does. One more, and I only found it because I wrote about it. The first of these proves the check warns when the image is late; that was always there. The third proves it goes quiet when the image arrives on time; and that one wasn't. The sitemap had both halves. The image had one, and I'd been reading the sitemap's pair as if it covered both.</p>
+            <p><span class="cue">6:38</span>Same rule, second place. Configuration gets checked before the commit, not when stage five finally needs it. A run that's already doomed must never take the irreversible step first. A missing path is a defect, so it's a gate. A lagging build is a queue, so it's a warning. Waiting fixes one of those, and never the other.</p>
+            <p><span class="cue">7:26</span>One decision from the model. Everything else deterministic, ordered, stopping at the first failure; with exactly one place where it's lenient, and a reason I can defend. Gate what you're judging; warn about what you're waiting on.</p>
+            <!-- TRANSCRIPT:END -->
+          </div>
+        </details>
+
+        <hr />
+
+        <p>Gate what you’re judging; warn about what you’re waiting on.</p>
+
+      </div>
+    </article>
+
+    <div class="post-footer">
+      <div class="read-container">
+        <div class="post-footer-label">Keep reading</div>
+        <div class="post-footer-links">
+          <a href="/demos/">All demos</a>
+          <a href="/blog/the-warning-not-the-gate/">The essay</a>
+          <a href="/#work">My work</a>
+          <a href="/blog/">All posts</a>
+          <a href="https://github.com/RNVizion/rnv-publishing-agent" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Christian Smith · RNVizion</div>
+      <div><a href="/aiii/">AIII</a> · <a href="/bio/">Bio</a> · <a href="/resume/">Résumé</a> · Washington, DC</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -17,3 +17,4 @@ assets/fonts/
 # directory appears, without it one does.
 __pycache__/
 *.py[cod]
+ggml-*.bin

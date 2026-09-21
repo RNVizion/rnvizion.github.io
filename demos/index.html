@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blog — Christian Smith (RNVizion)</title>
-  <meta name="description" content="Writing on building production AI systems, the developer tools around them, and the craft of software that feels right." />
+  <title>Demos — Christian Smith (RNVizion)</title>
+  <meta name="description" content="Systems I've built, running. Unedited recordings against live infrastructure, with the source and the tests public." />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://rnvizion.dev/blog/" />
-  <meta property="og:title" content="Blog — Christian Smith (RNVizion)" />
-  <meta property="og:description" content="Writing on building production AI systems, the developer tools around them, and the craft of software that feels right." />
+  <meta property="og:url" content="https://rnvizion.dev/demos/" />
+  <meta property="og:title" content="Demos — Christian Smith (RNVizion)" />
+  <meta property="og:description" content="Systems I've built, running. Unedited recordings against live infrastructure, with the source and the tests public." />
   <meta property="og:image" content="https://rnvizion.dev/assets/og-image.png" />
 
   <!-- Fonts -->
@@ -68,7 +68,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.55 00 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       opacity: 0.5;
       pointer-events: none;
       z-index: 1;
@@ -102,8 +102,6 @@
     .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
     .logo .dot {
-      /* .logo is flex; without this the dot is squeezed to an ellipse when the
-         nav is tight. Geometry only -- gold, glow and pulse are unchanged. */
       flex-shrink: 0;
       width: 8px;
       height: 8px;
@@ -146,7 +144,6 @@
 
     .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
-    /* Hamburger button */
     .nav-toggle {
       display: none;
       background: transparent;
@@ -222,9 +219,7 @@
     }
 
     /* HERO */
-    .blog-hero {
-      padding: 120px 0 60px;
-    }
+    .demos-hero { padding: 120px 0 60px; }
 
     .section-label {
       font-family: var(--font-mono);
@@ -245,7 +240,7 @@
       background: var(--accent);
     }
 
-    .blog-hero h1 {
+    .demos-hero h1 {
       font-family: var(--font-display);
       font-size: clamp(2.5rem, 6vw, 4.5rem);
       font-weight: 500;
@@ -254,20 +249,20 @@
       margin-bottom: 24px;
     }
 
-    .blog-hero h1 em {
+    .demos-hero h1 em {
       font-family: var(--font-serif);
       font-style: italic;
       color: var(--accent);
     }
 
-    .blog-hero p {
+    .demos-hero p {
       font-size: 1.15rem;
       color: var(--text-dim);
-      max-width: 600px;
+      max-width: 620px;
     }
 
-    /* POSTS LIST */
-    .posts {
+    /* LIST */
+    .demos {
       padding: 60px 0 120px;
       display: grid;
       gap: 1px;
@@ -276,39 +271,54 @@
       border-bottom: 1px solid var(--border-soft);
     }
 
-    .post-card {
+    .demo-card {
       background: var(--bg-2);
       padding: 40px 0;
       transition: background 0.25s ease;
     }
 
-    .post-card:hover {
-      background: var(--bg-3);
-    }
+    .demo-card:hover { background: var(--bg-3); }
 
-    .post-card .container {
+    .demo-card .container {
       display: grid;
-      grid-template-columns: 160px 1fr auto;
+      grid-template-columns: 280px 1fr auto;
       gap: 40px;
-      align-items: start;
+      align-items: center;
     }
 
-    @media (max-width: 720px) {
-      .post-card .container {
+    @media (max-width: 860px) {
+      .demo-card .container {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 20px;
+        align-items: start;
       }
     }
 
-    .post-meta {
+    .demo-thumb {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 48 / 23;
+    }
+
+    .demo-thumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .demo-meta {
       font-family: var(--font-mono);
       font-size: 12px;
       color: var(--text-faint);
       text-transform: uppercase;
       letter-spacing: 0.1em;
+      margin-bottom: 10px;
     }
 
-    .post-card h2 {
+    .demo-card h2 {
       font-family: var(--font-display);
       font-size: 1.65rem;
       font-weight: 500;
@@ -317,15 +327,15 @@
       margin-bottom: 10px;
     }
 
-    .post-card h2 a:hover { color: var(--accent); }
+    .demo-card h2 a:hover { color: var(--accent); }
 
-    .post-card p {
+    .demo-card p {
       color: var(--text-dim);
       font-size: 1rem;
-      max-width: 640px;
+      max-width: 560px;
     }
 
-    .post-card .read-link {
+    .demo-card .watch-link {
       font-family: var(--font-mono);
       font-size: 13px;
       color: var(--accent);
@@ -333,8 +343,8 @@
       align-self: center;
     }
 
-    @media (max-width: 720px) {
-      .post-card .read-link { align-self: start; }
+    @media (max-width: 860px) {
+      .demo-card .watch-link { align-self: start; }
     }
 
     footer {
@@ -366,8 +376,8 @@
         <a href="/#about">About</a>
         <a href="/#stack">Stack</a>
         <a href="/#work">Work</a>
-        <a href="/demos/">Demos</a>
-        <a href="/blog/" class="active">Blog</a>
+        <a href="/demos/" class="active">Demos</a>
+        <a href="/blog/">Blog</a>
         <a href="/#contact">Contact</a>
       </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
@@ -380,133 +390,30 @@
 
   <main>
 
-    <section class="blog-hero">
+    <section class="demos-hero">
       <div class="container">
-        <div class="section-label">Writing</div>
-        <h1>Notes from the <em>workshop</em>.</h1>
-        <p>Thoughts on building production AI systems, the developer tools around them, and the craft of software that feels right; sometimes technical, sometimes personal, always honest.</p>
+        <div class="section-label">Demos</div>
+        <h1>Systems, <em>running</em>.</h1>
+        <p>Recordings of things I've built, against live infrastructure rather than a mock; unedited inside a command, with the source and the tests public so you can check the claim instead of taking it.</p>
       </div>
     </section>
 
-    <section class="posts">
-      <!-- posts:start -->
-<article class="post-card">
-  <a href="/blog/the-warning-not-the-gate/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">September 16, 2026 · ~4 min read</div>
-      <div>
-        <h2>The Warning, Not the Gate</h2>
-        <p>The check I wrote to catch a naked post doesn&#8217;t stop the publish. Here&#8217;s the rule that decides which checks get to.</p>
-      </div>
-      <span class="read-link">Read post →</span>
+    <section class="demos">
+      <!-- demos:start -->
+<article class="demo-card">
+  <div class="container">
+    <a href="/demos/rnv-publishing-agent/" class="demo-thumb">
+      <img src="/demos/rnv-publishing-agent/poster.jpg" alt="The publish chain, drawn as a flowchart" loading="lazy" width="1920" height="920" />
+    </a>
+    <div>
+      <div class="demo-meta">September 2026 · 7:48</div>
+      <h2><a href="/demos/rnv-publishing-agent/">An agent that refuses</a></h2>
+      <p>A publishing agent for this site. One decision from the model; everything after it is deterministic, ordered, and stops at the first failure — with exactly one place where it's lenient.</p>
     </div>
-  </a>
+    <span class="watch-link">Watch →</span>
+  </div>
 </article>
-
-<article class="post-card">
-  <a href="/blog/honest-and-wrong/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">August 28, 2026 · ~8 min read</div>
-      <div>
-        <h2>Honest and Wrong</h2>
-        <p>It told me eight. The answer was nine. It wasn’t hallucinating; it was counting.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-
-<article class="post-card">
-  <a href="/blog/the-margin-not-the-price/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">August 19, 2026 · ~4 min read</div>
-      <div>
-        <h2>The Margin, Not the Price</h2>
-        <p>Everyone keeps quoting the line about charging more. The price isn’t what moves; the margin is.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-
-<article class="post-card">
-  <a href="/blog/fit-over-default/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">July 30, 2026 · ~4 min read</div>
-      <div>
-        <h2>Fit Over Default</h2>
-        <p>The reflex is to grab the biggest model. I built two systems and chose the opposite on purpose; here&#8217;s why fit beats default.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-
-<article class="post-card">
-  <a href="/blog/the-job-was-never-coding/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">July 15, 2026 · ~5 min read</div>
-      <div>
-        <h2>The Job Was Never Coding</h2>
-        <p>The machine learned to type; it never learned what’s worth typing. What AI actually automated, and who it actually left exposed.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-
-<article class="post-card">
-  <a href="/blog/ask-the-corpus/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">June 30, 2026 · ~6 min read</div>
-      <div>
-        <h2>The Honest Machine</h2>
-        <p>Most AI keeps talking past the edge of what it knows. I built one that stops. Here's how, and why the refusal is the part I'm proudest of.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-
-<article class="post-card">
-  <a href="/blog/sloth/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">June 22, 2026 · ~3 min read</div>
-      <div>
-        <h2>Lazy in the Right Way Is Leverage</h2>
-        <p>Two ways to be lazy about the same chore: one traps you in it forever, the other is how every tool ever got built.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-
-<article class="post-card">
-  <a href="/blog/squish/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">June 16, 2026 · ~5 min read</div>
-      <div>
-        <h2>Squish: The Soul That Speed Can't Generate</h2>
-        <p>Why people love Mario and not just play it: “squish” is the soul a human gives software, and the one thing speed can’t generate.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-
-<article class="post-card">
-  <a href="/blog/i-lacked-the-tools/" style="display: contents;">
-    <div class="container">
-      <div class="post-meta">May 20, 2026 · ~9 min read</div>
-      <div>
-        <h2>I Lacked the Tools, So I Built Them: How Constraint Created a Software Suite</h2>
-        <p>How constraint created a software suite — the story behind the RNVizion toolkit.</p>
-      </div>
-      <span class="read-link">Read post →</span>
-    </div>
-  </a>
-</article>
-      <!-- posts:end -->
+      <!-- demos:end -->
     </section>
 
   </main>
@@ -521,7 +428,6 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Mobile nav toggle
     const navToggle = document.getElementById('nav-toggle');
     const navLinks = document.getElementById('nav-links');
     navToggle.addEventListener('click', () => {
