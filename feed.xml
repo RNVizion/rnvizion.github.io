@@ -8,7 +8,7 @@
     <link>https://rnvizion.dev</link>
     <description>Development and philosophy from Christian Smith (RNVizion): building software with a soul in a fast age.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Sep 2026 22:55:32 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 22 Sep 2026 01:54:32 +0000</lastBuildDate>
     <atom:link href="https://rnvizion.dev/feed.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Warning, Not the Gate</title>
@@ -16,7 +16,7 @@
       <guid isPermaLink="true">https://rnvizion.dev/blog/the-warning-not-the-gate/</guid>
       <pubDate>Wed, 16 Sep 2026 00:00:00 +0000</pubDate>
       <dc:creator>Christian Smith</dc:creator>
-      <description>Why the check that catches a missing share image warns instead of blocking: gate what you’re judging, warn about what you’re waiting on.</description>
+      <description>Why the check that catches a missing share image warns instead of blocking: Gate what you’re judging — warn about what you’re waiting on.</description>
       <content:encoded><![CDATA[<p>Three posts went out without my custom share image.</p>
 <p>Not broken posts: the writing was there, the page loaded, the feed picked them up; the face, the preview, the part that makes a page feel alive looked abandoned, a gray rectangle with a URL sitting in it.</p>
 <p>I found out the way you always find out. I went to share one.</p>
