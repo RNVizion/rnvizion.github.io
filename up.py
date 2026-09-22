@@ -1,80 +1,76 @@
 #!/usr/bin/env python3
-"""Restore the registry form of row 18 in the post description. Reports by
-default; writes only with --apply.
+"""Normalise the post description to Brand Book section 5, row 18.
 
-    python3 fix_aphorism_punctuation.py            # check: writes nothing
-    python3 fix_aphorism_punctuation.py --apply    # write
+    python up.py            # check: writes nothing
+    python up.py --apply    # write
 
 Run from the rnvizion.github.io repo root.
 
-WHAT IS WRONG
-  Brand Book section 5, row 18, registers the line as:
+Row 18 registers the line as:
 
-      Gate what you're judging -- warn about what you're waiting on.
+    Gate what you're judging -- warn about what you're waiting on.
 
-  Capital G, em dash, lowercase "warn" after it. The post body carries that
-  form. The post's description does not -- it lowercases the G and uses a
-  comma:
+Capital G, em dash, lowercase "warn". This repairs the description to that form
+from ANY punctuation or capitalisation it currently carries -- comma, semicolon,
+hyphen, literal em dash, entity em dash, capital or lowercase G. An earlier
+script fixed the dash and left the capital, which is a third variant rather than
+a repair; matching on one exact form could not see the result of its own
+predecessor.
 
-      ...warns instead of blocking: gate what you're judging, warn about
-      what you're waiting on.
+The dash it writes matches the apostrophe encoding already in the line: entity
+apostrophes get `&#8212;`, literal ones get a literal em dash. Where a file has
+a house encoding, the file's encoding wins.
 
-  Both differences are restored in one edit, because they are one quotation.
-  The dash is the point of the line: it reverses, and the writing profile
-  reserves the dash for exactly that rupture. A comma makes it a list of two
-  chores.
+WHEN IT FINDS NOTHING IT PRINTS WHAT IS THERE. A script that reports only what
+it failed to match tells you nothing about the state you are actually in, which
+is the dead end this replaces.
 
-WHY THE CAPITAL SURVIVES A COLON
-  Written out, it looks like a mistake -- ordinary prose lowercases after a
-  colon, which is presumably how it drifted. A registered line is quoted, not
-  absorbed: it keeps its own capitalization wherever it appears, or the
-  register is describing something the surfaces do not say. Recorded here so
-  the next reader does not helpfully lowercase it back.
-
-WHY ONLY ONE FILE IS WRITTEN
-  The old form appears three times: twice in this post's <head>
-  (name="description" and og:description, byte-identical) and once in
-  feed.xml. feed.xml is not a source -- scripts/build_feed.py line 121 reads
-  og:description and writes it into <description>, and build-feed.yml runs on
-  any push touching blog/**. Editing the post regenerates the feed on its own,
-  and a hand edit to feed.xml is a change the next build overwrites.
-
-  A generated surface and its generator are two artifacts and either can be
-  the stale one. Here the post is the source; everything else is output.
-
-WHAT IS NOT AFFECTED, CHECKED BY RUNNING THE GENERATOR, NOT BY READING IT
-  blog/index.html, sitemap.xml and robots.txt rebuild byte-identical: the
-  blog-index card reads card:summary, which this post declares, and
-  generate_card.py falls back to og:description only when that tag is absent.
-  generate_og.py wraps the title only, so no share image changes.
-
-WHAT IT DELIBERATELY DOES NOT DO
-  It does not commit, stage, or push. It writes one named file and reports
-  every other occurrence in the repo without touching it, so a derived surface
-  that appears later shows up in the report instead of being silently patched.
+It does not commit, stage, or push. It writes one named file and reports every
+other occurrence in the repo without touching it -- feed.xml is generated from
+og:description by scripts/build_feed.py and rebuilds itself on push.
 """
 
+import re
 import sys
 from pathlib import Path
 
 POST = Path("blog/the-warning-not-the-gate/index.html")
 
-# The edit anchor carries the colon, so there is no doubt which "gate" is being
-# recapitalised, and the entity form of the apostrophe, because that is what
-# this file uses throughout. Both halves of the registry form -- the capital
-# and the dash -- move in one replacement: they are one quotation, and fixing
-# half of it is a third variant rather than a repair.
-OLD = ": gate what you&#8217;re judging, warn about"
-NEW = ": Gate what you&#8217;re judging &#8212; warn about"
+APOS = r"(?:&#8217;|\u2019|')"
+SEP = r"(?:,|;|&#8212;|&mdash;|\u2014|\u2013|--|-)"
 
-# The report anchor has no apostrophe in it, so it matches whether a file
-# writes the apostrophe as &#8217; (the post) or as a literal (the feed).
-FIND = "judging, warn about"
+PAT = re.compile(
+    r"(blocking:\s*)"
+    r"[Gg](ate what you)(" + APOS + r")(re judging)"
+    r"\s*" + SEP + r"\s*"
+    r"(warn about)"
+)
 
-EXPECTED = 2   # name="description" and og:description, byte-identical
+# Anything carrying the line at all, in any form, for the report and for the
+# "what is actually there" dump.
+ANY = re.compile(r"judging\s*(?:,|;|&#8212;|&mdash;|\u2014|\u2013|--|-)\s*warn about")
 
 G, R, Y, C, D, N = ("\033[32m", "\033[31m", "\033[33m",
                     "\033[36m", "\033[2m", "\033[0m")
+
+
+def fix(m: re.Match) -> str:
+    apos = m.group(3)
+    dash = "&#8212;" if apos == "&#8217;" else "\u2014"
+    return f"{m.group(1)}G{m.group(2)}{apos}{m.group(4)} {dash} {m.group(5)}"
+
+
+def show(path: Path, text: str, label: str) -> None:
+    print(f"{D}  {label}{N}")
+    hit = False
+    for i, ln in enumerate(text.splitlines(), 1):
+        if "judging" in ln or "warn about" in ln:
+            hit = True
+            s = ln.strip()
+            at = max(s.find("blocking:"), 0)
+            print(f"{D}    {i:>4}: ...{s[at:at + 110]}{N}")
+    if not hit:
+        print(f"{D}      (no line in this file mentions the aphorism at all){N}")
 
 
 def main() -> int:
@@ -86,12 +82,27 @@ def main() -> int:
         print(f"{R}{POST} not found. Nothing written.{N}")
         return 2
 
-    me = Path(__file__).resolve()
     src = POST.read_text(encoding="utf-8")
-    n = src.count(OLD)
-    loose = src.count(FIND)
+    out, n = PAT.subn(fix, src)
+
+    print(f"{C}== {POST} =={N}")
+    if n == 0:
+        print(f"  {R}no description form matched.{N}")
+        show(POST, src, "every line in the file that mentions the line:")
+        print(f"\n{Y}Nothing written. Send the block above and I will match it exactly.{N}")
+        return 1
+
+    if out == src:
+        print(f"  {G}already in the registry form{N}  ({n} occurrence(s) checked)")
+        changed = False
+    else:
+        print(f"  {G}{n} occurrence(s){N} -> capital G + em dash")
+        show(POST, src, "before:")
+        show(POST, out, "after:")
+        changed = True
 
     others = []
+    me = Path(__file__).resolve()
     for p in sorted(Path(".").rglob("*")):
         if not p.is_file() or ".git" in p.parts or p.resolve() == me or p == POST:
             continue
@@ -101,49 +112,30 @@ def main() -> int:
             s = p.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
             continue
-        if FIND in s:
-            others.append((p, s.count(FIND)))
-
-    print(f"{C}== source =={N}")
-    if n == 0 and loose == 0 and NEW in src:
-        print(f"  {Y}{POST}{N}\n      already carries the registry form. Nothing to do.")
-    elif n != EXPECTED:
-        # Not a silent pass. The loose count is printed alongside, because
-        # "my specific anchor missed" and "the string is not there" are
-        # different findings and only one of them means the work is done.
-        print(f"  {R}{POST}{N}")
-        print(f"      exact anchor matched {n} time(s), expected {EXPECTED}.")
-        print(f"      loose match ('{FIND}') found {loose} time(s).")
-        if loose and not n:
-            print(f"      The line is present but worded differently than this")
-            print(f"      script expects -- check the colon and the entity form.")
-        print(f"      Nothing written; this needs a human.")
-        return 1
-    else:
-        print(f"  {G}{POST}{N}  {n} occurrence(s) -> capital G + em dash")
+        bad = [m.group(0) for m in ANY.finditer(s)
+               if "&#8212;" not in m.group(0) and "\u2014" not in m.group(0)]
+        if bad:
+            others.append((p, len(bad)))
 
     if others:
-        print(f"\n{Y}== carries the old form, not written ({len(others)}) =={N}")
+        print(f"\n{Y}== carries an old form, not written ({len(others)}) =={N}")
         for p, c in others:
             print(f"  {Y}{p}{N}  x{c}")
-        print(f"{D}      Generated from the post by scripts/build_feed.py. The{N}")
-        print(f"{D}      build-feed workflow runs on any push under blog/**, so{N}")
-        print(f"{D}      these rebuild themselves once the post lands.{N}")
+        print(f"{D}      Generated from the post by scripts/build_feed.py;{N}")
+        print(f"{D}      build-feed.yml rebuilds these on any push under blog/**.{N}")
 
     if not apply:
         print(f"\n{Y}Check only. Nothing written.{N}")
-        print("  Re-run with --apply to write.")
+        print("  Re-run with --apply to write." if changed else "  Nothing to write.")
         return 0
 
-    if n == EXPECTED:
-        out = src.replace(OLD, NEW)
-        assert out.count(NEW) == src.count(NEW) + EXPECTED, "replacement count moved"
-        assert FIND not in out, "an old-form occurrence survived the replace"
+    if changed:
         POST.write_text(out, encoding="utf-8")
         print(f"\n{G}wrote{N}  {POST}")
-
-    print(f"\n{G}Nothing staged, nothing committed.{N}")
-    print("  git diff --stat")
+        print(f"\n{G}Nothing staged, nothing committed.{N}")
+        print("  git diff --stat")
+    else:
+        print(f"\n{G}Nothing to write.{N}")
     return 0
 
 
