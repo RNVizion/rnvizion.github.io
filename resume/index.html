@@ -93,6 +93,20 @@
     .nav-links a { color: var(--text-dim); }
     .nav-links a:hover { color: var(--accent); text-decoration: none; }
     .nav-links a.active { color: var(--accent); }
+    .nav-toggle { display: none; background: transparent; border: 1px solid var(--border); border-radius: 6px; width: 40px; height: 40px; cursor: pointer; padding: 0; flex-direction: column; justify-content: center; align-items: center; gap: 5px; transition: border-color 0.2s ease; }
+    .nav-toggle:hover { border-color: var(--accent); }
+    .nav-toggle span { display: block; width: 18px; height: 1.5px; background: var(--text); transition: transform 0.25s ease, opacity 0.25s ease; }
+    @media (max-width: 640px) {
+      .nav-toggle { display: flex; }
+      /* 73px is this nav's measured height with the toggle in place,
+         which matches the other pages. Measured, not assumed: this
+         nav is 56px WITHOUT the button, and the button is what
+         closes the difference. */
+      .nav-links { position: fixed; top: 73px; left: 0; right: 0; background: rgba(10, 10, 15, 0.96); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-soft); flex-direction: column; gap: 0; padding: 16px 32px 24px; transform: translateY(-12px); opacity: 0; pointer-events: none; transition: transform 0.25s ease, opacity 0.25s ease; }
+      .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      .nav-links a { padding: 14px 0; font-size: 15px; border-bottom: 1px solid var(--border-soft); }
+      .nav-links a:last-child { border-bottom: none; }
+    }
 
     /* ---- résumé header ---- */
     .resume-header { padding: 72px 0 28px; }
@@ -178,13 +192,16 @@
   <nav>
     <div class="container">
       <a href="/" class="logo"><span class="dot"></span> RNVizion</a>
-      <div class="nav-links">
+      <div class="nav-links" id="nav-links">
         <a href="/#about">About</a>
         <a href="/#work">Work</a>
         <a href="/demos/">Demos</a>
         <a href="/blog/">Blog</a>
         <a href="/resume/" class="active">Résumé</a>
       </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -350,6 +367,22 @@
     </div>
   </footer>
 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', false);
+      });
+    });
+  </script>
 </body>
 </html>
