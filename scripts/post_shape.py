@@ -4,7 +4,7 @@ post_shape.py — the reference rule and the shown-markup rule, as functions.
 
 WHY THIS IS A LIBRARY AND NOT A TEST
   Two consumers read a post for references: tests/test_post_shape.py, which
-  walks the whole tree in build-feed, and the MCP publishing agent, which
+  walks the whole tree in build-feed, and the RNV publishing agent, which
   checks the one document it is about to push. The agent holds the
   irreversible step; this repo's check runs after Pages has already served
   the commit.
