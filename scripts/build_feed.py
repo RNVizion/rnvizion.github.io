@@ -57,7 +57,8 @@ SITEMAP = Path("sitemap.xml")
 ROBOTS = Path("robots.txt")
 INDEX_FILE = BLOG_DIR / "index.html"
 # Directories never scanned for sitemap pages (no public index.html of their own).
-SKIP_DIRS = {"_templates", "scripts", "assets", ".github", ".git", "node_modules"}
+SKIP_DIRS = {"_templates", "scripts", "assets", ".github", ".git", "node_modules",
+             "tests"}
 POSTS_START = "<!-- posts:start -->"
 POSTS_END = "<!-- posts:end -->"
 # ------------------------------------------------------------------------------
@@ -195,18 +196,25 @@ def write_index(posts: list[dict]) -> None:
 def discover_static_pages() -> list[str]:
     """Find the non-blog pages that belong in the sitemap.
 
-    Scans the repo root and every top-level directory for an index.html, then
-    keeps a page only if it declares an og:url and is NOT a redirect stub. The
-    og:url is the page's own canonical, which is the same field the feed already
-    trusts for posts; using it here keeps one definition of "this page's URL".
+    Walks the repo at any depth for an index.html, then keeps a page only if it
+    declares an og:url and is NOT a redirect stub. The og:url is the page's own
+    canonical, which is the same field the feed already trusts for posts; using
+    it here keeps one definition of "this page's URL".
 
-    Blog posts live at blog/<slug>/index.html (depth 2) and are handled by the
-    feed pass, so this depth-1 glob never double-counts them. blog/index.html
-    itself IS picked up here, which is correct: the listing page is a real page.
+    Blog posts are excluded by rule rather than by depth: anything under blog/
+    deeper than blog/index.html belongs to the feed pass. blog/index.html itself
+    IS picked up, which is correct -- the listing page is a real page.
+
+    The walk was depth 1 until demos/rnv-publishing-agent/ went live one level
+    below demos/, passed every rule, and was never opened. Widening it means
+    SKIP_DIRS has to carry "tests": the golden post fixture declares an og:url
+    for an address that does not exist, and a deeper walk would publish it.
     """
     candidates = [Path("index.html")] + [
-        f for f in sorted(Path(".").glob("*/index.html"))
-        if f.parent.name not in SKIP_DIRS
+        f for f in sorted(Path(".").rglob("index.html"))
+        if len(f.parts) > 1
+        and not set(f.parts[:-1]) & SKIP_DIRS
+        and not (f.parts[0] == "blog" and len(f.parts) > 2)
     ]
     urls: list[str] = []
     for f in candidates:
