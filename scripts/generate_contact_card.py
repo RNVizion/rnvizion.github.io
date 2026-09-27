@@ -15,8 +15,9 @@ Outputs (all generated, none hand-edited):
 Standing rule this implements: a handoff surface is generated from the manifest,
 because the facts it carries are exactly the facts that change.
 
-Built against profile.json v1.2.7 (fetched 2026-08-10). If the manifest has moved
-past that, re-read it before trusting the key paths in the ADAPTER block below.
+The manifest version this ran against is printed on every run, read from the
+file itself; nothing here restates it. A version written into a docstring is
+stale the day the manifest moves, and it reads as checked.
 
 Usage:
     python3 scripts/generate_contact_card.py --profile ../rnv-brand/profile.json --out .
@@ -38,11 +39,12 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 # ADAPTER — every profile.json key path this script depends on lives here.
 #
-# Two of the facts this surface needs are NOT in the manifest yet, and how they
-# get encoded is the Brand Infrastructure project's dispatch call, not this
-# script's. Until they land, they come from CARD_OVERRIDES below and the script
-# says so loudly on every run. When they land, delete the override and point the
-# path at the real key. Nothing else in this file changes.
+# Facts this surface needs that the manifest does not carry yet come from
+# CARD_OVERRIDES below, and the script says so on every run. How they get
+# encoded is the Brand Infrastructure project's dispatch call, not this
+# script's. When one lands, delete the override and point the path at the
+# real key; the brand number made that trip in manifest v1.3.0. An override
+# left in place after its fact lands wins over the manifest, silently.
 # ---------------------------------------------------------------------------
 
 PATHS = {
@@ -54,18 +56,25 @@ PATHS = {
     "github":   ("identity", "github"),
     # Public inbound address. Lives under identity.role_emails as a key.
     "email":    ("identity", "role_emails", "inquiries@rnvizion.dev"),
+    # Brand routing number. Both forms are carried in the manifest, not derived:
+    # the card face takes display, tel: and the vCard TEL take e164.
+    "brand_phone_display": ("identity", "brand_phone", "display"),
+    "brand_phone_e164":    ("identity", "brand_phone", "e164"),
 }
 
-# NEVER read identity.phone. That is the personal cell (301). The card carries
-# the brand routing number and nothing else. This is enforced, not advised.
+# Personal-layer contact facts never reach a brand surface. identity.phone
+# held one until manifest v1.3.0 removed it; the key stays forbidden so its
+# return is a loud failure rather than a quiet one. Two checks, both read:
+# a forbidden path wired into PATHS fails at import, and a forbidden key
+# present in the manifest fails the run. The August version set a flag
+# nothing consumed, which is not a guard.
 FORBIDDEN_PATHS = [("identity", "phone")]
+for _name, _path in PATHS.items():
+    assert _path not in FORBIDDEN_PATHS, f"PATHS[{_name!r}] reads a forbidden key"
 
 CARD_OVERRIDES = {
-    # PENDING MANIFEST: brand routing number (Google Voice, created 2026-08-10).
-    # Distinct fact from identity.phone. Suggested shape only; dispatch is theirs.
-    "brand_phone_display": "(202) 987-9948",
-    "brand_phone_e164": "+12029879948",
-    # PENDING MANIFEST: the card line. Registry row Banked until the card ships.
+    # PENDING MANIFEST: the card line. Its registry status lives in Brand Book
+    # §5 and is not restated here.
     "line": "Vizion, built not borrowed.",
     # PENDING MANIFEST: the discipline kicker.
     "kicker": "AI · SOFTWARE · WEB · BRAND",
@@ -171,9 +180,12 @@ def load_facts(profile_path: Path, profile_url: str = PROFILE_URL,
     # The address is the key itself.
     facts["email"] = PATHS["email"][-1]
 
-    for path in FORBIDDEN_PATHS:
-        if dig(data, path) is not None:
-            facts.setdefault("_forbidden_present", True)
+    present = [".".join(p) for p in FORBIDDEN_PATHS if dig(data, p) is not None]
+    if present:
+        sys.exit("REFUSED: the manifest carries a personal-layer key this surface "
+                 f"must never see: {', '.join(present)}. The card does not read "
+                 "it, but its presence means something upstream went wrong; "
+                 "resolve that before building a brand surface from this file.")
 
     facts["_manifest_version"] = str(data.get("version", "unknown"))
     facts["_manifest_updated"] = str(data.get("updated", "unknown"))
