@@ -39,12 +39,13 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 # ADAPTER — every profile.json key path this script depends on lives here.
 #
-# Facts this surface needs that the manifest does not carry yet come from
-# CARD_OVERRIDES below, and the script says so on every run. How they get
-# encoded is the Brand Infrastructure project's dispatch call, not this
-# script's. When one lands, delete the override and point the path at the
-# real key; the brand number made that trip in manifest v1.3.0. An override
-# left in place after its fact lands wins over the manifest, silently.
+# Every fact on this surface comes from the manifest, and there is no override
+# table. A fact the manifest does not carry yet goes to the Brand
+# Infrastructure project first, since how it is encoded is their call, and
+# until it lands this script refuses rather than hardcoding it. The table
+# that used to sit below held the card line and the kicker until the manifest
+# carried them; it was deleted, not emptied, because an override left in
+# place after its fact lands wins over the manifest, silently.
 # ---------------------------------------------------------------------------
 
 PATHS = {
@@ -60,6 +61,11 @@ PATHS = {
     # the card face takes display, tel: and the vCard TEL take e164.
     "brand_phone_display": ("identity", "brand_phone", "display"),
     "brand_phone_e164":    ("identity", "brand_phone", "e164"),
+    # The card line and the discipline kicker. Their registry status lives in
+    # Brand Book §5 and is not restated here. The kicker is stored in its web
+    # form; build_vcard downgrades the dots for the vCard NOTE, consumer-side.
+    "line":     ("facts", "card_line", "value"),
+    "kicker":   ("facts", "discipline_kicker", "value"),
 }
 
 # Personal-layer contact facts never reach a brand surface. identity.phone
@@ -71,14 +77,6 @@ PATHS = {
 FORBIDDEN_PATHS = [("identity", "phone")]
 for _name, _path in PATHS.items():
     assert _path not in FORBIDDEN_PATHS, f"PATHS[{_name!r}] reads a forbidden key"
-
-CARD_OVERRIDES = {
-    # PENDING MANIFEST: the card line. Its registry status lives in Brand Book
-    # §5 and is not restated here.
-    "line": "Vizion, built not borrowed.",
-    # PENDING MANIFEST: the discipline kicker.
-    "kicker": "AI · SOFTWARE · WEB · BRAND",
-}
 
 CARD_URL = "https://rnvizion.dev/card/"
 
@@ -158,7 +156,7 @@ def require_qrcode() -> None:
 
 
 def load_facts(profile_path: Path, profile_url: str = PROFILE_URL,
-               offline: bool = False) -> tuple[dict, list[str], str]:
+               offline: bool = False) -> tuple[dict, str]:
     """Read the manifest. Refuses rather than guesses when a fact is missing."""
     data, source = read_manifest(profile_path, profile_url, offline)
 
@@ -189,8 +187,7 @@ def load_facts(profile_path: Path, profile_url: str = PROFILE_URL,
 
     facts["_manifest_version"] = str(data.get("version", "unknown"))
     facts["_manifest_updated"] = str(data.get("updated", "unknown"))
-    facts.update(CARD_OVERRIDES)
-    return facts, sorted(CARD_OVERRIDES), source
+    return facts, source
 
 
 # ---------------------------------------------------------------------------
@@ -459,8 +456,8 @@ def main() -> None:
     args = ap.parse_args()
 
     require_qrcode()
-    facts, overrides, source = load_facts(Path(args.profile), args.profile_url,
-                                          args.offline)
+    facts, source = load_facts(Path(args.profile), args.profile_url,
+                               args.offline)
 
     card = Path(args.out) / "card"
     (card / "print").mkdir(parents=True, exist_ok=True)
@@ -483,13 +480,6 @@ def main() -> None:
     for name in ("index.html", "rnvizion.vcf", "card-qr.png",
                  "card-qr-print.png", "print/index.html"):
         print(f"  {name}")
-
-    if overrides:
-        print("\nNOT YET IN THE MANIFEST — these came from CARD_OVERRIDES:")
-        for key in overrides:
-            print(f"  {key} = {CARD_OVERRIDES[key]!r}")
-        print("  Encoding is the Brand Infrastructure project's call. Until it\n"
-              "  lands, this surface is outside drift detection.")
 
 
 if __name__ == "__main__":
