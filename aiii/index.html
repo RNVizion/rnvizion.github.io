@@ -21,7 +21,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:wght@900&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#0a0a0f;
@@ -33,13 +33,6 @@
     --ink:#e7e3d8;
     --ink-mute:#9b978c;
     --ink-faint:#6f6c64;
-    /* Defined but NOT loaded on this page: the font link deliberately omits
-       Montserrat, because this page carries no site nav and therefore no
-       RNVizion wordmark to set in it. The token stays so the five-token
-       vocabulary is identical everywhere. If this page ever draws the mark,
-       restore `&family=Montserrat:wght@900` to the link IN THE SAME CHANGE --
-       using it without loading it renders the wordmark in system-ui, which
-       looks wrong on a live page rather than merely wasting a request. */
     --font-mark: 'Montserrat', system-ui, -apple-system, sans-serif;
     --font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
     --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
@@ -289,9 +282,160 @@
   footer.foot a:hover{color:var(--gold);}
 
   a:focus-visible,.byline a:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px;}
+
+  /* ---------- Site nav ----------------------------------------------------
+     The parent brand's chrome on an initiative page. Its palette is declared
+     ON nav, not :root, so the page's own vocabulary stays AIII's: --text here
+     is the site's cool #e8e8f0, which is not this page's warm --ink, and
+     --border-soft is a solid near-black, not this page's translucent --hair.
+     Rewriting the references to this page's tokens would render the nav in
+     the wrong palette; declaring them globally would put the parent's names
+     into a register that is deliberately its own.
+     The second rule gives the nav the site's body context in place of this
+     page's register (decision #16: Bricolage at 340, 1.75, warm ink). The
+     nav's links set family and size but inherit weight, leading and tracking,
+     so without it they compute differently here than on every other page. The third and fourth are base rules every
+     other nav page gets globally and this page does not have. */
+  nav{
+    --accent:#d2bc93; --text:#e8e8f0; --text-dim:#9a9ab0;
+    --border:#25253a; --border-soft:#1e1e2e; --max-width:1200px;
+  }
+  nav{
+    font-family:var(--font-body); font-size:17px; font-weight:400; line-height:1.7;
+    letter-spacing:normal; color:var(--text); text-rendering:auto;
+  }
+  nav a{ text-decoration:none; transition:color .2s ease; }
+  nav .container{ max-width:var(--max-width); margin:0 auto; padding:0 32px; }
+
+    nav {
+      position: sticky; top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.7);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0; z-index: 100;
+    }
+
+    nav .container {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo { font-family: var(--font-mark); font-weight: 900; font-size: 14px; letter-spacing: 0.09em; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+    .logo .dot {
+      flex-shrink: 0;
+      width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex; gap: 32px;
+      font-family: var(--font-mono); font-size: 13px;
+    }
+
+    .nav-links a { color: var(--text-dim); position: relative; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a:hover { text-decoration: none; }
+
+    .nav-links a::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 1px; background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 40px; height: 40px;
+      cursor: pointer; padding: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.2s ease;
+    }
+
+    .nav-toggle:hover { border-color: var(--accent); }
+
+    .nav-toggle span {
+      display: block; width: 18px; height: 1.5px;
+      background: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+      background: var(--accent);
+    }
+
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+      background: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed; top: 73px; left: 0; right: 0;
+        background: rgba(10, 10, 15, 0.96);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-soft);
+        flex-direction: column; gap: 0;
+        padding: 16px 32px 24px;
+        transform: translateY(-12px);
+        opacity: 0; pointer-events: none;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0); opacity: 1; pointer-events: auto;
+      }
+
+      .nav-links a {
+        padding: 14px 0; font-size: 15px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .nav-links a:last-child { border-bottom: none; }
+      .nav-links a::after { display: none; }
+    }
 </style>
 </head>
 <body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="/#about">About</a>
+        <a href="/#stack">Stack</a>
+        <a href="/#work">Work</a>
+        <a href="/demos/">Demos</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
 <main class="wrap">
 
   <header>
@@ -404,5 +548,21 @@
   </footer>
 
 </main>
+  <script>
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
 </body>
 </html>

@@ -89,13 +89,18 @@
       box-shadow: 0 0 12px var(--accent); animation: pulse 2.4s ease-in-out infinite;
     }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .nav-links { display: flex; gap: 28px; font-family: var(--font-mono); font-size: 13px; }
-    .nav-links a { color: var(--text-dim); }
+    .nav-links { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 13px; }
+    .nav-links a { color: var(--text-dim); position: relative; }
     .nav-links a:hover { color: var(--accent); text-decoration: none; }
     .nav-links a.active { color: var(--accent); }
+    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 1px; background: var(--accent); transition: width 0.25s ease; }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
     .nav-toggle { display: none; background: transparent; border: 1px solid var(--border); border-radius: 6px; width: 40px; height: 40px; cursor: pointer; padding: 0; flex-direction: column; justify-content: center; align-items: center; gap: 5px; transition: border-color 0.2s ease; }
     .nav-toggle:hover { border-color: var(--accent); }
     .nav-toggle span { display: block; width: 18px; height: 1.5px; background: var(--text); transition: transform 0.25s ease, opacity 0.25s ease; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background: var(--accent); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: var(--accent); }
     @media (max-width: 640px) {
       .nav-toggle { display: flex; }
       /* 73px is this nav's measured height with the toggle in place,
@@ -106,6 +111,7 @@
       .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
       .nav-links a { padding: 14px 0; font-size: 15px; border-bottom: 1px solid var(--border-soft); }
       .nav-links a:last-child { border-bottom: none; }
+      .nav-links a::after { display: none; }
     }
 
     /* ---- résumé header ---- */
@@ -191,13 +197,17 @@
 
   <nav>
     <div class="container">
-      <a href="/" class="logo"><span class="dot"></span> RNVizion</a>
+      <a href="/" class="logo">
+        <span class="dot"></span>
+        RNVizion
+      </a>
       <div class="nav-links" id="nav-links">
         <a href="/#about">About</a>
+        <a href="/#stack">Stack</a>
         <a href="/#work">Work</a>
         <a href="/demos/">Demos</a>
         <a href="/blog/">Blog</a>
-        <a href="/resume/" class="active">Résumé</a>
+        <a href="/#contact">Contact</a>
       </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
