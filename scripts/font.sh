@@ -12,7 +12,7 @@
 #   ./scripts/font.sh --force      # re-download everything
 #   ./scripts/font.sh --verify     # check what's on disk, download nothing
 #
-# Target directory honours OG_FONT_DIR; all three generators read the same
+# Target directory honors OG_FONT_DIR; all three generators read the same
 # override, so setting it for one and not the others is not a failure mode.
 #
 # This fetches what the raster pipeline draws, which is three of the five brand

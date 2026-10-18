@@ -77,7 +77,7 @@ LIST_REFS = re.compile(
 SHOWN = re.compile(r"<(pre|code)\b[^>]*>.*?</\1\s*>", re.I | re.S)
 
 # Escaped markup, tag-shaped, anywhere it survives the cut above. It is never
-# a real reference, so it is neutralised before scanning; and outside <code>
+# a real reference, so it is neutralized before scanning; and outside <code>
 # or <pre> it is the house rule being broken, which is reported on its own.
 # [^<>] keeps a match from crossing a real tag, so cutting one can never
 # swallow the document between two of them -- the greedy-span failure again.

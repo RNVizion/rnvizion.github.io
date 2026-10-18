@@ -158,7 +158,7 @@ card falls back to `og:description`, which is worse but not broken.
 
 ### `article code` — inline code in prose
 
-**Colour is `var(--code)`, this site's mirror of `--rnv-code`, emitted by `engine/brand.py`.** Not
+**Color is `var(--code)`, this site's mirror of `--rnv-code`, emitted by `engine/brand.py`.** Not
 `var(--accent)`. Code had its own hue as of 2026-09-12 precisely so it stops sharing one with links
 and `strong`.
 
@@ -177,12 +177,12 @@ repeated here beyond what the rules above need.
 
 ### `article p a`, `article li a`, `.bio a` — links in running text
 
-**Underlined at rest.** Gold against body text is 1.517:1 where WCAG 1.4.1 wants 3:1 when colour is
+**Underlined at rest.** Gold against body text is 1.517:1 where WCAG 1.4.1 wants 3:1 when color is
 the only cue — and a hover underline is not a cue, because it does not exist on touch and is absent
 while the page is being read.
 
 > **Never promote this to a bare `a`.** `nav`, `footer` and `.post-footer-links` are link *regions*:
-> position tells a reader they are links, so colour is not doing the work alone there. Underlining
+> position tells a reader they are links, so color is not doing the work alone there. Underlining
 > them is noise with no accessibility gain.
 
 ### `.logo .dot` — the nav mark dot
@@ -190,7 +190,7 @@ while the page is being read.
 **`flex-shrink: 0` is load-bearing.** `.logo` is a flex container, and without it the dot is squeezed
 to an ellipse whenever the nav is tight — which happened on the live site, at every viewport width,
 unnoticed through three passes of deliberate work on that component because every pass was about
-colour.
+color.
 
 **Geometry only.** The gold, the 12px glow and `pulse 2.4s` are unchanged and were ruled separately.
 

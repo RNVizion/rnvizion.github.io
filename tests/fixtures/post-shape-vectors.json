@@ -189,7 +189,7 @@
     },
     {
       "id": "escaped-cut-does-not-span-real-tags",
-      "why": "neutralising escaped markup must not swallow the document between two of them -- the greedy-span failure in a second costume",
+      "why": "neutralizing escaped markup must not swallow the document between two of them -- the greedy-span failure in a second costume",
       "html": "<p>x &lt; y</p><img src=\"real.png\"><p>a &gt; b</p>",
       "catches": [
         "real.png"

@@ -22,7 +22,7 @@
   // in that repo's agent.py: a dependency that looked configured because an
   // unrelated default happened to satisfy it. Declared here on its own account
   // now, so the editor environment stands up without borrowing from a
-  // neighbouring repo.
+  // neighboring repo.
   "name": "rnvizion.github.io",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "postCreateCommand": "pip install --user Pillow qrcode beautifulsoup4 lxml && bash scripts/font.sh",

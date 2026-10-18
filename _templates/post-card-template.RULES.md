@@ -6,7 +6,7 @@ is the brain. Read this before editing either.
 **Why the pair exists.** The same reason as the post template: anything written into a template is
 copied wherever that template goes, and reasoning addressed to whoever edits it has no audience at
 the destination. This card block is pasted into `blog/index.html`, so a 22-line instruction comment
-was travelling into the blog index on every publish.
+was traveling into the blog index on every publish.
 
 **So the template carries no comment that explains or instructs.** Unlike the post template it has
 no structural markers to keep — there are no sections to label in a single `<article>` block — so it

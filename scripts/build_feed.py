@@ -16,7 +16,7 @@ The script reads every post once, sorts newest-first by published_time, then wri
 
 A non-blog page is included in the sitemap only if it declares an og:url and is
 not a redirect stub (no meta http-equiv=refresh). That rule keeps alias stubs
-like /live/ — which forward elsewhere and canonicalise away — out of the sitemap
+like /live/ — which forward elsewhere and canonicalize away — out of the sitemap
 automatically, with no hardcoded exclude list to maintain.
 
 The index cards are rendered by generate_card.py — the SAME renderer and template
