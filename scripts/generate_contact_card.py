@@ -267,10 +267,10 @@ def build_qr(out_path: Path, *, dark: str, light: str, box: int = 10) -> None:
 # Montserrat Black (900) carries the mark, per the Brand Book lockup template:
 # mark letterforms in Montserrat Black above a hairline rule, spelled-out name
 # beneath in tracked JetBrains Mono. Same hand as the AIII mark.
-FONTS = ("https://fonts.googleapis.com/css2?"
-         "family=Montserrat:wght@900&"
-         "family=JetBrains+Mono:wght@400;500&"
-         "family=Instrument+Serif:ital@1&display=swap")
+# Served by the site from assets/webfonts/, copied from rnv-brand's engine/fonts/.
+# The browser downloads only the faces a page draws: here Montserrat 900,
+# JetBrains Mono 400 and 500, and Instrument Serif italic.
+FONTS = "/assets/webfonts/fonts.css"
 
 
 def build_page(f: dict) -> str:
@@ -298,7 +298,6 @@ def build_page(f: dict) -> str:
 <meta property="og:title" content="{f['name']} — {f['brand']}">
 <meta property="og:description" content="{f['line']}">
 <meta property="og:url" content="{CARD_URL}">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
 <style>
   :root {{ --gold:{GOLD}; --bg0:{BG_0}; --bg1:{BG_1};

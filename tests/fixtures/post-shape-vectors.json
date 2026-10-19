@@ -155,7 +155,7 @@
       ]
     },
     {
-      "id": "script-is-behaviour",
+      "id": "script-is-behavior",
       "why": "every post carries the nav toggle; a script fetching a sibling is a real defect, not a sample",
       "html": "<script>new Image().src='tracker.png'</script>",
       "catches": [
