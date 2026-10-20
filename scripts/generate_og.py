@@ -8,10 +8,10 @@ USAGE (run from the repo root)
   python scripts/generate_og.py blog/<slug>/index.html
   python scripts/generate_og.py blog/<slug>/index.html -o assets/og/<slug>.png
 
-Fonts live in assets/fonts/ (override with OG_FONT_DIR). Drop these three there:
-  BricolageGrotesque.ttf   (display)   Montserrat.ttf     (the mark)
-  JetBrainsMono.ttf        (labels, captions, footer)
-If a font is missing the script still renders, just with a default face.
+Fonts are the brand's own woff2 files in assets/webfonts/, the copy of rnv-brand's
+engine/fonts/ the site serves (override the folder with OG_FONT_DIR): Bricolage
+Grotesque for the title, Montserrat Black for the mark, JetBrains Mono for labels.
+A missing or unreadable font stops the script with its name.
 """
 import argparse
 import os
@@ -33,7 +33,7 @@ MARGIN = 72
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent  # scripts/ -> repo root
-FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "fonts"))
+FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "webfonts"))
 
 
 # Mark tracking: 1.8px absolute, ruled for all raster surfaces in
@@ -64,17 +64,26 @@ def draw_tracked(d, xy, text, font, fill, gap=MARK_TRACK):
 
 
 def load_font(path, size, weights=("SemiBold", "Bold", "Medium")):
+    """The brand's own font file, at the first weight asked for that it has.
+
+    Stops by name rather than drawing a default face: a share image in the
+    wrong face is a published error that nobody is told about.
+    """
     try:
         font = ImageFont.truetype(str(path), size)
+    except Exception as exc:
+        sys.exit(f"cannot load {path}: {exc}. The generators draw the brand's own "
+                 f"files from assets/webfonts/ (or OG_FONT_DIR).")
+    try:
+        names = [n.decode() if isinstance(n, bytes) else n
+                 for n in font.get_variation_names()]
     except Exception:
-        return ImageFont.load_default()
-    for name in weights:  # variable fonts: pick a heavier instance if available
-        try:
+        return font   # a single-weight file is the weight it was cut at
+    for name in weights:
+        if name in names:
             font.set_variation_by_name(name)
-            break
-        except Exception:
-            continue
-    return font
+            return font
+    sys.exit(f"{path} has none of the weights {weights}; it offers {names}")
 
 
 def og_title(html):
@@ -110,7 +119,7 @@ def render(title, out):
         d.line([(0, y), (W, y)], fill=GRID, width=1)
 
     # wordmark, top-left: gold dot + RNVizion (Montserrat Black, Brand Book #15)
-    mark = load_font(FONT_DIR / "Montserrat.ttf", 30, weights=("Black",))
+    mark = load_font(FONT_DIR / "montserrat-latin-900-normal.woff2", 30, weights=("Black",))
     dot_r = 7
     cy = MARGIN + 15
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
@@ -121,13 +130,13 @@ def render(title, out):
     max_w = W - title_x - MARGIN
     size = 94
     while size >= 50:
-        font = load_font(FONT_DIR / "BricolageGrotesque.ttf", size)
+        font = load_font(FONT_DIR / "bricolage-grotesque-latin-opsz-normal.woff2", size)
         lines = wrap(d, title, font, max_w)
         line_h = int(size * 1.14)
         if len(lines) <= 4 and line_h * len(lines) <= H - 320:
             break
         size -= 4
-    font = load_font(FONT_DIR / "BricolageGrotesque.ttf", size)
+    font = load_font(FONT_DIR / "bricolage-grotesque-latin-opsz-normal.woff2", size)
     lines = wrap(d, title, font, max_w)
     line_h = int(size * 1.14)
     block_h = line_h * len(lines)
@@ -140,7 +149,7 @@ def render(title, out):
         y += line_h
 
     # domain, bottom-right (dim mono)
-    small = load_font(FONT_DIR / "JetBrainsMono.ttf", 26, weights=("Medium", "Bold"))
+    small = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 26, weights=("Medium", "Bold"))
     domain = "rnvizion.dev"
     dw = d.textlength(domain, font=small)
     d.text((W - MARGIN - dw, H - MARGIN - 10), domain, font=small, fill=DIM)

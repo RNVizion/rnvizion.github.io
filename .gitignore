@@ -5,7 +5,8 @@ node_modules/
 .idea/
 .vs/
 *.log
-# fetched by scripts/font.sh; never commit
+# Held scripts/font.sh's TTFs until 2026-10-20; the generators now read
+# assets/webfonts/. Kept so a checkout that still holds the TTFs never commits them.
 assets/fonts/
 
 # Bytecode. tests/test_post_shape.py imports scripts/post_shape.py, so running

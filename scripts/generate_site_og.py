@@ -38,7 +38,7 @@ USAGE (run from the repo root)
 --check exits non-zero if the card is missing or older than index.html, which
 makes it usable as a CI guard.
 
-Fonts come from assets/fonts/ (override with OG_FONT_DIR); run ./scripts/font.sh first.
+Fonts are the brand's own woff2 files in assets/webfonts/ (override with OG_FONT_DIR).
 """
 import argparse
 import os
@@ -62,7 +62,7 @@ MARGIN = 72
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
-FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "fonts"))
+FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "webfonts"))
 DEFAULT_OUT = REPO / "assets" / "og-image.png"
 
 # Every card this script owns: source page -> output file.
@@ -172,17 +172,26 @@ def read_page(page_path):
 # drawing
 # --------------------------------------------------------------------------
 def load_font(path, size, weights=("SemiBold", "Bold", "Medium")):
+    """The brand's own font file, at the first weight asked for that it has.
+
+    Stops by name rather than drawing a default face: a share image in the
+    wrong face is a published error that nobody is told about.
+    """
     try:
         font = ImageFont.truetype(str(path), size)
+    except Exception as exc:
+        sys.exit(f"cannot load {path}: {exc}. The generators draw the brand's own "
+                 f"files from assets/webfonts/ (or OG_FONT_DIR).")
+    try:
+        names = [n.decode() if isinstance(n, bytes) else n
+                 for n in font.get_variation_names()]
     except Exception:
-        return ImageFont.load_default()
+        return font   # a single-weight file is the weight it was cut at
     for name in weights:
-        try:
+        if name in names:
             font.set_variation_by_name(name)
-            break
-        except Exception:
-            continue
-    return font
+            return font
+    sys.exit(f"{path} has none of the weights {weights}; it offers {names}")
 
 
 def wrap(draw, text, font, max_w):
@@ -218,7 +227,7 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
     # reasoning because the reasoning read confident and cited a real number --
     # what found it was checking the value the comment NAMED against the value
     # actually ruled, not re-deriving the conclusion.
-    mark_f = load_font(FONT_DIR / "Montserrat.ttf", 20, weights=("Black",))
+    mark_f = load_font(FONT_DIR / "montserrat-latin-900-normal.woff2", 20, weights=("Black",))
     dot_r = 6
     cy = MARGIN + 10
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
@@ -227,16 +236,16 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
     # optional kicker (e.g. "RÉSUMÉ") above the name
     name_y = MARGIN + 78
     if data.get("kicker"):
-        kick = load_font(FONT_DIR / "JetBrainsMono.ttf", 22, weights=("Medium", "Bold"))
+        kick = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 22, weights=("Medium", "Bold"))
         d.text((MARGIN, name_y - 6), " ".join(data["kicker"]), font=kick, fill=DIM)
         name_y += 34
 
     # name
-    name_font = load_font(FONT_DIR / "BricolageGrotesque.ttf", 88)
+    name_font = load_font(FONT_DIR / "bricolage-grotesque-latin-opsz-normal.woff2", 88)
     d.text((MARGIN, name_y), data["name"], font=name_font, fill=TEXT)
 
     # role line + tagline
-    body = load_font(FONT_DIR / "JetBrainsMono.ttf", 24, weights=("Medium", "Bold"))
+    body = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 24, weights=("Medium", "Bold"))
     y = name_y + 110
     d.text((MARGIN, y), role_line, font=body, fill=DIM)
     y += 36
@@ -249,12 +258,12 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
     d.line([(MARGIN, rule_y), (W - MARGIN, rule_y)], fill=RULE, width=1)
 
     # domain, bottom-left
-    domain_font = load_font(FONT_DIR / "JetBrainsMono.ttf", 30, weights=("Medium", "Bold"))
+    domain_font = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 30, weights=("Medium", "Bold"))
     d.text((MARGIN, H - MARGIN - 56), "rnvizion.dev", font=domain_font, fill=GOLD)
 
     # anchors footer: gold-dotted phrases, right-aligned (résumé-shaped pages)
     if data.get("anchors") and not data["stats"]:
-        af = load_font(FONT_DIR / "JetBrainsMono.ttf", 24, weights=("Medium", "Bold"))
+        af = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 24, weights=("Medium", "Bold"))
         gap, dot_gap, r = 34, 14, 4
         widths = [d.textlength(a, font=af) for a in data["anchors"]]
         total = sum(widths) + sum(2 * r + dot_gap for _ in widths) + gap * (len(widths) - 1)
@@ -271,8 +280,8 @@ def render(data, out, role_line="Python developer · AR/VR at Meta"):
         return out
 
     # stat tiles, bottom-right, right-aligned as a group
-    val_font = load_font(FONT_DIR / "BricolageGrotesque.ttf", 40)
-    lbl_font = load_font(FONT_DIR / "JetBrainsMono.ttf", 15, weights=("Medium", "Bold"))
+    val_font = load_font(FONT_DIR / "bricolage-grotesque-latin-opsz-normal.woff2", 40)
+    lbl_font = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 15, weights=("Medium", "Bold"))
     gap = 56
     widths = []
     for value, label in data["stats"]:

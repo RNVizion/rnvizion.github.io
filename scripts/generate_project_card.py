@@ -42,8 +42,8 @@ USAGE (run from the repo root)
       --title "RNV Something" --label "10 / TOOLS" --tags "Python,CLI"
 
 Existing files are left alone unless --force, so a real screenshot is never
-overwritten. Fonts come from assets/fonts/ (override with OG_FONT_DIR); run
-./scripts/font.sh first.
+overwritten. Fonts are the brand's own woff2 files in assets/webfonts/ (override
+with OG_FONT_DIR).
 """
 import argparse
 import os
@@ -67,7 +67,7 @@ MARGIN = 72
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
-FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "fonts"))
+FONT_DIR = Path(os.environ.get("OG_FONT_DIR", REPO / "assets" / "webfonts"))
 
 ARTICLE = re.compile(r'<article class="project">.*?</article>', re.DOTALL)
 IMG_SRC = re.compile(r'<img\s+src="assets/([a-zA-Z0-9._/-]+)\.png"')
@@ -173,17 +173,26 @@ def report(records):
 # drawing
 # --------------------------------------------------------------------------
 def load_font(path, size, weights=("SemiBold", "Bold", "Medium")):
+    """The brand's own font file, at the first weight asked for that it has.
+
+    Stops by name rather than drawing a default face: a share image in the
+    wrong face is a published error that nobody is told about.
+    """
     try:
         font = ImageFont.truetype(str(path), size)
+    except Exception as exc:
+        sys.exit(f"cannot load {path}: {exc}. The generators draw the brand's own "
+                 f"files from assets/webfonts/ (or OG_FONT_DIR).")
+    try:
+        names = [n.decode() if isinstance(n, bytes) else n
+                 for n in font.get_variation_names()]
     except Exception:
-        return ImageFont.load_default()
+        return font   # a single-weight file is the weight it was cut at
     for name in weights:
-        try:
+        if name in names:
             font.set_variation_by_name(name)
-            break
-        except Exception:
-            continue
-    return font
+            return font
+    sys.exit(f"{path} has none of the weights {weights}; it offers {names}")
 
 
 def wrap(draw, text, font, max_w):
@@ -209,14 +218,14 @@ def render(title, label, tags, out):
     for y in range(0, H, 48):
         d.line([(0, y), (W, y)], fill=GRID, width=1)
 
-    mark = load_font(FONT_DIR / "Montserrat.ttf", 30, weights=("Black",))
+    mark = load_font(FONT_DIR / "montserrat-latin-900-normal.woff2", 30, weights=("Black",))
     dot_r = 7
     cy = MARGIN + 15
     d.ellipse([MARGIN, cy - dot_r, MARGIN + 2 * dot_r, cy + dot_r], fill=GOLD)
     draw_tracked(d, (MARGIN + 2 * dot_r + 14, MARGIN), "RNVizion", mark, TEXT)
 
-    label_font = load_font(FONT_DIR / "JetBrainsMono.ttf", 26, weights=("Medium", "Bold"))
-    tag_font = load_font(FONT_DIR / "JetBrainsMono.ttf", 22, weights=("Medium", "Bold"))
+    label_font = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 26, weights=("Medium", "Bold"))
+    tag_font = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 22, weights=("Medium", "Bold"))
 
     pill_h, pad_x, gap = 44, 18, 12
     shown, row_w = [], 0
@@ -234,12 +243,12 @@ def render(title, label, tags, out):
     avail = H - 300 - tags_h
     size = 96
     while size >= 44:
-        f = load_font(FONT_DIR / "BricolageGrotesque.ttf", size)
+        f = load_font(FONT_DIR / "bricolage-grotesque-latin-opsz-normal.woff2", size)
         if len(wrap(d, title, f, max_w)) <= 4 and \
            int(size * 1.14) * len(wrap(d, title, f, max_w)) <= avail:
             break
         size -= 4
-    font = load_font(FONT_DIR / "BricolageGrotesque.ttf", size)
+    font = load_font(FONT_DIR / "bricolage-grotesque-latin-opsz-normal.woff2", size)
     lines = wrap(d, title, font, max_w)
     line_h = int(size * 1.14)
     block_h = line_h * len(lines)
@@ -266,7 +275,7 @@ def render(title, label, tags, out):
             d.text((x + (w - tw) / 2, y + 9), t, font=tag_font, fill=DIM)
             x += w + gap
 
-    small = load_font(FONT_DIR / "JetBrainsMono.ttf", 26, weights=("Medium", "Bold"))
+    small = load_font(FONT_DIR / "jetbrains-mono-latin-500-normal.woff2", 26, weights=("Medium", "Bold"))
     domain = "rnvizion.dev"
     dw = d.textlength(domain, font=small)
     d.text((W - MARGIN - dw, H - MARGIN - 10), domain, font=small, fill=DIM)
