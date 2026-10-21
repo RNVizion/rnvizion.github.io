@@ -61,8 +61,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Pillow
-        run: pip install Pillow
+      - name: Install Pillow and fontTools
+        run: pip install Pillow fonttools brotli
 
       - name: Render an OG image for every post
         run: |

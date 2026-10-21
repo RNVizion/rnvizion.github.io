@@ -25,7 +25,7 @@
   // neighboring repo.
   "name": "rnvizion.github.io",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "postCreateCommand": "pip install --user Pillow qrcode beautifulsoup4 lxml",
+  "postCreateCommand": "pip install --user Pillow fonttools brotli qrcode beautifulsoup4 lxml",
   "customizations": {
     "vscode": {
       "extensions": [

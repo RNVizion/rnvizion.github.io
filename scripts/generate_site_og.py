@@ -39,6 +39,7 @@ USAGE (run from the repo root)
 makes it usable as a CI guard.
 
 Fonts are the brand's own woff2 files in assets/webfonts/ (override with OG_FONT_DIR).
+A character the font has no glyph for stops the script with its name.
 """
 import argparse
 import os
@@ -47,6 +48,7 @@ import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
+from fontTools.ttLib import TTFont
 
 # Brand palette - identical to the other card generators
 BG = (10, 10, 15)         # --bg        #0a0a0f
@@ -192,6 +194,41 @@ def load_font(path, size, weights=("SemiBold", "Bold", "Medium")):
             font.set_variation_by_name(name)
             return font
     sys.exit(f"{path} has none of the weights {weights}; it offers {names}")
+
+
+_CMAPS = {}
+
+
+def require_glyphs(text, font):
+    """Stop by name if the font cannot draw a character of text.
+
+    The generators load the Latin file of each face, and Pillow draws from that
+    file alone, so a character it lacks becomes a missing-glyph box in a published
+    image. Whitespace is not checked.
+    """
+    path = getattr(font, "path", None)
+    if path is None:
+        sys.exit(f"drew {text!r} with no font; the generators draw only the brand's "
+                 f"files from assets/webfonts/ (or OG_FONT_DIR).")
+    cmap = _CMAPS.get(path)
+    if cmap is None:
+        cmap = _CMAPS[path] = TTFont(path).getBestCmap()
+    missing = sorted({c for c in text if not c.isspace() and ord(c) not in cmap})
+    if missing:
+        sys.exit(f"{Path(path).name} has no glyph for {' '.join(missing)} "
+                 f"({', '.join(f'U+{ord(c):04X}' for c in missing)}) in {text!r}. "
+                 f"Change the text, or draw it from a file that has the glyph.")
+
+
+_draw_text = ImageDraw.ImageDraw.text
+
+
+def _checked_text(self, xy, text, fill=None, font=None, *args, **kwargs):
+    require_glyphs(text, font)
+    return _draw_text(self, xy, text, fill, font, *args, **kwargs)
+
+
+ImageDraw.ImageDraw.text = _checked_text   # every string this script draws
 
 
 def wrap(draw, text, font, max_w):
