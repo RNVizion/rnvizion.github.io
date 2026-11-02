@@ -56,7 +56,7 @@ GOLD = (210, 188, 147)    # --accent    #d2bc93
 TEXT = (232, 232, 240)    # --text      #e8e8f0
 DIM = (154, 154, 176)     # --text-dim  #9a9ab0
 FAINT = (90, 90, 114)     # --text-faint #5a5a72
-GRID = (20, 20, 28)
+GRID = (19, 19, 28)      # #13131c, RECORDS['surface']: the barely-there grid line
 RULE = (37, 37, 58)       # --border    #25253a
 
 W, H = 1200, 630          # Open Graph standard

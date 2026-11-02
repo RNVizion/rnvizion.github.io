@@ -29,7 +29,7 @@ BG = (10, 10, 15)        # --bg      #0a0a0f
 GOLD = (210, 188, 147)   # --accent  #d2bc93
 TEXT = (232, 232, 240)   # --text    #e8e8f0
 DIM = (154, 154, 176)    # --text-dim #9a9ab0
-GRID = (20, 20, 28)      # barely-there grid line
+GRID = (19, 19, 28)      # #13131c, RECORDS['surface']: the barely-there grid line
 
 W, H = 1200, 630
 MARGIN = 72
