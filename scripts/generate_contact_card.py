@@ -377,7 +377,9 @@ def build_print(f: dict) -> str:
   @page {{ size:3.75in 2.25in; margin:0; }}
   :root {{ --gold:{GOLD}; --bg0:{BG_0}; --rule:rgba(210,188,147,{RULE_ALPHA}); }}
   * {{ box-sizing:border-box; }}
-  body {{ margin:0; background:#555;
+  /* Behind the card on screen: the white the print rule below sets, so the
+     screen shows the sheet as it prints. Chris, 2026-11-02. */
+  body {{ margin:0; background:#fff;
           font-family:"JetBrains Mono",ui-monospace,monospace;
           -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
   .card {{ width:3.75in; height:2.25in; background:var(--bg0); color:var(--gold);
